@@ -2,9 +2,11 @@
 
 This repository contains all source code and related resources for the **XCLV Davao Ordering System** project.
 
-To better understand our **branching strategies**, **development workflow**, and overall **project context**, please visit the following link:  
-[Branching](#) https://docs.google.com/document/d/1l1XPDwYQddUXh0kjVJZButdPzNLvGjmAEwV0ho1QTAg/edit?usp=sharing 
-[Development Workflow](#) https://docs.google.com/document/d/1AZlIi8WTghCwsrWWpuuY7iQlhgN1QCuq35Yy6cs11W0/edit?usp=sharing
+To better understand our **branching strategies**, **development workflow**, and overall **project context**, please visit the following link:
+Branching:
+[https://docs.google.com/document/d/1l1XPDwYQddUXh0kjVJZButdPzNLvGjmAEwV0ho1QTAg/edit?usp=sharing](#)  
+Development:
+[https://docs.google.com/document/d/1AZlIi8WTghCwsrWWpuuY7iQlhgN1QCuq35Yy6cs11W0/edit?usp=sharing](#) 
 ---
 
 ## 📘 Overview
