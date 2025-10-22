@@ -6,6 +6,12 @@ class MenuConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'menu'
 
+    """
+    When errors arise from this file when migrating, comment the entire code
+    block in the ready function, simply add the pass statement, and run migrations.
+
+    After migrations are complete, uncomment the code block again.
+    """
     def ready(self):
         from .models import Item
 
