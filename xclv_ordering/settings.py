@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'orders',
     'qr_codes.apps.QrCodesConfig',
     'tables',
+    'geolocation',
 ]
 
 MIDDLEWARE = [
