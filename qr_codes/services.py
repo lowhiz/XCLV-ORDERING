@@ -75,7 +75,6 @@ class QRValidationService:
         qr_hash: str,
         user_lat: float,
         user_lon: float,
-        ip_address: str = None,
         user_agent: str = None,
         session_key: str = None
     ) -> dict:
@@ -94,7 +93,6 @@ class QRValidationService:
                 qr_hash_attempted=qr_hash,
                 result=ValidationAttempt.ResultChoices.QR_NOT_FOUND,
                 error_message=f"QR hash '{qr_hash}' not found",
-                ip_address=ip_address,
                 user_agent=user_agent or '',
                 session_key=session_key or ''
             )
@@ -112,7 +110,6 @@ class QRValidationService:
                 qr_hash_attempted=qr_hash,
                 result=ValidationAttempt.ResultChoices.BATCH_INACTIVE,
                 error_message=f"Batch {qr_code.batch.batch_name} is not active",
-                ip_address=ip_address,
                 user_agent=user_agent or '',
                 session_key=session_key or ''
             )
@@ -129,7 +126,6 @@ class QRValidationService:
                 user_lat=user_lat,
                 user_lon=user_lon,
                 log=True,
-                ip_address=ip_address,
                 user_agent=user_agent
             )
 
@@ -142,7 +138,6 @@ class QRValidationService:
                     user_longitude=user_lon,
                     distance_from_club=distance,
                     result=ValidationAttempt.ResultChoices.SUCCESS,
-                    ip_address=ip_address,
                     user_agent=user_agent or '',
                     session_key=session_key or ''
                 )
@@ -164,7 +159,6 @@ class QRValidationService:
                     distance_from_club=distance,
                     result=ValidationAttempt.ResultChoices.LOCATION_INVALID,
                     error_message=f"User is {distance:.0f}m from club location",
-                    ip_address=ip_address,
                     user_agent=user_agent or '',
                     session_key=session_key or ''
                 )
@@ -185,7 +179,6 @@ class QRValidationService:
                 user_longitude=user_lon,
                 result=ValidationAttempt.ResultChoices.LOCATION_ERROR,
                 error_message=f"Location validation error: {str(e)}",
-                ip_address=ip_address,
                 user_agent=user_agent or '',
                 session_key=session_key or ''
             )

@@ -44,7 +44,6 @@ class GeolocationService:
         user_lat: float,
         user_lon: float,
         log: bool = True,
-        ip_address: Optional[str] = None,
         user_agent: Optional[str] = None
     ) -> Tuple[bool, float, Optional[LocationCheck]]:
         """
@@ -53,7 +52,6 @@ class GeolocationService:
         Arguments:
             user_lat, user_lon: User's coordinates
             log: Whether to log this check to database
-            ip_address: User's IP (optional, but not stored)
             user_agent: User's browser info (optional)
 
         Returns:

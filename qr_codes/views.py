@@ -41,7 +41,7 @@ def order_entry(request):
             qr_hash_attempted=qr_hash,
             result=ValidationAttempt.ResultChoices.QR_NOT_FOUND,
             error_message=f"QR hash '{qr_hash}' not found in database",
-            ip_address=get_client_ip(request),
+            # ip_address=get_client_ip(request),
             user_agent=request.META.get('HTTP_USER_AGENT', ''),
             session_key=request.session.session_key or ''
         )
@@ -59,7 +59,7 @@ def order_entry(request):
             qr_hash_attempted=qr_hash,
             result=ValidationAttempt.ResultChoices.BATCH_INACTIVE,
             error_message=f"QR code belongs to inactive batch: {qr_code.batch.batch_name}",
-            ip_address=get_client_ip(request),
+            # ip_address=get_client_ip(request),
             user_agent=request.META.get('HTTP_USER_AGENT', ''),
             session_key=request.session.session_key or ''
         )
@@ -132,7 +132,6 @@ def validate_location_ajax(request):
             qr_hash=qr_hash,
             user_lat=float(latitude),
             user_lon=float(longitude),
-            ip_address=get_client_ip(request),
             user_agent=request.META.get('HTTP_USER_AGENT', ''),
             session_key=request.session.session_key or ''
         )
@@ -146,6 +145,12 @@ def validate_location_ajax(request):
             request.session['validated_qr_hash'] = qr_hash
             request.session['validation_time'] = timezone.now().isoformat()
 
+            # Set table information in session for ordering
+            request.session['current_table_type'] = qr_code.table_type
+            request.session['current_table_number'] = qr_code.table_number
+            request.session['current_table_id'] = qr_code.table_identifier  # "ST1", "VIP2", etc.
+            request.session['current_table_display'] = qr_code.table_display_name  # "Table 1", "VIP 2"
+
             # Clear pending data
             request.session.pop('pending_qr_hash', None)
             request.session.pop('pending_qr_id', None)
@@ -153,9 +158,10 @@ def validate_location_ajax(request):
             return JsonResponse({
                 'success': True,
                 'message': 'Location validated successfully',
-                'redirect_url': reverse('menu:menu_list'),  # Adjust based on your URL names
+                'redirect_url': '/menu/',
                 'distance': f"{result['distance']:.0f}m" if result['distance'] < 1000 else f"{result['distance']/1000:.1f}km"
             })
+
 
         else:
             # FAILED validation
@@ -184,7 +190,6 @@ def validate_location_ajax(request):
             qr_hash_attempted=qr_hash if 'qr_hash' in locals() else 'unknown',
             result=ValidationAttempt.ResultChoices.LOCATION_ERROR,
             error_message=f"Unexpected error: {str(e)}",
-            ip_address=get_client_ip(request),
             user_agent=request.META.get('HTTP_USER_AGENT', ''),
             session_key=request.session.session_key or ''
         )
@@ -194,16 +199,16 @@ def validate_location_ajax(request):
             'error': 'An unexpected error occurred. Please try again.'
         }, status=500)
 
-
+"""
 def get_client_ip(request):
-    """Helper function to get client IP address"""
+    # Helper function to get client IP address
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
+"""
 
 # Legacy view for backward compatibility (if needed)
 def validation(request):
