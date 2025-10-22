@@ -82,10 +82,42 @@ class QRCode(models.Model):
     """
 
     # Unique Token; pre-generated human-readable token
+    # e.g., xclv-vip-1-BatchA-uuid
     unique_token = models.CharField(max_length=255, unique=True)
 
+    """
+    Following attributes are, while reduntant, aids the connection of a QR code to a table type and number.
+    """
+
     # Pre-generated static hash used in QR code URLs
-    qr_hash = models.CharField(max_length=64, unique=True, db_index=True)
+    # Temporarily make these fields nullable for migration
+    table_type = models.CharField(
+        max_length=10,
+        choices=[
+            ('vvip', 'VVIP'),
+            ('vip', 'VIP'),
+            ('st', 'Standard'),
+        ],
+        null=True,  # Temporary
+        blank=True,  # Temporary
+        help_text="Type of table this QR represents"
+    )
+
+    table_number = models.PositiveIntegerField(
+        null=True,  # Temporary
+        blank=True,  # Temporary
+        help_text="Table number within the type (1, 2, 3, etc.)"
+    )
+
+    qr_hash = models.CharField(
+        max_length=64,
+        unique=True,
+        db_index=True,
+        null=True,  # Temporary
+        blank=True,  # Temporary
+        help_text="Pre-generated static hash used in QR code URLs"
+    )
+
 
     # Files/Images of the QR code
     image = models.ImageField(upload_to='qrcodes/')
@@ -112,6 +144,21 @@ class QRCode(models.Model):
         # Generate the full QR code URL that goes in the QR image
         ##  This uses the pre-generated static hash
         return f"https://xclv-ordering.com/order?qr={self.qr_hash}"
+
+    @property
+    def table_display_name(self):
+        """Human-readable table name (e.g., 'VIP 2', 'VVIP 1', 'Table 15')"""
+        type_map = {
+            'vvip': 'VVIP',
+            'vip': 'VIP',
+            'st': 'Table'
+        }
+        return f"{type_map.get(self.table_type, self.table_type)} {self.table_number}"
+
+    @property
+    def table_identifier(self):
+        """Short table identifier (e.g., 'ST1', 'VIP2', 'VVIP3')"""
+        return f"{self.table_type.upper()}{self.table_number}"
 
     @classmethod
     def get_by_hash(cls, qr_hash):
@@ -151,7 +198,7 @@ class ValidationAttempt(models.Model):
             models.Index(fields=['-attempted_at']),
             models.Index(fields=['result', '-attempted_at']),
             models.Index(fields=['qr_code', '-attempted_at']),
-            models.Index(fields=['ip_address', '-attempted_at']),
+            # models.Index(fields=['ip_address', '-attempted_at']),
         ]
 
     # QR Code being validated (can be null if QR hash not found)

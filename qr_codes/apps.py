@@ -7,17 +7,32 @@ class QrCodesConfig(AppConfig):
     name = "qr_codes"
 
     def ready(self):
-        post_migrate.connect(run_after_migrate, sender=self)
+        pass
+        # post_migrate.connect(run_after_migrate, sender=self)
 
 
 def run_after_migrate(sender, **kwargs):
-    from .services import BatchService
-    from .models import Batch, ValidList
+    """
+    Auto-setup after migrations complete
+    Creates batches A-Z and activates Batch A if none exist
+    """
+    from .models import QRBatch
 
-    BatchService.create_batches()
-    BatchService.generate_qr_codes()
-    BatchService.invalidate_all_qr_codes()
-    if not ValidList.objects.exists():
-        first_batch = Batch.objects.order_by("id").first()
-        if first_batch:
-            BatchService._activate_first_batch(first_batch)
+    # Only run if no batches exist (first time setup)
+    if not QRBatch.objects.exists():
+        print("Setting up QR batches A-Z...")
+
+        # Create all batches A-Z
+        batches = []
+        for i in range(ord('A'), ord('Z') + 1):
+            batch_name = f"Batch {chr(i)}"
+            batches.append(QRBatch(batch_name=batch_name))
+
+        QRBatch.objects.bulk_create(batches)
+
+        # Activate Batch A by default
+        batch_a = QRBatch.objects.get(batch_name="Batch A")
+        batch_a.is_active = True
+        batch_a.save()
+
+        print("✓ Created batches A-Z, activated Batch A")
