@@ -45,8 +45,7 @@ class GeolocationService:
         user_lon: float,
         log: bool = True,
         ip_address: Optional[str] = None,
-        user_agent: Optional[str] = None,
-        notes: str = ""
+        user_agent: Optional[str] = None
     ) -> Tuple[bool, float, Optional[LocationCheck]]:
         """
         Main validation method - checks if user is at the club location
@@ -54,9 +53,8 @@ class GeolocationService:
         Arguments:
             user_lat, user_lon: User's coordinates
             log: Whether to log this check to database
-            ip_address: User's IP (optional)
+            ip_address: User's IP (optional, but not stored)
             user_agent: User's browser info (optional)
-            notes: Optional notes about this check
 
         Returns:
             Tuple of (is_inside: bool, distance: float, log_entry: LocationCheck|None)
@@ -87,30 +85,7 @@ class GeolocationService:
                 geofence_latitude=settings.latitude,
                 geofence_longitude=settings.longitude,
                 geofence_radius=settings.radius_meters,
-                ip_address=ip_address,
-                user_agent=user_agent,
-                notes=notes
+                user_agent=user_agent or '',
             )
 
         return is_inside, distance, log_entry
-
-    @staticmethod
-    def get_geofence_info():
-        """Get current geofence settings"""
-        return GeofenceSettings.get_settings()
-
-    @staticmethod
-    def format_distance(meters: float) -> str:
-        """
-        Format distance in human-readable format
-
-        Args:
-            meters: Distance in meters
-
-        Returns:
-            Formatted string (e.g., "45m", "1.2km")
-        """
-        if meters < 1000:
-            return f"{meters:.0f}m"
-        else:
-            return f"{meters/1000:.1f}km"

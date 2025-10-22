@@ -1,4 +1,3 @@
-from _typeshed import GenericPath
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import path
@@ -128,8 +127,7 @@ class LocationCheckAdmin(admin.ModelAdmin):
         'result_display',
         'distance_display',
         'user_location',
-        'ip_address',
-        'notes',
+        'user_agent_short',
     ]
 
     list_filter = [
@@ -137,7 +135,7 @@ class LocationCheckAdmin(admin.ModelAdmin):
         'checked_at',
     ]
 
-    search_fields = ['ip_address', 'notes']
+    search_fields = ['user_agent']
 
     readonly_fields = [
         'user_latitude',
@@ -147,10 +145,8 @@ class LocationCheckAdmin(admin.ModelAdmin):
         'geofence_latitude',
         'geofence_longitude',
         'geofence_radius',
-        'ip_address',
         'user_agent',
         'checked_at',
-        'notes',
     ]
 
     date_hierarchy = 'checked_at'
@@ -191,3 +187,10 @@ class LocationCheckAdmin(admin.ModelAdmin):
             obj.user_latitude, obj.user_longitude
         )
     user_location.short_description = 'User Location'
+
+    def user_agent_short(self, obj):
+        """Show shortened user agent"""
+        if len(obj.user_agent) > 50:
+            return obj.user_agent[:50] + "..."
+        return obj.user_agent
+    user_agent_short.short_description = 'Browser'
