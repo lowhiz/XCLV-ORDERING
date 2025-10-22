@@ -29,7 +29,7 @@ class QRBatch(models.Model):
         status = "Active" if self.is_active else "Inactive"
         return f"Batch {self.batch_name} ({status})"
 
-    def save(self, *args **kwargs):
+    def save(self, *args, **kwargs):
         # Ensure only one batch is active at a time
         if self.is_active:
             QRBatch.objects.filter(is_active=True).update(is_active=False)
