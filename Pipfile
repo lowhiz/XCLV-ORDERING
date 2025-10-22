@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
+pillow = "*"
+qrcode = "*"
 
 [dev-packages]
 
