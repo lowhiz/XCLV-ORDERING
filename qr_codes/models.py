@@ -235,15 +235,3 @@ class ValidationAttempt(models.Model):
             else:
                 return f"{self.distance_from_club/1000:.1f}km"
         return "Unknown distance"
-
-class ValidList(models.Model):
-    unique_token = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return self.unique_token
-
-class InvalidList(models.Model):
-    unique_token = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return self.unique_token
