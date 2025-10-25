@@ -10,6 +10,12 @@ from .models import QRCode, QRBatch, ValidationAttempt
 from .services import QRValidationService
 from geolocation.services import GeolocationService
 
+# Ensure all error messages are ambiguous
+# For example, they do not disclose to the user that the batch is inactive
+# Instead, simply raise an error that the QR code is invalid
+
+# Only do this IF it's not logging under ValidationAttempt, but rather through
+# a render() mechanism
 
 def order_entry(request):
     """
@@ -155,6 +161,7 @@ def validate_location_ajax(request):
             request.session.pop('pending_qr_hash', None)
             request.session.pop('pending_qr_id', None)
 
+            # Return via a JSON response and redirect to the menu
             return JsonResponse({
                 'success': True,
                 'message': 'Location validated successfully',
