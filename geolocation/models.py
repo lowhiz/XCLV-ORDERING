@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 # Geofencing Constants
 LAT = 7.093504776789317
 LON = 125.61290047486922
-RADIUS_METERS = 50
+RADIUS_METERS = 20000
 
 # Create your models here.
 
