@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XCLV Menu - {{ table_display }}</title>
+</head>
+<body>
+    <div class="header">
+        <span>XCLV Club Davao</span>
+        <br>
+        <span>Table {{ table_id }}</span>
+    </div>
+
+    {% if categories %}
+        {% for category, items in categories.items %}
+        <div class="category">
+            <h2 class="category-title">{{ category }}</h2>
+
+            {% for item in items %}
+            <div class="menu-item">
+                <div class="item-info">
+                    <h4>{{ item.name }}</h4>
+                    <p>{{ item.description }}</p>
+                </div>
+                <div class="item-actions">
+                    <span class="item-price">₱{{ item.unit_price }}</span>
+                    <button class="order-btn" onclick="addToOrder('{{ item.id }}', '{{ item.name }}', {{ item.unit_price }})">
+                        Add to Order
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="category">
+            <div class="menu-item">
+                <p>No menu items available at the moment.</p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="cart" id="cart" style="display: none;" onclick="showCart()">
+        🛒 <span id="cart-count">0</span>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToOrder(itemId, itemName, itemPrice) {
+            cart.push({id: itemId, name: itemName, price: itemPrice, quantity: 1});
+            updateCartDisplay();
+            alert(`Added ${itemName} to your order!`);
+        }
+
+        function updateCartDisplay() {
+            const cartElement = document.getElementById('cart');
+            const cartCount = document.getElementById('cart-count');
+
+            if (cart.length > 0) {
+                cartElement.style.display = 'block';
+                cartCount.textContent = cart.length;
+            } else {
+                cartElement.style.display = 'none';
+            }
+        }
+
+        function showCart() {
+            if (cart.length === 0) return;
+
+            let cartItems = cart.map(item => `${item.name} - ₱${item.price}`).join('\n');
+            let total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
+
+            if (confirm(`Your Order:\n${cartItems}\n\nTotal: ₱${total.toFixed(2)}\n\nPlace this order?`)) {
+                placeOrder();
+            }
+        }
+
+        function placeOrder() {
+            fetch('/menu/order/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    items: cart,
+                    table_id: '{{ table_id }}'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Order placed successfully!');
+                    cart = [];
+                    updateCartDisplay();
+                } else {
+                    alert('Error placing order: ' + data.error);
+                }
+            })
+            .catch(error => {
+                alert('Network error. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
