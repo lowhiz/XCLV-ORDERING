@@ -35,6 +35,29 @@ def menu_list(request):
 
     return render(request, 'menu/menu_list.html', context)
 
+def order_review(request):
+    """
+    Display order review page where customers confirm their order
+    """
+
+    # Validates QR/auth session
+    validated_qr_id = request.session.get('validated_qr_id')
+    if not validated_qr_id:
+        messages.error(request, 'Invalid request. Try again by scanning your table\'s QR code.')
+        return redirect('/')
+
+    # Get table information from session
+    table_display = request.session.get('current_table_display', 'Unknown Table')
+    table_id = request.session.get('current_table_id', 'Unknown')
+
+    context = {
+        'table_display': table_display,
+        'table_id': table_id,
+        'validated_qr_id': validated_qr_id,
+    }
+
+    return render(request, 'menu/order_review.html', context)
+
 
 def create_order(request):
     """

@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Order - {{ table_display }}</title>
+</head>
+<body>
+    <div class="header">
+        <span>XCLV Club Davao</span>
+        <br>
+        <span>Table {{ table_id }}</span>
+    </div>
+
+    <h2>Review Order</h2>
+
+    <div class="review-container">
+        <h2>Order Details</h2>
+
+        <div id="review-items">
+            <!-- Order items will be loaded here via JavaScript -->
+        </div>
+
+        <div class="total-section">
+            <div class="grand-total" id="grand-total">
+                Total: ₱0.00
+            </div>
+        </div>
+
+        <div class="button-container">
+            <a href="/menu/" class="btn btn-back">← Back to Menu</a>
+            <button onclick="confirmOrder()" class="btn btn-confirm" id="confirm-btn">Confirm Order</button>
+        </div>
+    </div>
+
+    <script src="{% static 'menu/js/order_review.js' %}"></script>
+</body>
+</html>
