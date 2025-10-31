@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.conf import settings
 from .models import QRCode, QRBatch
+from geolocation.models import LAT, LON, RADIUS_METERS # Get geofencing constants from geolocation app
 from geolocation.services import GeolocationService  # custom geolocation service
 import json
 
@@ -27,17 +28,20 @@ def validation(request):
 
         # Case 2: Batch is inactive
         if not qr_code.batch.batch_status:
-            return render(request, 'error.html', {
-                'message': 'This QR code belongs to an inactive batch.'
+            return render(request, 'qr_codes/error.html', {
+                'error_message': 'Invalid QR code.'
             })
 
         # Save QR temporarily in session for next step
         request.session['pending_qr_token'] = token
+        request.session['pending_qr_id'] = qr_code.id
 
         # Step 3: Ask for geolocation (client-side JS will call validate_location_ajax)
         # @luigi-ichi, implement your geo-location here
-        return render(request, 'qr_codes/validate_location.html', {
-            'qr_token': token
+        # >> Geolocation now implemented; template now points to its app template
+        return render(request, 'geolocation/validate_location.html', {
+            'qr_hash': token, # Gets from token declaration (line 18)
+            'qr_code': qr_code   # Pass the qr_code object
         })
 
     except QRCode.DoesNotExist:
@@ -54,15 +58,22 @@ def validate_location_ajax(request):
     - Returns JSON response (redirects to menu if successful).
     """
     try:
-        # Parse JSON request body
         data = json.loads(request.body)
-        token = data.get('qr_token')
-        lat = data.get('latitude')
-        lon = data.get('longitude')
+
+        # Try multiple possible field names
+        token = data.get('qr_token') or data.get('qr_hash') or data.get('qr')
+        lat = data.get('latitude') or data.get('lat')
+        lon = data.get('longitude') or data.get('lon') or data.get('lng')
+
+        print(f"QR Hash: '{token}', Lat: '{lat}', Lon: '{lon}'")
+
 
         # Validate fields
         if not token or lat is None or lon is None:
-            return JsonResponse({'success': False, 'error': 'Missing required fields.'}, status=400)
+            return JsonResponse({
+                'success': False,
+                'error': 'Missing required fields.'
+            }, status=400)
 
         # Convert to float safely
         try:
@@ -72,17 +83,18 @@ def validate_location_ajax(request):
             return JsonResponse({'success': False, 'error': 'Invalid coordinate format.'}, status=400)
 
         # Retrieve QR again
-        qr_code = QRCode.objects.select_related('batch').get(unique_token=token)
+        qr_code = QRCode.objects.select_related('batch').get(qr_hash=token)
 
         # Ensure batch is still active
         if not qr_code.batch.batch_status:
             return JsonResponse({'success': False, 'error': 'Inactive batch.'}, status=403)
 
         # Check distance using your custom service
-        distance = GeolocationService.check_distance(lat, lon)
+        # Retrieve geofencing constants from geolocation model
+        distance = GeolocationService.calculate_distance(lat, lon, LAT, LON)
 
-        # Allowed radius defined in Django settings
-        if distance <= getattr(settings, 'ALLOWED_RADIUS_METERS', 100):
+        # Use the constant radius from the geofencing constants
+        if distance <= RADIUS_METERS:
             # Mark as validated in session
             request.session['validated_qr'] = token
             request.session['validation_time'] = timezone.now().isoformat()
@@ -90,7 +102,7 @@ def validate_location_ajax(request):
             return JsonResponse({
                 'success': True,
                 'message': 'Location validated successfully.',
-                'redirect_url': reverse('menu'),
+                'redirect_url': '/menu/',
                 'distance': f"{distance:.1f} meters"
             })
         else:
