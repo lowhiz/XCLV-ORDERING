@@ -57,7 +57,7 @@ def validation(request):
     return render(request, 'geolocation/validate_location.html', {
         'qr_hash': token, # Gets from token declaration (line 18)
         'qr_code': qr_code   # Pass the qr_code object
-
+    })
 
 @csrf_exempt
 def validate_location_ajax(request):
@@ -108,7 +108,7 @@ def validate_location_ajax(request):
             # Mark as validated in session
             request.session['validated_qr'] = token
             request.session['validation_time'] = timezone.now().isoformat()
-           
+
             # Check if the pattern on the token (upon scanning) matches the one in the database
             token_pattern = re.compile(r"xclv-([a-zA-Z]+)-(\d+)-")
             match = token_pattern.search(qr_code.unique_token)
@@ -118,7 +118,7 @@ def validate_location_ajax(request):
                   'success': False,
                   'error': 'Invalid QR code.'
               })
-          
+
             # If successful, fetch table details
             # Extract category and number (e.g. "VIP" and "3") from the QR token
             category = match.group(1).upper()   # e.g. "VIP"
@@ -131,7 +131,7 @@ def validate_location_ajax(request):
                 defaults={
                     'qrcode': qr_code,
                     'total_payment': 0,
-                    'table_status': True,  
+                    'table_status': True,
                 }
             )
 
@@ -143,7 +143,7 @@ def validate_location_ajax(request):
             return JsonResponse({
                 'success': True,
                 'message': 'Location validated successfully.',
-                'redirect_url': 'f'/menu/view/?table_id={table.id}'',
+                'redirect_url': f'/menu/view/?table_id={table.id}',
                 'distance': f"{distance:.1f} meters"
             })
         else:
