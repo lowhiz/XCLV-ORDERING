@@ -4,46 +4,76 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.conf import settings
-from .models import QRCode, QRBatch
+from .models import QRCode
+from tables.models import Table
 from geolocation.services import GeolocationService  # custom geolocation service
 import json
+import re
 
+
+from django.shortcuts import render, get_object_or_404
+from qr_codes.models import QRCode
+from tables.models import Table
 
 def validation(request):
     """
     STEP 1: Customer scans QR code.
     - Check if QR exists and belongs to an active batch.
-    - If valid, render a page asking for geolocation permission.
+    - If valid, retrieve or create its associated table.
+    - Then render the menu page linked to that table.
     """
+
     token = request.GET.get('qr')
 
-    # Case 1: Missing token in URL
+    # Case 1: Missing QR token
     if not token:
-        return render(request, {'message': 'No QR code provided.'})
-
-    try:
-        # Retrieve QR code and its batch relationship in one query
-        qr_code = QRCode.objects.select_related('batch').get(qr_hash=token)
-
-        # Case 2: Batch is inactive
-        if not qr_code.batch.batch_status:
-            return render(request, 'error.html', {
-                'message': 'This QR code belongs to an inactive batch.'
-            })
-
-        # Save QR temporarily in session for next step
-        request.session['pending_qr_token'] = token
-
-        # Step 3: Ask for geolocation (client-side JS will call validate_location_ajax)
-        # @luigi-ichi, implement your geo-location here
-        return render(request, 'qr_codes/validate_location.html', {
-            'qr_token': token
+        return render(request, 'qr_codes/error.html', {
+            'message': 'No QR code provided.'
         })
 
+    try:
+        # Retrieve QR code and its batch in one query
+        qr_code = QRCode.objects.select_related('batch').get(qr_hash=token)
     except QRCode.DoesNotExist:
-        # Case 3: QR code not found
-        return render(request, 'error.html', {'message': 'Invalid QR code.'})
+        # Case 2: QR code not found
+        return render(request, 'qr_codes/error.html', {
+            'message': 'Invalid or unknown QR code.'
+        })
 
+    # Case 3: Batch is inactive
+    if not qr_code.batch.batch_status:
+        return render(request, 'qr_codes/error.html', {
+            'message': 'This QR code belongs to an inactive batch.'
+        })
+
+    # Extract category and number (e.g. "VIP" and "3") from the QR token
+    token_pattern = re.compile(r"xclv-([a-zA-Z]+)-(\d+)-")
+    match = token_pattern.search(qr_code.unique_token)
+
+    if not match:
+        return render(request, 'qr_codes/error.html', {
+            'message': 'QR code format is invalid.'
+        })
+
+    category = match.group(1).upper()   # e.g. "VIP"
+    number = match.group(2)             # e.g. "3"
+    description = f"{category} {number}"  # e.g. "VIP 3"
+
+    # Find or create the corresponding table
+    table, created = Table.objects.get_or_create(
+        description=description,
+        defaults={
+            'qrcode': qr_code,
+            'total_payment': 0,
+            'table_status': True,  
+        }
+    )
+
+    # Store active table for later (e.g., order submission)
+    request.session['active_table_id'] = str(table.id)
+
+    # Redirect to menu view instead of rendering directly
+    return redirect(f'/menu/view/?table_id={table.id}')
 
 @csrf_exempt
 def validate_location_ajax(request):
