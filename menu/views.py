@@ -2,55 +2,43 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import Item
+from django.shortcuts import render, get_object_or_404
+from tables.models import Table
+from .models import Item
 
-def menu_list(request):
+def view_menu(request):
     """
-    Display menu items - only accessible after QR validation
+    Unified view for displaying menu items.
+    - Customer: shows menu based on the table linked to QR.
+    - Admin: shows full menu view for management.
     """
 
-    # Check if user has a validated QR session
-    validated_qr_id = request.session.get('validated_qr_id')
-    if not validated_qr_id:
-        messages.error(request, 'Please scan a QR code to access the menu.')
-        return redirect('/')
+    # Determine if request comes from a customer or admin
+    table_id = request.GET.get('table_id')
+    is_admin = request.GET.get('admin') == 'true'  # /menu/view?admin=true
 
-    # Get table information from session
-    table_display = request.session.get('current_table_display', 'Unknown Table')
-    table_id = request.session.get('current_table_id', 'Unknown')
-
-    # Get menu items
+    # Fetch all menu items and group them by category
     items = Item.objects.all().order_by('category', 'name')
-
-    # Group by category
     categories = {}
     for item in items:
         categories.setdefault(item.category, []).append(item)
 
-    context = {
-        'categories': categories,
-        'table_display': table_display,
-        'table_id': table_id,
-        'validated_qr_id': validated_qr_id,
-    }
+    # Base context shared between admin and customer
+    context = {'categories': categories}
 
+    if table_id:  # Customer view (linked to a table)
+        table = get_object_or_404(Table, id=table_id)
+        context.update({
+            'table_id': table.id,
+            'table_display': table.description,
+        })
+        return render(request, 'menu/menu_list.html', context)
+
+    elif is_admin:  # Admin view (dashboard)
+        return render(request, 'menu/admin.html', context)
+
+    # Fallback: customer-style view without a specific table
     return render(request, 'menu/menu_list.html', context)
-
-def menu_view(request):
-    """
-    Display all menu items for the admin view (accessible from admin dashboard).
-
-    This view is separate from the customer-facing menu page. 
-    It is intended for administrators to see all menu items, 
-    grouped by category for better readability.
-    """
-    token = request.GET.get('token')
-    items = Item.objects.all().order_by('category', 'name')
-
-    categories = {}
-    for item in items:
-        categories.setdefault(item.category, []).append(item)
-
-    return render(request, 'menu/admin.html', {'categories': categories, 'token': token})
 
 
 def create_order(request):
