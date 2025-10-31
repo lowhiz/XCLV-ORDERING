@@ -18,6 +18,7 @@
 <body>
     <div class="container">
         <h1>Welcome to XCLV!</h1>
+        <h1>Geolocation</h1>
 
         {% if qr_code %}
         <p>You've scanned the QR code for:</p>
@@ -41,7 +42,7 @@
     </div>
 
     <script>
-        const qrHash = '{{ qr_hash }}';
+        const qr_hash = '{{ qr_hash }}';
 
         function validateLocation() {
             document.getElementById('validateLocationBtn').disabled = true;
@@ -87,7 +88,7 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    qr_hash: qrHash,
+                    qr_token: qr_hash,
                     latitude: latitude,
                     longitude: longitude
                 })
