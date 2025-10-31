@@ -1,9 +1,9 @@
 from django.urls import path
 from . import views
 
-app_name = 'menu'
 
 urlpatterns = [
-    path('menu/', views.menu_list, name='menu_list'),
-    path('menu/order/', views.create_order, name='create_order'),
+    path('order/', views.create_order, name='create_order'),
+    path('view/', views.view_menu, name='view_menu'),
+    path('review/', views.order_review, name='order_review'),
 ]
