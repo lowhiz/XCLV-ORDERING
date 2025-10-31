@@ -1,3 +1,6 @@
+# QR code directory
+media/
+
 # Python
 *.py[cod]
 *$py.class
