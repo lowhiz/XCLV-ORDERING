@@ -35,6 +35,23 @@ def menu_list(request):
 
     return render(request, 'menu/menu_list.html', context)
 
+def menu_view(request):
+    """
+    Display all menu items for the admin view (accessible from admin dashboard).
+
+    This view is separate from the customer-facing menu page. 
+    It is intended for administrators to see all menu items, 
+    grouped by category for better readability.
+    """
+    token = request.GET.get('token')
+    items = Item.objects.all().order_by('category', 'name')
+
+    categories = {}
+    for item in items:
+        categories.setdefault(item.category, []).append(item)
+
+    return render(request, 'menu/admin.html', {'categories': categories, 'token': token})
+
 
 def create_order(request):
     """
