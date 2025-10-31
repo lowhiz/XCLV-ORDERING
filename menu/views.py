@@ -1,10 +1,15 @@
+import json
+from decimal import Decimal
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import Item
 from django.shortcuts import render, get_object_or_404
-from tables.models import Table
+from tables.models import Table, TableOrder
+from orders.models import Order
 from .models import Item
+from django.views.decorators.csrf import csrf_exempt
+
 
 def view_menu(request):
     """
@@ -26,11 +31,20 @@ def view_menu(request):
     # Base context shared between admin and customer
     context = {'categories': categories}
 
-    if table_id:  # Customer view (linked to a table)
+    if table_id:
         table = get_object_or_404(Table, id=table_id)
+        qr_hash = table.qrcode.qr_hash if table.qrcode else None
+
+        # Use session keys that match order_review
+        request.session['active_table_id'] = table.id
+        request.session['active_table_display'] = table.description
+        request.session['active_qr_hash'] = getattr(table.qrcode, 'qr_hash', None)
+
+
         context.update({
             'table_id': table.id,
             'table_display': table.description,
+            'qr_hash': qr_hash,
         })
         return render(request, 'menu/menu_list.html', context)
 
@@ -40,24 +54,116 @@ def view_menu(request):
     # Fallback: customer-style view without a specific table
     return render(request, 'menu/menu_list.html', context)
 
+def order_review(request):
+    """
+    Display order review page where customers confirm their order
+    """
+   
+    # Validates QR/auth session
+    validated_qr_id = request.session.get('active_qr_hash')
+    if not validated_qr_id:
+        messages.error(request, 'Invalid request. Try again by scanning your table\'s QR code.')
+        return redirect('/')
 
+    # Get table information from session
+    table_display = request.session.get('active_table_display', 'Unknown Table')
+    table_id = request.session.get('active_table_id', 'Unknown')
+    context = {
+        'table_display': table_display,
+        'table_id': table_id,
+        'validated_qr_id': validated_qr_id,
+    }
+
+    return render(request, 'menu/order_review.html', context)
+
+@csrf_exempt
 def create_order(request):
     """
-    Handle order creation from menu
+    Handle order creation and store into TableOrder/Table/Order models.
+    This function receives POST requests containing order items and the table ID,
+    validates the QR session, creates Order and TableOrder entries, and updates
+    the total payment of the table.
     """
 
-    # Check QR validation
-    validated_qr_id = request.session.get('validated_qr_id')
+    # Validate QR/auth session from the current session
+    validated_qr_id = request.session.get('active_qr_hash')
+    print("Validated QR ID from session:", validated_qr_id)
     if not validated_qr_id:
         return JsonResponse({'error': 'No valid QR session'}, status=403)
 
-    if request.method == 'POST':
-        # Handle order creation logic here
-        # You'll integrate with your orders app
+    # Ensure the request method is POST
+    if request.method != 'POST':
+        print("Invalid request method:", request.method)
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-        # After successful order, optionally clear the session or keep it for more orders
-        # request.session.pop('validated_qr_id', None)
+    # Parse JSON payload
+    try:
+        data = json.loads(request.body)
+        items = data.get("items", [])  # Extract order items
+        table_id = data.get("table_id")  # Extract table ID
+    except json.JSONDecodeError as e:
+        print("JSON decode error:", e)
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-        return JsonResponse({'success': True, 'message': 'Order placed successfully!'})
+    # Validate table_id and items
+    if not table_id:
+        print("No table_id provided")
+        return JsonResponse({'error': 'Table ID is required'}, status=400)
 
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    if not items or not isinstance(items, list):
+        print("No items or invalid format")
+        return JsonResponse({'error': 'No items in order or invalid format'}, status=400)
+
+    # Fetch the Table object from the database
+    try:
+        table = Table.objects.get(id=table_id)
+        print("Fetched Table:", table)
+    except Table.DoesNotExist:
+        print("Table not found for ID:", table_id)
+        return JsonResponse({'error': 'Table not found'}, status=404)
+
+    # Initialize total payment accumulator as Decimal
+    table_total = Decimal('0.00')
+
+    # Process each item
+    for i, item_data in enumerate(items, start=1):
+        try:
+            item_id = item_data.get("id")
+            quantity = int(item_data.get("quantity", 0))
+            price = Decimal(str(item_data.get("price", 0)))
+            print(f"Item #{i} - ID: {item_id}, Quantity: {quantity}, Price: {price}")
+
+            if quantity <= 0 or price <= 0:
+                print(f"Skipping invalid item #{i}")
+                continue
+
+            # Fetch menu item
+            menu_item = Item.objects.get(id=item_id)
+
+            # Create Order
+            order = Order.objects.create(
+                item=menu_item,
+                quantity=quantity,
+                total_item_price=price * quantity
+            )
+
+            # Link to TableOrder
+            table_order = TableOrder.objects.create(
+                table=table,
+                order=order,
+                order_status="pending"
+            )
+            print("Created TableOrder:", table_order)
+
+            # Add to table total
+            table_total += price * quantity
+
+        except Exception as e:
+            print(f"Error processing item #{i}:", e)
+            return JsonResponse({'error': f'Invalid item data: {e}'}, status=400)
+
+    # Update table total_payment safely
+    table.total_payment += table_total
+    table.save()
+
+    return JsonResponse({'success': True, 'message': 'Order placed successfully!'})

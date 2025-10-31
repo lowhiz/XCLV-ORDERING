@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Order - {{ table_display }}</title>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+    <div class="header">
+        <span>XCLV Club Davao</span><br>
+        <span>{{ table_display }}</span>
+    </div>
+
+    <h2>Review Order</h2>
+
+    <div class="review-container">
+        <h2>Order Details</h2>
+
+        <div id="review-items">
+            <!-- Order items will be loaded here via JavaScript -->
+        </div>
+
+        <div class="total-section">
+            <div class="grand-total" id="grand-total">
+                Total: ₱0.00
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div id="menu-data"
+                 data-table-id="{{ table_id }}"
+                 data-table-display="{{ table_display }}"
+                 data-qr-hash="{{ validated_qr_id }}">
+            </div>
+
+            <a href="{% url 'view_menu' %}?table_id={{ table_id }}" class="btn btn-back">← Back to Menu</a>
+            <button onclick="confirmOrder()" class="btn btn-confirm" id="confirm-btn">Confirm Order</button>
+        </div>
+    </div>
+
+    <script>
+        const menuData = document.getElementById("menu-data");
+        console.log("DEBUG menuData dataset:", menuData.dataset);
+    </script>
+    <script src="{% static 'js/order_review.js' %}"></script>
+</body>
+</html>

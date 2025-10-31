@@ -69,10 +69,13 @@ def validation(request):
         }
     )
 
-    # Store active table for later (e.g., order submission)
-    request.session['active_table_id'] = str(table.id)
+    # Store QR and table info in session
+    request.session['active_table_id'] = table.id
+    request.session['active_table_display'] = table.description
+    request.session['active_qr_hash'] = qr_code.qr_hash
 
     # Redirect to menu view instead of rendering directly
+    # Geolocation call here
     return redirect(f'/menu/view/?table_id={table.id}')
 
 @csrf_exempt
