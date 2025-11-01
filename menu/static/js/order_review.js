@@ -84,7 +84,7 @@ function confirmOrder() {
   confirmBtn.textContent = "Processing...";
 
   const menuData = document.getElementById("menu-data");
-  const tableId = menuData.dataset.tableId; 
+  const tableId = menuData.dataset.tableId;
   fetch("/orders/order/", {
       method: "POST",
       headers: {
@@ -93,32 +93,28 @@ function confirmOrder() {
       },
       body: JSON.stringify({
           items: orderData.items,
-          table_id: tableId, 
+          table_id: tableId,
       }),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Order placed successfully!");
+        // Instead of alert, redirect to success page
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+        }
 
-        // Clear order data
-        sessionStorage.removeItem("orderData");
-
-        // Redirect back to menu
-        window.location.href = `/menu/view/?table_id=${tableId}`;
+        // Reset cart and quantities
+        const oldCart = Object.keys(cart);
+        cart = {};
+        oldCart.forEach((itemId) => {
+          updateMenuQuantity(itemId);
+        });
+        updateOrderSummary();
+        updateCartDisplay();
       } else {
         alert("Error placing order: " + data.error);
-
-        // Re-enable button
-        confirmBtn.disabled = false;
-        confirmBtn.textContent = "Confirm Order";
       }
     })
-    .catch((error) => {
-      alert("Network error. Please try again.");
 
-      // Re-enable button
-      confirmBtn.disabled = false;
-      confirmBtn.textContent = "Confirm Order";
-    });
 }
