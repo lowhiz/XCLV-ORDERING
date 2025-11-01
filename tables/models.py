@@ -15,9 +15,8 @@ class Table(models.Model):
 class TableOrder(models.Model):
     table_order_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     table = models.ForeignKey(Table, on_delete=models.CASCADE, related_name='orders')
-    order = models.ForeignKey('orders.Order', on_delete=models.CASCADE, related_name='table_orders')
     order_time = models.DateTimeField(auto_now_add=True)
     order_status = models.CharField(max_length=255, default='pending')
 
     def __str__(self):
-        return str(self.table_order_id)
+        return f"TableOrder {self.table_order_id} for Table {self.table}"

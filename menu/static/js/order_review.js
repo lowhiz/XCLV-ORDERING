@@ -85,7 +85,7 @@ function confirmOrder() {
 
   const menuData = document.getElementById("menu-data");
   const tableId = menuData.dataset.tableId; 
-  fetch("/menu/order/", {
+  fetch("/orders/order/", {
       method: "POST",
       headers: {
           "Content-Type": "application/json",

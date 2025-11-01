@@ -80,32 +80,36 @@ def order_review(request):
 def create_order(request):
     """
     Handle order creation and store into TableOrder/Table/Order models.
-    This function receives POST requests containing order items and the table ID,
-    validates the QR session, creates Order and TableOrder entries, and updates
-    the total payment of the table.
+    Debug prints enabled to show data being processed.
     """
+
+    print("==== create_order called ====")
 
     # Validate QR/auth session from the current session
     validated_qr_id = request.session.get('active_qr_hash')
     print("Validated QR ID from session:", validated_qr_id)
     if not validated_qr_id:
+        print("No valid QR session")
         return JsonResponse({'error': 'No valid QR session'}, status=403)
 
     # Ensure the request method is POST
+    print("Request method:", request.method)
     if request.method != 'POST':
-        print("Invalid request method:", request.method)
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
     # Parse JSON payload
     try:
         data = json.loads(request.body)
-        items = data.get("items", [])  # Extract order items
-        table_id = data.get("table_id")  # Extract table ID
+        items = data.get("items", [])
+        table_id = data.get("table_id")
+        print("Parsed JSON data:", data)
     except json.JSONDecodeError as e:
         print("JSON decode error:", e)
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
     # Validate table_id and items
+    print("Table ID:", table_id)
+    print("Items received:", items)
     if not table_id:
         print("No table_id provided")
         return JsonResponse({'error': 'Table ID is required'}, status=400)
@@ -114,55 +118,45 @@ def create_order(request):
         print("No items or invalid format")
         return JsonResponse({'error': 'No items in order or invalid format'}, status=400)
 
-    # Fetch the Table object from the database
+    # Fetch the Table object
     try:
         table = Table.objects.get(id=table_id)
-        print("Fetched Table:", table)
+        print("Fetched Table object:", table)
     except Table.DoesNotExist:
         print("Table not found for ID:", table_id)
         return JsonResponse({'error': 'Table not found'}, status=404)
 
-    # Initialize total payment accumulator as Decimal
+    # Initialize total
     table_total = Decimal('0.00')
 
-    # Process each item
+    # Create one TableOrder for this request
+    table_order = TableOrder.objects.create(
+        table=table,
+        order_status="pending"
+    )
+    print("Created TableOrder (cart):", table_order)
+
+    table_total = Decimal('0.00')
+
+    # Create Orders linked to this TableOrder
     for i, item_data in enumerate(items, start=1):
-        try:
-            item_id = item_data.get("id")
-            quantity = int(item_data.get("quantity", 0))
-            price = Decimal(str(item_data.get("price", 0)))
-            print(f"Item #{i} - ID: {item_id}, Quantity: {quantity}, Price: {price}")
+        item_id = item_data.get("id")
+        quantity = int(item_data.get("quantity", 0))
+        price = Decimal(str(item_data.get("price", 0)))
 
-            if quantity <= 0 or price <= 0:
-                print(f"Skipping invalid item #{i}")
-                continue
+        menu_item = Item.objects.get(id=item_id)
 
-            # Fetch menu item
-            menu_item = Item.objects.get(id=item_id)
+        order = Order.objects.create(
+            table_order=table_order,  # link to single TableOrder
+            item=menu_item,
+            quantity=quantity,
+            total_item_price=price * quantity
+        )
+        print(f"Created Order: {order} ({quantity} x {menu_item.name})")
 
-            # Create Order
-            order = Order.objects.create(
-                item=menu_item,
-                quantity=quantity,
-                total_item_price=price * quantity
-            )
+        table_total += price * quantity
 
-            # Link to TableOrder
-            table_order = TableOrder.objects.create(
-                table=table,
-                order=order,
-                order_status="pending"
-            )
-            print("Created TableOrder:", table_order)
-
-            # Add to table total
-            table_total += price * quantity
-
-        except Exception as e:
-            print(f"Error processing item #{i}:", e)
-            return JsonResponse({'error': f'Invalid item data: {e}'}, status=400)
-
-    # Update table total_payment safely
+    # Update Table total_payment
     table.total_payment += table_total
     table.save()
 
