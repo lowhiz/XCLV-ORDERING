@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | QR & Menu Control</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        h2 {
+            color: #333;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+        }
+        .btn-toggle {
+            background-color: #007bff;
+        }
+        .btn-close {
+            background-color: #dc3545;
+        }
+        .status-box {
+            margin-top: 25px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>QR Batch and Menu Management</h2>
+
+    <div class="button-group">
+        <a href="{% url 'toggle_batch' %}" class="btn btn-toggle">🔁 Toggle QR Batch</a>
+        <a href="{% url 'close_menu' %}" class="btn btn-close">🚫 Close Menu</a>
+    </div>
+</body>
+</html>

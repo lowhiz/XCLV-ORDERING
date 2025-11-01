@@ -2,6 +2,7 @@ from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from .models import QRBatch, QRCode
 from .services import QRBatchService
+from .views import toggle_batch
 
 @receiver(post_migrate)
 def run_after_migrate(sender, **kwargs):
@@ -22,4 +23,4 @@ def run_after_migrate(sender, **kwargs):
 
     if not QRCode.objects.exists():
         QRBatchService.generate_all_qr_codes()
-        QRBatchService.toggle_batch()
+        toggle_batch()

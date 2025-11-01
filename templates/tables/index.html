@@ -17,7 +17,7 @@
     <div>
         <a href="{% url 'pending_table_orders' %}?admin=true">Pending Orders</a>
         <a href="">QR Management</a>
-        <a href="">Table Overview</a>
+        <a href="{% url 'table_overview' %}">Table Overview</a>
         <a href="{% url 'view_menu' %}?admin=true">View Menu</a>
     </div>
 
@@ -37,15 +37,24 @@
             <tbody>
                 {% for order in pending_orders %}
                 <tr>
-                    <td>{{ order.description }}</td>
+                    <!-- Table Description -->
+                    <td>{{ order.description }} <br>
+                    <!-- Order Time -->
+                    {{ order.order_time|date:"Y-m-d H:i:s" }}</td>
+
+                    <!-- Order Items -->
                     <td>
-                        <ul>
+                        <ul class="mb-0">
                             {% for item in order.items %}
-                            <li>{{ item.name }} ({{ item.quantity }})</li>
+                            <li>{{ item.name }} (x{{ item.quantity }})</li>
                             {% endfor %}
                         </ul>
                     </td>
-                    
+                    <!-- Actions -->
+                    <td>
+                        <a href="{% url 'delete_order' order.table_order_id %}" class="btn btn-sm btn-primary">Delete</a>
+                        <a href="{% url 'complete_order' order.table_order_id %}" class="btn btn-sm btn-primary">Complete</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -55,6 +64,5 @@
         {% endif %}
     </div>
 </div>
-
 </body>
 </html>

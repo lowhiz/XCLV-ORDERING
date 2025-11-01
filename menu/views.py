@@ -9,7 +9,8 @@ from tables.models import Table, TableOrder
 from orders.models import Order
 from .models import Item
 from django.views.decorators.csrf import csrf_exempt
-
+# Global toggle variable
+MENU_CLOSED = False
 
 def view_menu(request):
     """
@@ -22,6 +23,11 @@ def view_menu(request):
     table_id = request.GET.get('table_id')
     is_admin = request.GET.get('admin') == 'true'  # /menu/view?admin=true
 
+    
+    # Check if menu is closed
+    if MENU_CLOSED and not request.GET.get('admin'):
+        return render(request, 'menu/menu_closed.html')
+    
     # Fetch all menu items and group them by category
     items = Item.objects.all().order_by('category', 'name')
     categories = {}
@@ -73,91 +79,19 @@ def order_review(request):
         'table_id': table_id,
         'validated_qr_id': validated_qr_id,
     }
-
     return render(request, 'menu/order_review.html', context)
 
-@csrf_exempt
-def create_order(request):
+def close_menu(request):
     """
-    Handle order creation and store into TableOrder/Table/Order models.
-    Debug prints enabled to show data being processed.
+    Prevents customers from accessing the menu.
+    Admin can toggle this state.
     """
+    global MENU_CLOSED
+    MENU_CLOSED = True
+    messages.success(request, "Menu has been closed for customers.")
+    return redirect('qr_management')
 
-    print("==== create_order called ====")
-
-    # Validate QR/auth session from the current session
-    validated_qr_id = request.session.get('active_qr_hash')
-    print("Validated QR ID from session:", validated_qr_id)
-    if not validated_qr_id:
-        print("No valid QR session")
-        return JsonResponse({'error': 'No valid QR session'}, status=403)
-
-    # Ensure the request method is POST
-    print("Request method:", request.method)
-    if request.method != 'POST':
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-    # Parse JSON payload
-    try:
-        data = json.loads(request.body)
-        items = data.get("items", [])
-        table_id = data.get("table_id")
-        print("Parsed JSON data:", data)
-    except json.JSONDecodeError as e:
-        print("JSON decode error:", e)
-        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-
-    # Validate table_id and items
-    print("Table ID:", table_id)
-    print("Items received:", items)
-    if not table_id:
-        print("No table_id provided")
-        return JsonResponse({'error': 'Table ID is required'}, status=400)
-
-    if not items or not isinstance(items, list):
-        print("No items or invalid format")
-        return JsonResponse({'error': 'No items in order or invalid format'}, status=400)
-
-    # Fetch the Table object
-    try:
-        table = Table.objects.get(id=table_id)
-        print("Fetched Table object:", table)
-    except Table.DoesNotExist:
-        print("Table not found for ID:", table_id)
-        return JsonResponse({'error': 'Table not found'}, status=404)
-
-    # Initialize total
-    table_total = Decimal('0.00')
-
-    # Create one TableOrder for this request
-    table_order = TableOrder.objects.create(
-        table=table,
-        order_status="pending"
-    )
-    print("Created TableOrder (cart):", table_order)
-
-    table_total = Decimal('0.00')
-
-    # Create Orders linked to this TableOrder
-    for i, item_data in enumerate(items, start=1):
-        item_id = item_data.get("id")
-        quantity = int(item_data.get("quantity", 0))
-        price = Decimal(str(item_data.get("price", 0)))
-
-        menu_item = Item.objects.get(id=item_id)
-
-        order = Order.objects.create(
-            table_order=table_order,  # link to single TableOrder
-            item=menu_item,
-            quantity=quantity,
-            total_item_price=price * quantity
-        )
-        print(f"Created Order: {order} ({quantity} x {menu_item.name})")
-
-        table_total += price * quantity
-
-    # Update Table total_payment
-    table.total_payment += table_total
-    table.save()
-
-    return JsonResponse({'success': True, 'message': 'Order placed successfully!'})
+def open_menu(is_open: bool):
+    """Helper to toggle global menu availability."""
+    global MENU_CLOSED
+    MENU_CLOSED = not is_open
