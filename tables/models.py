@@ -6,7 +6,7 @@ class Table(models.Model):
     qrcode = models.ForeignKey('qr_codes.QRCode', on_delete=models.CASCADE, related_name='tables')
     description = models.CharField(max_length=255)
     total_payment = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    table_status = models.BooleanField(default=True)
+    table_status = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Table {self.description or self.table_id_number}"

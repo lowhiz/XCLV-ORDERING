@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.files import File
 from .models import QRBatch, QRCode
 from .utils import generate_qr_code_image
+from menu.views import open_menu
 
 #This class handles how QR Code batches works
 class QRBatchService:
@@ -103,53 +104,3 @@ class QRBatchService:
                 qr_hash=qr_hash,
                 image=File(f, name=f"{batch.batch_name.replace(' ', '')}/{file_name}")
             )
-
-    @staticmethod
-    def toggle_batch():
-        """
-        Toggle the active QR batch.
-
-        Rules:
-        - Only one batch can be active at a time (batch_status=True).
-        - If no batch is currently active, activate the first batch.
-        - If a batch is active, deactivate it and activate the next batch in order.
-        - The toggle is circular: after the last batch, it wraps back to the first.
-
-        Steps:
-        1. Get all batches ordered by ID.
-        2. Find the currently active batch.
-        3. If no batch is active, activate the first one.
-        4. Otherwise, find the index of the current batch.
-        5. Determine the next batch using modulo for circular rotation.
-        6. Deactivate current batch and activate the next batch.
-        """
-        
-        batches = list(QRBatch.objects.all().order_by('id'))
-        if not batches:
-            return
-
-        # Find currently active batch
-        current_batch = QRBatch.objects.filter(batch_status=True).first()
-
-        if not current_batch:
-            # If no batch is active yet, activate the first one
-            first_batch = batches[0]
-            first_batch.batch_status = True
-            first_batch.save()
-            return
-
-        # Find index of the current active batch
-        current_index = next((i for i, b in enumerate(batches) if b.id == current_batch.id), None)
-        if current_index is None:
-            return
-
-        # Determine next batch (circular toggle)
-        next_index = (current_index + 1) % len(batches)
-        next_batch = batches[next_index]
-
-        # Deactivate current and activate next
-        current_batch.batch_status = False
-        current_batch.save()
-
-        next_batch.batch_status = True
-        next_batch.save()

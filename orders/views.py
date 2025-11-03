@@ -9,8 +9,8 @@ from .models import Order
 from menu.models import Item
 from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
-# here dapat si create_order
+# This section creates the customer's order.
+# It is also used when the customer requests to modify their existing order.
 @csrf_exempt
 def create_order(request):
     """
@@ -180,3 +180,70 @@ def past_order_details(request, order_id):
         'order_total': order_total,
     }
     return render(request, 'orders/past_order_details.html', context)
+    return JsonResponse({'success': True, 'message': 'Order placed successfully!'})
+
+# This section deletes the customer's order when they request the admin to remove it.
+def delete_order(response, table_order_id):
+    # Fetch the specific TableOrder
+    table_order = get_object_or_404(TableOrder, id=table_order_id)
+
+    # Get the table details
+    table = table_order.table
+
+    # Get the orders of TableOrder and delete
+    orders = table_order.orders.all()
+
+    # Delete and deduct order from the table total payment
+    total_deduction = 0
+    for order in orders:
+        total_deduction += order.total_item_price
+        order.delete()
+
+    # Update table total payment
+    if table.total_payment is not None:
+        table.total_payment -= total_deduction
+        if table.total_payment < 0:
+            table.total_payment = 0
+        table.save()
+
+    # Delete the Table order
+    table_order.delete()
+
+    return redirect("pending_table_orders")
+
+# This section sets the status of the TableOrder
+# after the admin reviews it and finds no issues with the customer's order.
+def complete_order(response, table_order_id):
+    # Fetch the specific TableOrder
+    table_order = get_object_or_404(TableOrder, id=table_order_id)
+
+    # Update the status to complete
+    table_order.order_status = "Completed"
+    table_order.save
+
+    return redirect("pending_table_orders")
+
+# Archive all TableOrders associated with the table.
+# This ensures that previous orders are hidden when a new customer occupies the table.
+# Admins are advised to archive the table once a new customer is seated,
+# so the new customer won't see the previous customer's orders.
+def archive_order(response, table_order_id):
+    # Fetch the specific TableOrder
+    table_order = get_object_or_404(TableOrder, id=table_order_id)
+
+    # Get the table details
+    table = table_order.table
+
+    # Get the related TableOrders
+    related_orders = TableOrder.objects.filter(table=table)
+
+    # Archive all orders under the same table
+    for order in related_orders:
+        order.order_status = "Archived"
+        order.save()
+        
+    # Update the table status to False
+    table.table_status = False
+    table.save()
+
+    return redirect("pending_table_orders")
