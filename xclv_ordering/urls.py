@@ -21,7 +21,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', include('qr_codes.urls')), 
-    path('', include('menu.urls')),
+    path('', include('admin_auth.urls')),
+    path('tables/', include('tables.urls')),
+    path('menu/', include('menu.urls')),
+    path('orders/', include('orders.urls')),
+    
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

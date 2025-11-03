@@ -3,13 +3,20 @@ import uuid
 import hashlib
 from django.conf import settings
 from django.core.files import File
-from .models import QRBatch, QRCode, ValidationAttempt
+from .models import QRBatch, QRCode
 from .utils import generate_qr_code_image
-from geolocation.services import GeolocationService
+from menu.views import open_menu
 
-
+#This class handles how QR Code batches works
 class QRBatchService:
-    """Service for managing QR code batches"""
+    """
+    Create QR batches named 'Batch A' to 'Batch Z' if none exist.
+
+    - Checks if the QRBatch table is empty. If so, proceeds to create batches.
+    - Uses ASCII values to iterate from 'A' to 'Z'.
+    - Prepares a list of QRBatch objects with names "Batch A" to "Batch Z".
+    - Inserts all batches at once using bulk_create for efficiency.
+    """
 
     @staticmethod
     def create_all_batches():
@@ -23,14 +30,35 @@ class QRBatchService:
 
     @staticmethod
     def generate_all_qr_codes():
-        """Generate QR codes for all batches if they don't exist"""
+        """
+        Generate QR codes for all batches if they don't already exist.
+
+        - Checks if any QR codes exist in the database; if so, the function exits.
+        This ensures QR codes are only pre-generated once per batch setup.
+
+        - Iterates through all QR batches.
+
+        - Creates a folder for each batch inside MEDIA_ROOT/qrcodes/<batch_name>.
+
+        - Generates QR codes for different table types:
+            * VVIP tables: 1-4
+            * VIP tables: 1-7
+            * Standard tables: 1-46
+
+        - Each QR code token format:
+            "<prefix>-<table_number>-<batch_name>-<UUID>"
+            Example: "xclv-vvip-1-BatchA-550e8400-e29b-41d4-a716-446655440000"
+
+        - Calls QRBatchService._create_qr_code() to create the QRCode object and save the image.
+        """
+
         if QRCode.objects.exists():
             return
 
         batches = QRBatch.objects.all()
 
         for batch in batches:
-            batch_folder = os.path.join(settings.MEDIA_ROOT, "qrcodes", batch.batch_name.replace(" ", ""))
+            batch_folder = os.path.join(settings.MEDIA_ROOT, "qrcodes", batch.batch_name.replace(' ', ''))
             os.makedirs(batch_folder, exist_ok=True)
 
             # VVIP tables (1-4)
@@ -47,161 +75,32 @@ class QRBatchService:
             for i in range(1, 47):
                 token = f"xclv-st-{i}-{batch.batch_name.replace(' ', '')}-{uuid.uuid4()}"
                 QRBatchService._create_qr_code(token, batch, batch_folder)
-
+    
     @staticmethod
     def _create_qr_code(token, batch, folder_path):
-        """Create a single QR code with image"""
-        # Generate hash from token
-        qr_hash = hashlib.sha256(token.encode('utf-8')).hexdigest()
+        """
+        Create a single QRCode object and save its image.
 
-        # Generate QR image
+        - Ensures the folder path exists for storing the QR image.
+        - Generates a SHA256 hash of the token for secure identification.
+        - Calls generate_qr_code_image() to create the actual QR image.
+        - Saves a new QRCode instance in the DB with:
+            * unique_token: human-readable token
+            * batch: associated QRBatch
+            * qr_hash: secure hashed token
+            * image: File object pointing to generated QR image
+        """
+        if folder_path is None:
+            folder_path = os.path.join(settings.MEDIA_ROOT, 'qrcodes', batch.batch_name)
+        os.makedirs(folder_path, exist_ok=True)
+
+        qr_hash = hashlib.sha256(token.encode('utf-8')).hexdigest()
         file_path, file_name = generate_qr_code_image(token, qr_hash, batch, folder_path)
 
-        # Create QR code record
         with open(file_path, "rb") as f:
             QRCode.objects.create(
                 unique_token=token,
-                qr_hash=qr_hash,
                 batch=batch,
-                image=File(f, name=f"qrcodes/{batch.batch_name.replace(' ', '')}/{file_name}")
+                qr_hash=qr_hash,
+                image=File(f, name=f"{batch.batch_name.replace(' ', '')}/{file_name}")
             )
-
-
-class QRValidationService:
-    """Service for validating QR codes and managing the validation process"""
-
-    @staticmethod
-    def validate_entry(
-        qr_hash: str,
-        user_lat: float,
-        user_lon: float,
-        user_agent: str = None,
-        session_key: str = None
-    ) -> dict:
-        """
-        Complete QR validation process including location check
-
-        Returns dict with validation result
-        """
-
-        # Step 1: Find QR code
-        qr_code = QRCode.get_by_hash(qr_hash)
-
-        if not qr_code:
-            # Log failed attempt
-            ValidationAttempt.objects.create(
-                qr_hash_attempted=qr_hash,
-                result=ValidationAttempt.ResultChoices.QR_NOT_FOUND,
-                error_message=f"QR hash '{qr_hash}' not found",
-                user_agent=user_agent or '',
-                session_key=session_key or ''
-            )
-
-            return {
-                'success': False,
-                'error': 'QR code not found',
-                'result': 'qr_not_found'
-            }
-
-        # Step 2: Check if QR's batch is active
-        if not qr_code.is_currently_valid:
-            ValidationAttempt.objects.create(
-                qr_code=qr_code,
-                qr_hash_attempted=qr_hash,
-                result=ValidationAttempt.ResultChoices.BATCH_INACTIVE,
-                error_message=f"Batch {qr_code.batch.batch_name} is not active",
-                user_agent=user_agent or '',
-                session_key=session_key or ''
-            )
-
-            return {
-                'success': False,
-                'error': 'QR code is not currently active',
-                'result': 'batch_inactive'
-            }
-
-        # Step 3: Validate location
-        try:
-            is_inside, distance, location_log = GeolocationService.validate_location(
-                user_lat=user_lat,
-                user_lon=user_lon,
-                log=True,
-                user_agent=user_agent
-            )
-
-            if is_inside:
-                # SUCCESS
-                ValidationAttempt.objects.create(
-                    qr_code=qr_code,
-                    qr_hash_attempted=qr_hash,
-                    user_latitude=user_lat,
-                    user_longitude=user_lon,
-                    distance_from_club=distance,
-                    result=ValidationAttempt.ResultChoices.SUCCESS,
-                    user_agent=user_agent or '',
-                    session_key=session_key or ''
-                )
-
-                return {
-                    'success': True,
-                    'qr_code': qr_code,
-                    'distance': distance,
-                    'result': 'success'
-                }
-
-            else:
-                # LOCATION FAILED
-                ValidationAttempt.objects.create(
-                    qr_code=qr_code,
-                    qr_hash_attempted=qr_hash,
-                    user_latitude=user_lat,
-                    user_longitude=user_lon,
-                    distance_from_club=distance,
-                    result=ValidationAttempt.ResultChoices.LOCATION_INVALID,
-                    error_message=f"User is {distance:.0f}m from club location",
-                    user_agent=user_agent or '',
-                    session_key=session_key or ''
-                )
-
-                return {
-                    'success': False,
-                    'error': f'You must be at the club to order. You are {distance:.0f}m away.',
-                    'distance': distance,
-                    'result': 'location_invalid'
-                }
-
-        except Exception as e:
-            # LOCATION ERROR
-            ValidationAttempt.objects.create(
-                qr_code=qr_code,
-                qr_hash_attempted=qr_hash,
-                user_latitude=user_lat,
-                user_longitude=user_lon,
-                result=ValidationAttempt.ResultChoices.LOCATION_ERROR,
-                error_message=f"Location validation error: {str(e)}",
-                user_agent=user_agent or '',
-                session_key=session_key or ''
-            )
-
-            return {
-                'success': False,
-                'error': 'Location validation failed',
-                'result': 'location_error'
-            }
-
-
-# Backward compatibility class (legacy)
-class BatchService:
-    """Legacy service - use QRBatchService instead"""
-
-    @staticmethod
-    def create_batches():
-        return QRBatchService.create_all_batches()
-
-    @staticmethod
-    def generate_qr_codes():
-        return QRBatchService.generate_all_qr_codes()
-
-    @staticmethod
-    def toggle_batch():
-        return QRBatch.close_current_and_activate_next()

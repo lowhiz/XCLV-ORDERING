@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Menu Items</title>
+<body class="p-4">
+
+    <div>
+        <!-- Header Section -->
+        <div>
+            <h2>Admin Dashboard</h2>
+            <a href="">Logout</a>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div>
+            <a href="{% url 'pending_table_orders' %}?admin=true">Pending Orders</a>
+            <a href="">QR Management</a>
+            <a href="{% url 'table_overview' %}">Table Overview</a>
+            <a href="{% url 'view_menu' %}?admin=true">View Menu</a>
+        </div>
+
+
+        {% if categories %}
+        {% for category, items in categories.items %}
+            <h2>{{ category }}</h2>
+            <ul>
+                {% for item in items %}
+                    <li>
+                        <strong>{{ item.name }}</strong> - ₱{{ item.unit_price }}<br>
+                        <small>{{ item.description }}</small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>No menu items found.</p>
+    {% endif %}
+</body>
+</html>

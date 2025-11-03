@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Table Overview</title>
+</head>
+<body class="p-4">
+
+    <div>
+        <!-- Header Section -->
+        <div>
+            <h2>Table Overview</h2>
+            <a href="">Logout</a>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div>
+            <a href="{% url 'pending_table_orders' %}?admin=true">Pending Orders</a>
+            <a href="{% url 'qr_management' %}">QR Management</a>
+            <a href="{% url 'table_overview' %}">Table Overview</a>
+            <a href="{% url 'view_menu' %}?admin=true">View Menu</a>
+        </div>
+
+
+        <!-- Table Status Display -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Table</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in tables_status %}
+                <tr>
+                    <td>{{ entry.table.description }}</td>
+                    <td>
+                        {% if "Pending" in entry.status %}
+                            <span class="badge badge-pending">{{ entry.status }}</span>
+                        {% elif "Completed" in entry.status %}
+                            <span class="badge badge-complete">{{ entry.status }}</span>
+                        {% elif "Inactive" in entry.status or "Archived" in entry.status %}
+                            <span class="badge badge-archived">{{ entry.status }}</span>
+                        {% else %}
+                            <span class="badge badge-none">{{ entry.status }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No tables found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
