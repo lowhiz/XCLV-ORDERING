@@ -249,9 +249,7 @@ function saveOrderChanges() {
 }
 
 function cancelEdit() {
-    if (confirm('Are you sure you want to cancel? Any changes will be lost.')) {
-        window.location.href = '/tables/?admin=true';
-    }
+  window.location.href = '/tables/?admin=true';
 }
 
 // Helper function to get CSRF token
