@@ -1,0 +1,271 @@
+// Initialize cart with current order quantities
+let cart = {};
+
+// Load current quantities from the template
+document.addEventListener('DOMContentLoaded', function() {
+    const editOrderData = document.getElementById('edit-order-data');
+    const tableOrderId = editOrderData.dataset.tableOrderId;
+    const currentQuantities = editOrderData.dataset.currentQuantities;
+
+    console.log('Loading current quantities:', currentQuantities); // Debug line
+
+    // Parse current quantities and populate cart
+    try {
+        // Handle case where currentQuantities might be empty or malformed
+        if (currentQuantities && currentQuantities !== '{}' && currentQuantities !== 'None') {
+            const quantities = JSON.parse(currentQuantities.replace(/'/g, '"'));
+            console.log('Parsed quantities:', quantities); // Debug line
+
+            for (const [itemId, quantity] of Object.entries(quantities)) {
+                if (quantity > 0) {
+                    // Find the item details from the page
+                    const quantityElement = document.getElementById(`quantity-${itemId}`);
+                    if (quantityElement) {
+                        const menuItem = quantityElement.closest('.menu-item');
+                        const itemName = menuItem.querySelector('h6').textContent.trim();
+                        const priceText = menuItem.querySelector('.text-muted').textContent;
+                        const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+
+                        cart[itemId] = {
+                            id: itemId,
+                            name: itemName,
+                            price: itemPrice,
+                            quantity: parseInt(quantity)
+                        };
+
+                        console.log(`Added to cart: ${itemName} x${quantity}`); // Debug line
+                    }
+                }
+            }
+        }
+
+        // Also initialize cart from the displayed quantities on the page
+        // This ensures we capture items even if the data parsing fails
+        const quantityElements = document.querySelectorAll('[id^="quantity-"]');
+        quantityElements.forEach(element => {
+            const itemId = element.id.replace('quantity-', '');
+            const displayedQuantity = parseInt(element.textContent) || 0;
+
+            if (displayedQuantity > 0 && !cart[itemId]) {
+                const menuItem = element.closest('.menu-item');
+                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const priceText = menuItem.querySelector('.text-muted').textContent;
+                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+
+                cart[itemId] = {
+                    id: itemId,
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: displayedQuantity
+                };
+
+                console.log(`Backup init: ${itemName} x${displayedQuantity}`); // Debug line
+            }
+        });
+
+    } catch (e) {
+        console.error('Error parsing current quantities:', e);
+
+        // Fallback: Initialize from displayed quantities
+        const quantityElements = document.querySelectorAll('[id^="quantity-"]');
+        quantityElements.forEach(element => {
+            const itemId = element.id.replace('quantity-', '');
+            const displayedQuantity = parseInt(element.textContent) || 0;
+
+            if (displayedQuantity > 0) {
+                const menuItem = element.closest('.menu-item');
+                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const priceText = menuItem.querySelector('.text-muted').textContent;
+                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+
+                cart[itemId] = {
+                    id: itemId,
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: displayedQuantity
+                };
+            }
+        });
+    }
+
+    console.log('Final cart state:', cart); // Debug line
+    updateOrderSummary();
+});
+
+function increaseQuantity(itemId, itemName, itemPrice) {
+    console.log(`Increase: ${itemId}, ${itemName}, ${itemPrice}`); // Debug line
+
+    if (!cart[itemId]) {
+        cart[itemId] = {
+            id: itemId,
+            name: itemName,
+            price: parseFloat(itemPrice),
+            quantity: 0
+        };
+    }
+
+    cart[itemId].quantity++;
+    updateDisplay(itemId);
+    updateOrderSummary();
+    highlightChangedItem(itemId);
+
+    console.log('Cart after increase:', cart[itemId]); // Debug line
+}
+
+function decreaseQuantity(itemId) {
+    console.log(`Decrease attempt: ${itemId}`, cart[itemId]); // Debug line
+
+    // Check if item exists in cart
+    if (!cart[itemId]) {
+        // If not in cart, try to initialize it from the displayed quantity
+        const quantityElement = document.getElementById(`quantity-${itemId}`);
+        if (quantityElement) {
+            const currentDisplayed = parseInt(quantityElement.textContent) || 0;
+            if (currentDisplayed > 0) {
+                const menuItem = quantityElement.closest('.menu-item');
+                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const priceText = menuItem.querySelector('.text-muted').textContent;
+                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+
+                cart[itemId] = {
+                    id: itemId,
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: currentDisplayed
+                };
+
+                console.log(`Initialized cart for decrease: ${itemName} x${currentDisplayed}`); // Debug line
+            }
+        }
+    }
+
+    // Now try to decrease
+    if (cart[itemId] && cart[itemId].quantity > 0) {
+        cart[itemId].quantity--;
+        console.log(`Decreased to: ${cart[itemId].quantity}`); // Debug line
+
+        if (cart[itemId].quantity === 0) {
+            delete cart[itemId];
+            console.log(`Removed item ${itemId} from cart`); // Debug line
+        }
+        updateDisplay(itemId);
+        updateOrderSummary();
+        highlightChangedItem(itemId);
+    } else {
+        console.log(`Cannot decrease ${itemId}: not in cart or quantity is 0`); // Debug line
+    }
+}
+
+function updateDisplay(itemId) {
+    const quantityElement = document.getElementById(`quantity-${itemId}`);
+    const quantity = cart[itemId] ? cart[itemId].quantity : 0;
+    quantityElement.textContent = quantity;
+
+    // Update item styling
+    const menuItem = quantityElement.closest('.menu-item');
+    if (quantity > 0) {
+        menuItem.classList.add('current-item');
+    } else {
+        menuItem.classList.remove('current-item');
+    }
+
+    console.log(`Updated display for ${itemId}: ${quantity}`); // Debug line
+}
+
+function highlightChangedItem(itemId) {
+    const menuItem = document.getElementById(`quantity-${itemId}`).closest('.menu-item');
+    menuItem.style.border = '2px solid #ffc107';
+    setTimeout(() => {
+        if (cart[itemId] && cart[itemId].quantity > 0) {
+            menuItem.style.border = '2px solid #28a745';
+        } else {
+            menuItem.style.border = '';
+        }
+    }, 1000);
+}
+
+function updateOrderSummary() {
+    const summaryElement = document.getElementById('current-order-summary');
+    const totalElement = document.getElementById('order-total');
+
+    let summaryHTML = '';
+    let total = 0;
+
+    for (const item of Object.values(cart)) {
+        if (item.quantity > 0) {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            summaryHTML += `
+                <div class="d-flex justify-content-between align-items-center py-1">
+                    <span>${item.name}</span>
+                    <span>${item.quantity} × ₱${item.price} = ₱${itemTotal.toFixed(2)}</span>
+                </div>
+            `;
+        }
+    }
+
+    if (summaryHTML === '') {
+        summaryHTML = '<p class="text-muted">No items in order</p>';
+    }
+
+    summaryElement.innerHTML = summaryHTML;
+    totalElement.textContent = `Total: ₱${total.toFixed(2)}`;
+}
+
+function saveOrderChanges() {
+    const editOrderData = document.getElementById('edit-order-data');
+    const tableOrderId = editOrderData.dataset.tableOrderId;
+
+    // Prepare order items
+    const orderItems = Object.values(cart).filter(item => item.quantity > 0);
+
+    if (confirm('Are you sure you want to save these changes to the order?')) {
+        // Send updated order to server
+        fetch('/orders/update-order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                table_order_id: tableOrderId,
+                items: orderItems
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order updated successfully!');
+                window.location.href = '/tables/?admin=true';
+            } else {
+                alert('Error updating order: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the order');
+        });
+    }
+}
+
+function cancelEdit() {
+    if (confirm('Are you sure you want to cancel? Any changes will be lost.')) {
+        window.location.href = '/tables/?admin=true';
+    }
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
