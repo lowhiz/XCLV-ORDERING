@@ -241,9 +241,64 @@ def archive_order(response, table_order_id):
     for order in related_orders:
         order.order_status = "Archived"
         order.save()
-        
+
     # Update the table status to False
     table.table_status = False
     table.save()
 
     return redirect("pending_table_orders")
+
+@csrf_exempt
+def update_order(request):
+    """
+    Update an existing order (admin functionality).
+    Replaces all items in a TableOrder with new quantities.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+    try:
+        data = json.loads(request.body)
+        table_order_id = data.get("table_order_id")
+        items = data.get("items", [])
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    if not table_order_id:
+        return JsonResponse({'error': 'Table order ID is required'}, status=400)
+
+    try:
+        table_order = TableOrder.objects.get(id=table_order_id)
+    except TableOrder.DoesNotExist:
+        return JsonResponse({'error': 'Table order not found'}, status=404)
+
+    # Delete existing orders
+    Order.objects.filter(table_order=table_order).delete()
+
+    # Calculate new total
+    new_total = Decimal('0.00')
+    old_total = table_order.table.total_payment
+
+    # Create new orders
+    for item_data in items:
+        item_id = item_data.get("id")
+        quantity = int(item_data.get("quantity", 0))
+        price = Decimal(str(item_data.get("price", 0)))
+
+        if quantity > 0:
+            menu_item = Item.objects.get(id=item_id)
+
+            Order.objects.create(
+                table_order=table_order,
+                item=menu_item,
+                quantity=quantity,
+                total_item_price=price * quantity
+            )
+            new_total += price * quantity
+
+    # Update table total (subtract old total, add new total)
+    table = table_order.table
+    table.total_payment = table.total_payment - old_total + new_total
+    table.save()
+
+    return JsonResponse({'success': True, 'message': 'Order updated successfully!'})

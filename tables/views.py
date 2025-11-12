@@ -15,10 +15,10 @@ def pending_table_orders(request):
     for table_order in pending_orders:
         # Table description from Table entity
         table_description = table_order.table.description or str(table_order.table.table_id_number)
-        
+
         # Get all Orders linked to the TableOrder
         orders = table_order.orders.all()
-        
+
         items_list=[]
         # Collect all item details
         for order in orders:
@@ -27,7 +27,7 @@ def pending_table_orders(request):
                 "quantity": order.quantity,
                 "total_item_price":Decimal(order.total_item_price)
             })
-        
+
         table_orders_with_items.append({
             "table_order_id": table_order.id,
             "description": table_description,
@@ -104,7 +104,7 @@ def table_overview(request):
         else:
             # No orders at all
             status = "Inactive"
-            
+
         # Add to list for rendering
         tables_status.append({
             "table": table,
@@ -114,3 +114,47 @@ def table_overview(request):
     # Render the overview page with table status data
     context = {"tables_status": tables_status}
     return render(request, "tables/table_overview.html", context)
+
+def edit_order(request, table_order_id):
+    """
+    Allow admin to edit an existing order by displaying current items
+    in a similar interface to menu_list.html with pre-populated quantities.
+    """
+    from menu.models import Item
+
+    # Fetch the specific TableOrder
+    table_order = get_object_or_404(TableOrder, id=table_order_id)
+
+    # Get all current orders (items) in this table order
+    current_orders = table_order.orders.all()
+
+    # Create a dictionary of current item quantities
+    current_quantities = {}
+    for order in current_orders:
+        current_quantities[order.item.id] = order.quantity
+
+    # Get all menu items organized by category (same as menu_list view)
+    all_items = Item.objects.all().order_by('category', 'name')
+    categories = {}
+    for item in all_items:
+        if item.category not in categories:
+            categories[item.category] = []
+
+        # Add current quantity to each item
+        item.current_quantity = current_quantities.get(item.id, 0)
+        categories[item.category].append(item)
+
+    # Calculate current order total
+    current_total = sum(order.total_item_price for order in current_orders)
+
+    context = {
+        'categories': categories,
+        'table_order': table_order,
+        'table_display': table_order.table.description,
+        'table_id': table_order.table.id,
+        'current_quantities': current_quantities,
+        'current_total': current_total,
+        'is_admin_edit': True,  # Flag to identify this as admin edit mode
+    }
+
+    return render(request, 'tables/edit_order.html', context)
