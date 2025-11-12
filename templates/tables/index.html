@@ -52,6 +52,9 @@
                     </td>
                     <!-- Actions -->
                     <td>
+                        <a href="{% url 'edit_order' table_order_id=order.table_order_id %}" class="btn btn-warning btn-sm">
+                            Edit Order
+                        </a>
                         <a href="{% url 'delete_order' order.table_order_id %}" class="btn btn-sm btn-primary">Delete</a>
                         <a href="{% url 'complete_order' order.table_order_id %}" class="btn btn-sm btn-primary">Complete</a>
                     </td>
