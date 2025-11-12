@@ -4,3 +4,7 @@
     font-size: 2.5rem;
     text-transform: uppercase;
 }
+
+body {
+    font-family: 'Inter', sans-serif;
+}
