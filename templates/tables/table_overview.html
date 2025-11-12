@@ -11,6 +11,7 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
 
@@ -21,6 +22,8 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -76,10 +79,232 @@
         </div>
     </div>
 
-    <div class="main-content">
+    <div class="main-content fw-bold">
         <!-- Header Section -->
         <div>
             <h1 class="dashboard-heading">Table Overview</h1>
+
+            <div class="container">
+                <div class="container-fluid py-4">
+                    <!-- Row 1 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-3">
+                            <div class="xclv-bg-gold xclv-text-black text-center py-5 rounded">VVIP 2</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="xclv-bg-hi-black text-center py-5 rounded">
+                                <img src="{% static 'images/logo-footer.png' %}" class="img-fluid" style="max-width: 75px";/>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="xclv-bg-gold xclv-text-black text-center py-5 rounded">VVIP 3</div>
+                        </div>
+                        <div class="col-1">
+                            <div class="xclv-bg-gold xclv-text-black text-center py-5 rounded">VVIP 4</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-1">
+                            <div class="xclv-bg-gold xclv-text-black text-center py-3 rounded">VVIP 1</div>
+                        </div>
+
+                        <div class="col-9">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 1</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 2</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 3</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 4</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 5</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 6</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 7</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 4</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-9 offset-1">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 8</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 9</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 10</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 11</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 12</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 13</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 14</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-2">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 5</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-1">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 3</div>
+                        </div>
+
+                        <div class="col-9">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 15</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 16</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 17</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 18</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 19</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 20</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 21</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 6</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 5 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-1">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 2</div>
+                        </div>
+
+                        <div class="col-9">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 22</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 23</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 24</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 25</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 26</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 27</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 28</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 7</div>
+                        </div>
+                    </div>
+
+                    <!-- Row 6 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-1">
+                            <div class="xclv-bg-accent-2 xclv-text-white text-center py-3 rounded">VIP 1</div>
+                        </div>
+
+                        <div class="col-9">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 29</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 30</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 31</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 32</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 33</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 34</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 35</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 7 -->
+                    <div class="row g-2">
+                        <div class="col-7 offset-2">
+                            <div class="row g-2">
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 36</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 37</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 38</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 39</div>
+                                </div>
+                                <div class="col">
+                                    <div class="xclv-bg-light-grey xclv-text-black text-center py-3 rounded">ST 40</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <!-- Table Status Display -->
         <table>
