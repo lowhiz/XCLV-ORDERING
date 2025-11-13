@@ -9,15 +9,16 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-/* Table status classes */
-.table-pending {
-    background-color: var(--danger-red) !important;
-    color: var(--white) !important;
-    border: 2px solid var(--danger-red) !important;
+.table-div {
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.table-complete {
+.table-status-available {
     background-color: var(--success-green) !important;
     color: var(--white) !important;
-    border: 2px solid var(--success-green) !important;
+}
+
+.table-status-pending {
+    background-color: var(--danger-red) !important;
+    color: var(--white) !important;
 }

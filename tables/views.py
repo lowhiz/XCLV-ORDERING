@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from .models import TableOrder, Table
 from orders.models import Order
 
@@ -15,10 +16,10 @@ def pending_table_orders(request):
     for table_order in pending_orders:
         # Table description from Table entity
         table_description = table_order.table.description or str(table_order.table.table_id_number)
-        
+
         # Get all Orders linked to the TableOrder
         orders = table_order.orders.all()
-        
+
         items_list=[]
         # Collect all item details
         for order in orders:
@@ -27,7 +28,7 @@ def pending_table_orders(request):
                 "quantity": order.quantity,
                 "total_item_price":Decimal(order.total_item_price)
             })
-        
+
         table_orders_with_items.append({
             "table_order_id": table_order.id,
             "description": table_description,
@@ -104,7 +105,7 @@ def table_overview(request):
         else:
             # No orders at all
             status = "Inactive"
-            
+
         # Add to list for rendering
         tables_status.append({
             "table": table,
@@ -114,3 +115,31 @@ def table_overview(request):
     # Render the overview page with table status data
     context = {"tables_status": tables_status}
     return render(request, "tables/table_overview.html", context)
+
+def table_status_api(request):
+    """
+    API endpoint to get live table status for all active tables
+    Returns JSON with table descriptions and their current status
+    """
+    active_tables = Table.objects.filter(table_status=True)
+    table_statuses = {}
+
+    for table in active_tables:
+        # Get all orders for this specific table
+        table_orders = TableOrder.objects.filter(table=table)
+
+        # Determine status based on orders
+        has_pending = False
+
+        if table_orders.exists():
+            statuses = list(table_orders.values_list('order_status', flat=True))
+            has_pending = any(s.lower() == "pending" for s in statuses)
+
+        # Use table description as key (VVIP 1, ST 1, etc.)
+        table_key = table.description
+        table_statuses[table_key] = {
+            'has_pending_orders': has_pending,
+            'status': 'pending' if has_pending else 'available'
+        }
+
+    return JsonResponse(table_statuses)
