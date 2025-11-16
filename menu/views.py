@@ -147,3 +147,7 @@ def open_menu(is_open: bool):
     """Helper to toggle global menu availability."""
     global MENU_CLOSED
     MENU_CLOSED = not is_open
+
+def admin_toggle_menu(request):
+    open_menu(is_open=True)
+    return redirect('qr_management')

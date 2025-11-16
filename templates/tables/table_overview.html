@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<!--
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -310,6 +311,7 @@
                 </div>
             </div>
 
+<body>
         <!-- Table Status Display -->
         <table>
             <thead>
@@ -321,7 +323,11 @@
             <tbody>
                 {% for entry in tables_status %}
                 <tr>
-                    <td>{{ entry.table.description }}</td>
+                    <td>
+                        <a href="{% url 'table_details' entry.table_id %}" class="text-decoration-none">
+                            {{ entry.table.description }}
+                        </a>
+                    </td>
                     <td>
                         {% if "Pending" in entry.status %}
                             <span class="badge badge-pending">{{ entry.status }}</span>

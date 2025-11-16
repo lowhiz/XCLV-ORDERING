@@ -1,0 +1,166 @@
+body {
+    background-color: #ffffff;
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+}
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background-color: #2C2133;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 0;
+}
+
+/* Time section (dark area on top) */
+.time-section {
+    background-color: #503a5d;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.time-section h5 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.7rem;
+    padding-bottom: 5px;
+}
+
+.time-section small {
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+/* Logo section */
+.logo-section {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.logo-section img {
+    width: 60px;
+    height: 70px;
+}
+
+.logo-section h6 {
+    margin: 0;
+    line-height: 1.2;
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+/* Navigation buttons */
+.nav-section {
+    margin-top: 1rem;
+    padding: 0 1rem;
+}
+
+.nav-link {
+    text-align: center;
+    display: block;
+    color: #ffffff;
+    border: 3px solid #544b5c;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #544b5c;
+}
+
+.nav-link i {
+    margin-right: 8px;
+}
+
+/* Bottom section */
+.bottom-section {
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid #4d3d60;
+}
+
+.bottom-section p {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #ffffff;
+}
+
+.logout-btn {
+    background-color: #ffffff;
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    width: 100%;
+    font-weight: 600;
+    margin-top: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #544b5c;
+}
+
+.profile-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: invert(1) brightness(2);
+    margin-right: 5px;
+}
+
+.profile-img2 {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+}
+
+/* Main content spacing */
+.main-content {
+    margin-left: 280px; /* same as sidebar width */
+    padding: 30px;
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+/* Small icon size, special case since the image for that is a little bit bigger*/
+.icon-small {
+    width: 23px;
+    height: 23px;
+}
+
+/* Responsive: sidebar stacks above content on smaller screens */
+@media (max-width: 992px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+}
