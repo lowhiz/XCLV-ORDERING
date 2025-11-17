@@ -105,10 +105,11 @@ def table_overview(request):
         else:
             # No orders at all
             status = "Inactive"
-
+    
         # Add to list for rendering
         tables_status.append({
             "table": table,
+            "table_id": table.table_id_number,
             "status": status,
         })
 

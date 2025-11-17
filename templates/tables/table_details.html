@@ -88,15 +88,76 @@
     <div class="main-content fw-bold">
         <!-- Header Section -->
         <div>
-            <h1 class="dashboard-heading">TABLE XX 99</h1>
+            <h1 class="dashboard-heading">TABLE {{ table_order.table_order_id }}</h1>
             <h2>Total Bill: <span class="xclv-text-accent-2">Php 9999.00</span></h2>
         </div>
 
         <br>
 
+        <!-- ✅ PENDING ORDERS -->
         <h4 class="xclv-text-grey fw-bold">QUEUED ORDERS</h4>
+        {% if pending_orders %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Description</th>
+                    <th>Items</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in pending_orders %}
+                <tr>
+                    <td>
+                        {{ order.description }} <br>
+                        <small>{{ order.order_time|date:"Y-m-d H:i:s" }}</small>
+                    </td>
+                    <td>
+                        {{ order.item.name }} (x{{ order.quantity }}) — ₱{{ order.total_item_price }}
+                    </td>
+                    <td>
+                        <a href="{% url 'delete_order' order.order_id %}" class="btn btn-sm btn-danger">Delete</a>
+                        <a href="{% url 'complete_order' order.order_id %}" class="btn btn-sm btn-success">Mark Complete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No pending orders for this table.</p>
+        {% endif %}
+
+        <hr>
 
         <h4 class="xclv-text-grey fw-bold">PAST ORDERS</h4>
+            <!-- ✅ PAST ORDERS -->
+            {% if past_orders %}
+            <table class="table table-bordered table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>Description</th>
+                        <th>Items</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in past_orders %}
+                    <tr>
+                        <td>
+                            {{ order.description }} <br>
+                            <small>{{ order.order_time|date:"Y-m-d H:i:s" }}</small>
+                        </td>
+                        <td>
+                            {{ order.item.name }} (x{{ order.quantity }}) — ₱{{ order.total_item_price }}
+                        </td>
+                        <td><span class="badge bg-success">{{ order.status|capfirst }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">No past orders yet.</p>
+            {% endif %}
 
         <button class="btn btn-lg admin-grey-button mt-4 fw-bold">
             BACK
