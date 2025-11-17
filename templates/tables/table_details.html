@@ -159,12 +159,22 @@
             <p class="text-muted">No past orders yet.</p>
             {% endif %}
 
-        <button class="btn btn-lg admin-grey-button mt-4 fw-bold">
-            BACK
-        </button>
-        <button class="btn btn-lg admin-gold-button mt-4 fw-bold" data-bs-toggle="modal" data-bs-target="#archiveTableModal">
-            ARCHIVE TABLE
-        </button>
+        <div class="fixed-bottom-section mb-3">
+            <div class="d-flex justify-content-center container pt-2">
+                <div class="row w-100 g-2">
+                    <div class="col">
+                        <button class="btn btn-lg admin-grey-button w-100 fw-bold">
+                            BACK
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-lg admin-gold-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#archiveTableModal">
+                            ARCHIVE ORDER
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal to Archive Table -->
