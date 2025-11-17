@@ -6,6 +6,7 @@
     --hi-black: #1A1A1A;
     --grey: #A79FB1;
     --light-grey: #BFB4CD;
+    --lighter-grey: #CBC4D4;
     --white: #E6E1ED;
     --accent-gold: #F3D5A2;
     --hi-accent-color-1: #F3D5A2;
@@ -22,6 +23,7 @@
 .xclv-bg-white { background-color: var(--white); }
 .xclv-bg-grey { background-color: var(--grey); }
 .xclv-bg-light-grey { background-color: var(--light-grey); }
+.xclv-bg-lighter-grey { background-color: var(--lighter-grey); }
 .xclv-bg-gold { background-color: var(--accent-gold); }
 .xclv-bg-danger { background-color: var(--danger-red); }
 .xclv-bg-success { background-color: var(--success-green); }
@@ -33,6 +35,7 @@
 .xclv-text-white { color: var(--white); }
 .xclv-text-grey { color: var(--grey); }
 .xclv-text-light-grey { color: var(--light-grey); }
+.xclv-text-lighter-grey { color: var(--lighter-grey); }
 .xclv-text-danger { color: var(--danger-red); }
 .xclv-text-success { color: var(--success-green); }
 
