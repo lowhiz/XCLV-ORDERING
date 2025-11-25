@@ -219,6 +219,7 @@ def qr_management(request):
 
     # Get all of the batches in a list, retrieve the current batch, and init
     # next batch to none
+    all_batches = QRBatch.objects.all().order_by('batch_name')
     batches = list(QRBatch.objects.all().order_by('id'))
     current_batch = QRBatch.objects.filter(batch_status=True).first()
     next_batch = None
@@ -239,6 +240,7 @@ def qr_management(request):
 
     context = {
         'menu_closed': MENU_CLOSED,
+        'batches': all_batches,
         'current_batch': current_batch,
         'next_batch': next_batch,
     }

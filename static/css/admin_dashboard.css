@@ -99,3 +99,11 @@ body {
     background-color: var(--black) !important;
     color: var(--white) !important;
 }
+
+.batch-card {
+    max-width: 300px;
+    border-style: solid;
+    border-color: var(--black) !important;
+    border-width: 2px;
+    border-radius: 8px;
+}
