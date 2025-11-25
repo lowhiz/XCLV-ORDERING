@@ -1,3 +1,4 @@
+from posixpath import curdir
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
@@ -211,5 +212,34 @@ def toggle_batch(request):
     return redirect('qr_management')
 
 def qr_management(request):
-    return render(request, 'qr_codes/management.html')
-    
+
+    # Get the global variable in /menu/views.py for the frontend implementation
+    # of toggling between opening and closing the menu
+    from menu.views import MENU_CLOSED
+
+    # Get all of the batches in a list, retrieve the current batch, and init
+    # next batch to none
+    batches = list(QRBatch.objects.all().order_by('id'))
+    current_batch = QRBatch.objects.filter(batch_status=True).first()
+    next_batch = None
+
+    # Checks if there is a current batch and verifies if all the batches are in
+    if current_batch and batches:
+        # Find the current batch index
+        current_index = next((i for i, b in enumerate(batches) if b.id == current_batch.id), None)
+
+        # If it finds the current batch, get the next batch by batch[i+1]
+        if current_index is not None:
+            # Calculate next batch (circular)
+            next_index = (current_index + 1) % len(batches)
+            next_batch = batches[next_index]
+    elif batches:
+        # If no batch is active, the first batch would be next
+        next_batch = batches[0]
+
+    context = {
+        'menu_closed': MENU_CLOSED,
+        'current_batch': current_batch,
+        'next_batch': next_batch,
+    }
+    return render(request, 'qr_codes/management.html', context)
