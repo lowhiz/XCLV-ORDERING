@@ -60,3 +60,42 @@ body {
     background-color: var(--black) !important;
     color: var(--white) !important;
 }
+
+.admin-danger-button {
+    background-color: var(--danger-red);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-danger-button:hover {
+    background-color: #9b3030;
+    color: var(--white);
+}
+.admin-danger-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.admin-safe-button {
+    background-color: #48B639;
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-safe-button:hover {
+    background-color: #327f28;
+    color: var(--white);
+}
+
+.admin-safe-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
