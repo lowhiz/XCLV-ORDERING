@@ -105,7 +105,7 @@ def table_overview(request):
         else:
             # No orders at all
             status = "Inactive"
-    
+
         # Add to list for rendering
         tables_status.append({
             "table": table,
@@ -144,3 +144,17 @@ def table_status_api(request):
         }
 
     return JsonResponse(table_statuses)
+
+def table_details(request, table_id):
+    """
+    View to display details of a specific table including its orders.
+    """
+    table = get_object_or_404(Table, id=table_id)
+    table_orders = TableOrder.objects.filter(table=table).order_by("-order_time")
+
+    context = {
+        "table": table,
+        "table_orders": table_orders,
+
+    }
+    return render(request, "tables/table_details.html", context)

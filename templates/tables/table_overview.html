@@ -324,7 +324,7 @@
                 {% for entry in tables_status %}
                 <tr>
                     <td>
-                        <a href="{% url 'table_details' entry.table_id %}" class="text-decoration-none">
+                        <a href="{% url 'table_details' entry.table.id %}">
                             {{ entry.table.description }}
                         </a>
                     </td>

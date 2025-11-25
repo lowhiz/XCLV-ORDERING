@@ -88,7 +88,7 @@
     <div class="main-content fw-bold">
         <!-- Header Section -->
         <div>
-            <h1 class="dashboard-heading">TABLE {{ table_order.table_order_id }}</h1>
+            <h1 class="dashboard-heading">TABLE {{ table.description }}</h1>
             <h2>Total Bill: <span class="xclv-text-accent-2">Php 9999.00</span></h2>
         </div>
 
@@ -163,9 +163,9 @@
             <div class="d-flex justify-content-center container pt-2">
                 <div class="row w-100 g-2">
                     <div class="col">
-                        <button class="btn btn-lg admin-grey-button w-100 fw-bold">
+                        <a href="{% url 'table_overview' %}" class="btn btn-lg admin-grey-button w-100 fw-bold">
                             BACK
-                        </button>
+                        </a>
                     </div>
                     <div class="col">
                         <button class="btn btn-lg admin-gold-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#archiveTableModal">
