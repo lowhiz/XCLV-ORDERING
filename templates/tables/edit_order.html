@@ -69,6 +69,8 @@
             overflow-y: auto;
             padding: 1rem 0;
             margin-bottom: 110px; /* Space for fixed bottom controls */
+            background-color: white;
+            border-radius: 8px;
         }
 
         .fixed-bottom-section {
@@ -151,71 +153,80 @@
         <!-- Scrollable Menu Section -->
         <div class="scrollable-menu-section">
             <div class="container">
-                <!-- Menu Items for Editing -->
-                {% if categories %}
-                    {% for category, items in categories.items %}
-                    <div class="category mb-4">
-                        <h2 class="category-title border-bottom pb-2">{{ category }}</h2>
-
-                        {% for item in items %}
-                        <div class="menu-item card mb-2 {% if item.current_quantity > 0 %}current-item{% endif %}">
-                            <div class="card-body">
-                                <div class="row align-items-center">
-                                    <!-- Item Info -->
-                                    <div class="col-md-4">
-                                        <h6 class="mb-1">{{ item.name }}</h6>
-                                        <small class="text-muted">₱{{ item.unit_price }}</small>
-                                    </div>
-
-                                    <!-- Item Description Modal Button -->
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-outline-info btn-sm"
-                                                data-bs-toggle="modal" data-bs-target="#itemModal{{ item.id }}">
-                                            Info
-                                        </button>
-                                    </div>
-
-                                    <!-- Quantity Controls -->
-                                    <div class="col-md-6">
-                                        <div class="d-flex align-items-center justify-content-end">
-                                            <button class="btn btn-outline-danger me-2"
-                                                    onclick="decreaseQuantity('{{ item.id }}')">-</button>
-
-                                            <span id="quantity-{{ item.id }}" class="quantity-display mx-3">
-                                                {{ item.current_quantity }}
-                                            </span>
-
-                                            <button class="btn btn-outline-success ms-2"
-                                                    onclick="increaseQuantity('{{ item.id }}', '{{ item.name }}', {{ item.unit_price }})">+</button>
+                <div class="accordion" id="menuAccordion">
+                    {% if categories %}
+                        {% for category, items in categories.items %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|slugify }}" aria-expanded="true" aria-controls="collapse{{ category|slugify }}">
+                                    {{ category }}
+                                </button>
+                            </h2>
+                            <div id="collapse{{ category|slugify }}" class="accordion-collapse collapse show" data-bs-parent="#menuAccordion">
+                                <div class="accordion-body">
+                                    {% for item in items %}
+                                    <div class="menu-item card mb-2 {% if item.current_quantity > 0 %}current-item{% endif %}">
+                                        <div class="card-body">
+                                            <div class="row align-items-center">
+                                                <!-- Item Info -->
+                                                <div class="col-md-4">
+                                                    <h6 class="mb-1">{{ item.name }}</h6>
+                                                    <small class="text-muted">₱{{ item.unit_price }}</small>
+                                                </div>
+            
+                                                <!-- Item Description Modal Button -->
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-outline-info btn-sm"
+                                                            data-bs-toggle="modal" data-bs-target="#itemModal{{ item.id }}">
+                                                        Info
+                                                    </button>
+                                                </div>
+            
+                                                <!-- Quantity Controls -->
+                                                <div class="col-md-6">
+                                                    <div class="d-flex align-items-center justify-content-end">
+                                                        <button class="btn btn-outline-danger me-2"
+                                                                onclick="decreaseQuantity('{{ item.id }}')">-</button>
+            
+                                                        <span id="quantity-{{ item.id }}" class="quantity-display mx-3">
+                                                            {{ item.current_quantity }}
+                                                        </span>
+            
+                                                        <button class="btn btn-outline-success ms-2"
+                                                                onclick="increaseQuantity('{{ item.id }}', '{{ item.name }}', {{ item.unit_price }})">+</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Modal for Item Description -->
-                            <div class="modal fade" id="itemModal{{ item.id }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">{{ item.name }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <p>{{ item.description }}</p>
-                                            <p><strong>Price:</strong> ₱{{ item.unit_price }}</p>
+                                    
+                                    <!-- Modal for Item Description -->
+                                    <div class="modal fade" id="itemModal{{ item.id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">{{ item.name }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>{{ item.description }}</p>
+                                                    <p><strong>Price:</strong> ₱{{ item.unit_price }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
-                    </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="alert alert-warning">
-                        No menu items available.
-                    </div>
-                {% endif %}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            No menu items available.
+                        </div>
+                    {% endif %}
+                </div>
+                <!-- Menu Items for Editing -->
             </div>
         </div>
 
