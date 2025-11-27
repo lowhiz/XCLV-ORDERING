@@ -1,0 +1,106 @@
+/* Section background and layout */
+.welcome-section {
+  background-color: #000;
+  height: 100vh;
+  padding: 2rem;
+}
+
+/* Icon styling */
+.utensil-icon {
+  width: 80px;
+  height: 80px;
+  filter: invert(1);
+}
+
+/* Button styling */
+.allow-btn {
+  background-color: #9a73d9;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  margin-top: 1.rem; 
+}
+
+.allow-btn:hover {
+  background-color: #b191f0;
+}
+
+
+
+/* Container to center the card and control its max width */
+.status-container {
+  width: 100%;
+  max-width: 320px; /* Limits width on large screens */
+  padding-left: 1.5rem !important; 
+  padding-right: 1.5rem !important; 
+}
+
+.success-card {
+  /* Styling for the dark, rounded box */
+  background-color: #212529; 
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  width: 100%; 
+  text-align: center; 
+  justify-content: center; 
+  flex-direction: column;
+}
+
+.success-text {
+  /* Style for 'Location validated successfully' */
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #fff; 
+  text-align: center; 
+}
+
+.redirect-text {
+  /* Style for 'Redirecting to menu...' */
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #adb5bd; /* Light gray for subtle secondary text */
+  text-align: center; 
+}
+
+/* Responsive adjustments */
+@media (max-width: 430px) {
+  .utensil-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .welcome-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .welcome-section p {
+    font-size: 0.9rem;
+  }
+
+  .allow-btn {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.2rem;
+  }
+  
+  /* Responsive adjustment for success card */
+  .status-container {
+      /* On small screens, we want it to align with the button which is full-width less margin */
+      padding-left: 1.5rem !important; 
+      padding-right: 1.5rem !important;
+  }
+  .success-card {
+      padding: 10px 15px;
+      /* The card's width is now implicitly controlled by .status-container */
+      max-width: 100%; 
+  }
+  .success-text {
+      font-size: 0.85rem;
+  }
+  .redirect-text {
+      font-size: 0.75rem;
+  }
+}
