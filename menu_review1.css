@@ -1,0 +1,201 @@
+/* PART 1 — GLOBAL, WRAPPER, HEADER, ITEMS, SUMMARY */
+
+/* GLOBAL FONTS */
+.header-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #fff;
+}
+
+.drink-title,
+.qty,
+.qty-btn,
+.summary-line {
+  font-family: 'Inter', sans-serif;
+  color: #fff;
+}
+
+/* WRAPPER */
+.menu-wrapper {
+  background: #111015;
+  padding: 20px;
+  border-radius: 14px;
+}
+
+/* HEADER (COCKTAILS) */
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 12px;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1f1b23, #2e2835);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: 0.3s ease;
+}
+
+.dropdown-header:hover {
+  background: #4c4358;
+}
+
+.dropdown-arrow {
+  font-size: 1.3rem;
+}
+
+/* CONTENT WRAPPER */
+.dropdown-content {
+  display: none;
+  margin-top: 12px;
+}
+
+.dropdown-content.show {
+  display: block;
+}
+
+/* ITEM CARD */
+.item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1d1b22;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 12px;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+.item-card:hover {
+  background: #4c4358;
+}
+
+/* LEFT SECTION */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drink-icon {
+  width: 28px;
+  filter: invert(1);
+}
+
+.info-icon {
+  font-size: 1.1rem;
+  color: #c9c9c9;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.info-icon:hover {
+  color: #fff;
+}
+
+.drink-title {
+  margin: 0;
+  font-size: 1rem;
+  max-width: 170px;
+  line-height: 1.2;
+}
+
+/* RIGHT SECTION */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 10px;
+  background: #2e2b33;
+  color: #fff;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.4);
+  transition: 0.2s ease;
+}
+
+.qty-btn:hover {
+  background: #4c4358;
+}
+
+.qty {
+  width: 40px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ORDER SUMMARY */
+.order-summary {
+  background: #1d1b22;
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 25px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  min-height: 50px;
+}
+
+.summary-header {
+  font-family: 'Montserrat', sans-serif;
+  color: #f3d5a2;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+}
+
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.summary-item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #4c4358;
+  padding: 12px;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.summary-item-card .summary-qty {
+  color: #f3d5a2;
+  font-weight: 700;
+}
+
+/* REVIEW BUTTON */
+.review-order-btn {
+  width: 100%;
+  padding: 15px 20px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #8b5cf6;
+  color: #fff;
+  font-size: 1.1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: 0.3s ease;
+}
+
+.review-order-btn:hover {
+  background: #4c4358;
+}
+
+.review-order-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #6d28d9;
+}
