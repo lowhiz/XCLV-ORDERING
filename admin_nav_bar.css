@@ -6,13 +6,13 @@ body {
 
 .sidebar {
     width: 280px;
-    height: 110vh;
+    height: 100vh;
     background-color: #2C2133;
     color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    position: relative;
+    position: absolute;
     left: 0;
     top: 0;
     padding: 0;
@@ -164,4 +164,5 @@ body {
         padding: 20px;
     }
 }
+
 
