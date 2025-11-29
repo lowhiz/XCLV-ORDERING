@@ -81,30 +81,47 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-          // JavaScript to update time and date
-        function updatePhilippineTime() {
-          const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: true };
-          const optionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
+    // JavaScript to update time and date
+    function updatePhilippineTime() {
+        // --- Date/Time Options ---
+        const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: true };
+        const optionsDateDay = { day: '2-digit' };
+        const optionsDateMonth = { month: 'short' };
+        const optionsDateYear = { year: 'numeric' };
 
-          // Get Philippine time zone
-          const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
-          const phDate = new Date(now);
+        // Get Philippine time zone
+        // Note: Using the US locale with the Manila timezone is generally the most reliable way 
+        // to control the output format without relying on the user's local settings.
+        const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+        const phDate = new Date(now);
 
-          // Format
-          const timeStr = phDate.toLocaleTimeString('en-US', optionsTime).toUpperCase();
-          const dateStr = phDate.toLocaleDateString('en-US', optionsDate)
-            .toUpperCase()
-            .replace(',', '');
+        // --- Formatting Time (e.g., 05:00 PM) ---
+        // toLocaleTimeString returns "05:00 PM" (with a space)
+        const timeStr = phDate.toLocaleTimeString('en-US', optionsTime).toUpperCase(); 
 
-          document.getElementById('ph-time').textContent = timeStr;
-          document.getElementById('ph-date').textContent = dateStr;
-        }
+        // --- Formatting Date (e.g., 07 JAN 2007) ---
+        const dayStr = phDate.toLocaleDateString('en-US', optionsDateDay);
+        const monthStr = phDate.toLocaleDateString('en-US', optionsDateMonth).toUpperCase();
+        const yearStr = phDate.toLocaleDateString('en-US', optionsDateYear);
 
-        // Update every second
-        setInterval(updatePhilippineTime, 1000);
-        updatePhilippineTime();
+        // Combine day, short month (uppercase), and year with spaces
+        const dateStr = `${dayStr} ${monthStr} ${yearStr}`;
+
+        // --- Output to HTML ---
+        // Note: You must ensure your HTML structure has elements with these IDs:
+        // <div id="ph-time-display"></div>
+        // <div id="ph-date-display"></div>
+        
+        document.getElementById('ph-time').textContent = timeStr;
+        document.getElementById('ph-date').textContent = dateStr;
+    }
+
+    // Update immediately and then every second
+    updatePhilippineTime();
+    setInterval(updatePhilippineTime, 1000);
     </script>
 
   </body>
 </html>
+
 
