@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/pending_orders.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/table_overview.css' %}"/>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -67,13 +68,6 @@
             right: 0;
             padding: 1rem;
             z-index: 20;
-        }
-
-        .order-card {
-            border-style: solid;
-            border-width: 2px;
-            background-color: white;
-            border-radius: 8px;
         }
 
         /* Responsive adjustment */
@@ -156,16 +150,16 @@
                     <!-- Insert for loop of this entire col div below to render pending
                     orders from the backend -->
                     <div class="col">
-                        <div class="order-item px-3 py-2">
+                        <div class="pending-order-card px-3 py-2">
                             <div class="row">
-                                <div class="col-5">
+                                <div class="col-3">
                                     <!-- Fetch time and total price of order -->
                                     <span class="fw-bold fs-2">7:30PM</span>
                                     <br>
                                     <span class="fs-5">Php 9 999 999.99</span>
                                 </div>
                     
-                                <div class="col-6">
+                                <div class="col">
                                     <!-- Loop items -->
                                     <li>x2 Rice</li>
                                     <li>x2 French Fries</li>
@@ -173,9 +167,9 @@
                                     <li>(3 more...)</li>
                                 </div>
                     
-                                <div class="col-1 align-items-end d-flex align-items-center">
+                                <div class="col-4">
                                     <!-- Point these buttons to its order -->
-                                    <div class="order-actions">
+                                    <div class="d-flex gap-3 justify-content-end">
                                     <button class="action-btn edit-btn">
                                         <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
                                     </button>
@@ -212,7 +206,7 @@
                     clickable to its own order details -->
 
                     <div class="col">
-                        <div class="order-item" style="">
+                        <div class="past-order-card">
                             <div class="col">
                                 <div class="row">
                                     <!-- Fetch time, status, and total of order -->
