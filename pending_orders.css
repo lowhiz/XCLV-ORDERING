@@ -32,7 +32,7 @@
     border-radius: 10px;
     /* subtle shadow as seen in the image */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
-    border: 1px solid #f0f0f0; /* Light border for definition */
+    border: 1px solid #a79fb1; /* UNIFORM ORDER ITEM BORDER */; /* Light border for definition */
 }
 
 /* Order Details (Table ID, Time, Items) */
@@ -85,9 +85,8 @@
 }
 
 .action-btn {
-    width: 45px;
-    height: 45px;
-    border: 3px solid; /* Use generic border here, specific color below */
+    width: 75px;
+    height: 75px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -96,42 +95,46 @@
     background-color: #ffffff;
     transition: background-color 0.2s;
     padding: 0; /* Remove default padding */
+    
 }
 
 .action-icon {
-    width: 20px;
-    height: 20px;
+    width: 65px;
+    height: 65px;
 }
 
 /* Specific Button Styles */
 .edit-btn {
-    border-color: #cccccc; /* Light gray border for edit */
+    border: 2px solid #A5A5A5; /* Light gray border for edit */
 }
 .edit-btn:hover {
-    background-color: #f0f0f0;
+    background-color: #d8d6d6;
 }
 .edit-btn .action-icon {
-    filter: invert(30%) sepia(50%); /* Darker pencil icon */
+    filter: invert(88%) grayscale(100%) brightness(75%);
 }
 
 .reject-btn {
-    border-color: #e74c3c; /* Red border */
-    background-color: #f6d2d2; /* Light red background to match image */
+    background-color: #e05e50; /* Light red background to match image */
+    border: none;
 }
 .reject-btn:hover {
-    background-color: #f0baba;
+    background-color: #e42712;
 }
 .reject-btn .action-icon {
     filter: none; 
+    filter: invert(100%) brightness(200%);
 }
 
 .accept-btn {
-    border-color: #2ecc71; /* Green border */
-    background-color: #d2f6d2; /* Light green background to match image */
+    background-color: #58d48c; /* Light green background to match image */
+    border: none;
+    
 }
 .accept-btn:hover {
-    background-color: #baf0ba;
+    background-color: #15c45d;
 }
 .accept-btn .action-icon {
     filter: none; 
+    filter: invert(100%) brightness(200%);
 }
