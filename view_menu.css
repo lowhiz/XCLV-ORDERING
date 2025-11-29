@@ -1,0 +1,174 @@
+/* Custom styles for the View Menu page content */
+
+/* Main content area layout */
+.main-content {
+    /* Adjust margin based on screen size for responsiveness */
+    margin-left: 280px; /* Default for desktop */
+    padding: 30px;
+    background-color: #f7f3fb; /* Light purple background color seen in the image */
+    min-height: 100vh; /* Ensure it covers the full viewport height */
+}
+
+/* "VIEW MENU" Title */
+.view-menu-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Category Dropdown Container */
+.category-dropdown-container {
+    max-width: 100%; /* Maximize use of space */
+    padding-right: 30px; /* Add padding to the right for a better look */
+}
+
+/* Base Accordion (Dropdown) Styling */
+.accordion {
+    --bs-accordion-border-width: 0;
+    --bs-accordion-border-radius: 0;
+    --bs-accordion-bg: transparent;
+    --bs-accordion-active-bg: transparent;
+    --bs-accordion-btn-focus-box-shadow: none;
+}
+
+/* Individual Accordion Item (Category) */
+.accordion-item {
+    background-color: transparent;
+    border: none;
+    margin-bottom: 20px;
+}
+
+/* Header/Toggle Button Styling (The 'COCKTAILS' bar) */
+.category-dropdown-toggle {
+    background-color: #4a4a4a; /* Dark grey background */
+    color: white; /* White text */
+    padding: 15px 20px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border-radius: 8px !important; 
+    text-transform: uppercase;
+    width: 100%;
+    text-align: left;
+    transition: none; /* Disable transition for cleaner look */
+}
+
+/* Remove default Bootstrap focus/hover styles */
+.accordion-button:not(.collapsed) {
+    background-color: #4a4a4a;
+    color: white;
+    box-shadow: none;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* Ensure the collapsed state maintains rounded corners */
+.accordion-button.collapsed {
+    border-radius: 8px !important;
+}
+
+.accordion-button:focus {
+    border-color: transparent;
+    box-shadow: none;
+}
+
+/* Customizing the Bootstrap arrow icon */
+.accordion-button::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    transform: rotate(0deg); /* Initial state: down arrow (collapsed) */
+    transition: transform 0.2s ease-in-out;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(-180deg); /* Expanded state: up arrow */
+    filter: brightness(0) invert(1); /* Ensure it is white if not already */
+}
+
+/* Accordion Body (The Menu Items Container) */
+.category-items-grid {
+    background-color: #f7f3fb; /* Matches main background */
+    padding: 20px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 15px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Menu Item Card Styling */
+.menu-item-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #e5d7f0; /* Light purple background for cards */
+    color: #4a4a4a;
+    border: none;
+    border-radius: 8px; 
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-item-card:hover {
+    background-color: #d8c3e6; /* Darker hover effect */
+}
+
+/* --- NEW / MODIFIED: Styling for the left content (icon + text) within the card --- */
+.menu-item-card > span:first-child {
+    display: flex;
+    align-items: center;
+    /* Adjust margin here to control closeness of icon to text */
+    /* You can make this smaller if you want them even closer */
+    margin-right: 5px; 
+}
+
+
+.item-icon {
+    width: 20px;
+    height: 20px;
+    /* --- MODIFIED: Reduce margin-right to bring text closer to icon --- */
+    margin-right: 5px; 
+    filter: invert(30%) sepia(10%) saturate(1000%) hue-rotate(240deg) brightness(80%);
+}
+
+/* Info Icon Styling (Using 'i' character) */
+.info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #4a4a4a;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-left: 10px;
+    flex-shrink: 0;
+    color: #4a4a4a;
+}
+
+/* --- Responsiveness for Sidebar/Main Content --- */
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .category-items-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .main-content {
+        padding: 10px;
+    }
+    .view-menu-title {
+        font-size: 2rem;
+    }
+    .category-items-grid {
+        grid-template-columns: 1fr;
+    }
+}

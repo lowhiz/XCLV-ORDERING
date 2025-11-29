@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Navbar</title>
+    <link rel="icon" type="image/png" href="logo-footer.png">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="admin_nav_bar.css" />
+    <link rel="stylesheet" href="view_menu.css" /> <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <div>
+        <div class="time-section">
+          <h5 id="ph-time">5:00 PM</h5>
+          <small id="ph-date">07 JAN 2007</small>
+        </div>
+
+        <div class="logo-section d-flex align-items-center">
+          <img src="logo-footer.png" alt="Logo" />
+          <div class="ms-2">
+            <h6 class="mb-0 fw-bold text-white">Ordering</h6>
+            <h6 class="fw-bold text-white">System</h6>
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <a href="#" class="nav-link">
+            <img
+              src="pending.svg"
+              alt="Icon"
+              class="profile-img icon-small"
+            />
+            Pending Orders
+          </a>
+          <a href="#" class="nav-link">
+            <img src="dining-table.png" alt="Icon" class="profile-img" />
+            Table Overview
+          </a>
+          <a href="#" class="nav-link">
+            <img src="menu.svg" alt="Icon" class="profile-img" />
+            View Menu
+          </a>
+          <a href="#" class="nav-link">
+            <img src="qr_code.svg" alt="Icon" class="profile-img" />
+            QR Codes
+          </a>
+          <a href="#" class="nav-link">
+            <img src="archive.svg" alt="Icon" class="profile-img" />
+            Archived Orders
+          </a>
+        </div>
+      </div>
+
+      <div class="bottom-section">
+        <p>Logged in as <strong>Manager</strong></p>
+        <button class="logout-btn">
+          <img src="logout.svg" alt="Icon" class="profile-img2" />
+          LOGOUT
+        </button>
+      </div>
+    </div>
+    <div class="main-content">
+        <h1 class="view-menu-title">VIEW MENU</h1>
+
+        <div class="category-dropdown-container">
+            <div class="accordion" id="menuCategoryAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingCocktails">
+                        <button class="accordion-button category-dropdown-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCocktails" aria-expanded="false" aria-controls="collapseCocktails">
+                            COCKTAILS
+                            </button>
+                    </h2>
+                    <div id="collapseCocktails" class="accordion-collapse collapse show" aria-labelledby="headingCocktails" data-bs-parent="#menuCategoryAccordion">
+                        <div class="accordion-body category-items-grid">
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> The Aperol Affair <span class="info-icon">i</span>
+                            </button>
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> White Sangria Special <span class="info-icon">i</span>
+                            </button>
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron Ala Mojito <span class="info-icon">i</span>
+                            </button>
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron De Strawberry <span class="info-icon">i</span>
+                            </button>
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron De Chocolate <span class="info-icon">i</span>
+                            </button>
+                            <button class="menu-item-card">
+                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> XCLV Martini <span class="info-icon">i</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // JavaScript to update time and date
+      function updatePhilippineTime() {
+          const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: true };
+          const optionsDate = { day: '2-digit', month: 'short', year: 'numeric' };
+
+          // Get Philippine time zone
+          const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+          const phDate = new Date(now);
+
+          // Format
+          const timeStr = phDate.toLocaleTimeString('en-US', optionsTime).toUpperCase();
+          const dateStr = phDate.toLocaleDateString('en-US', optionsDate)
+            .toUpperCase()
+            .replace(',', '');
+
+          document.getElementById('ph-time').textContent = timeStr;
+          document.getElementById('ph-date').textContent = dateStr;
+      }
+
+      // Update every second
+      setInterval(updatePhilippineTime, 1000);
+      updatePhilippineTime();
+    </script>
+
+  </body>
+</html>
