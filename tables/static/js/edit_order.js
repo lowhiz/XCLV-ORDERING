@@ -108,9 +108,11 @@ function increaseQuantity(itemId, itemName, itemPrice) {
         };
     }
 
-    cart[itemId].quantity++;
-    updateDisplay(itemId);
-    updateOrderSummary();
+    if (cart[itemId].quantity < 99) {
+        cart[itemId].quantity++;
+        updateDisplay(itemId);
+        updateOrderSummary();
+    }
 
     console.log('Cart after increase:', cart[itemId]); // Debug line
     console.log('Full cart now:', Object.keys(cart)); // Debug line
