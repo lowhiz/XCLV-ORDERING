@@ -16,13 +16,7 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
-
-    <!-- LOADING CSS FILES STATICALLY WITHOUT DJANGO SERVER (VIA LIVE SERVER)-->
-    <!-- OR BY OPENING THE HTML FILE DIRECTLY -->
-    <!-- IN PRODUCTION/FINALIZATION, REMOVE THIS BLOCK -->
-    <link rel="stylesheet" href="../../static/css/global.css"/>
-    <link rel="stylesheet" href="../../static/css/admin_nav_bar.css"/>
-    <link rel="stylesheet" href="../../static/css/admin_dashboard.css"/>
+    <link rel="stylesheet" href="{% static 'css/pending_orders.css' %}"/>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -157,33 +151,41 @@
          
         <div class="scrollable-queued-orders">
             <div class="container-fluid p-3">
-                <div class="row row-cols-1 g-3">
+                <div class="row row-cols-1 g-2">
 
                     <!-- Insert for loop of this entire col div below to render pending
                     orders from the backend -->
                     <div class="col">
-                        <div class="order-card px-3 py-2">
+                        <div class="order-item px-3 py-2">
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-5">
                                     <!-- Fetch time and total price of order -->
                                     <span class="fw-bold fs-2">7:30PM</span>
                                     <br>
                                     <span class="fs-5">Php 9 999 999.99</span>
                                 </div>
-
-                                <div class="col-5">
+                    
+                                <div class="col-6">
                                     <!-- Loop items -->
                                     <li>x2 Rice</li>
                                     <li>x2 French Fries</li>
                                     <!-- Loop the remaining and just count-->
                                     <li>(3 more...)</li>
                                 </div>
-
-                                <div class="col-auto align-items-end">
+                    
+                                <div class="col-1 align-items-end d-flex align-items-center">
                                     <!-- Point these buttons to its order -->
-                                    <button>Edit</button>
-                                    <button>Deny</button>
-                                    <button>Approve</button>
+                                    <div class="order-actions">
+                                    <button class="action-btn edit-btn">
+                                        <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
+                                    </button>
+                                    <button class="action-btn reject-btn">
+                                        <img src="{% static 'images/x.svg' %}" alt="Reject" class="action-icon" />
+                                    </button>
+                                    <button class="action-btn accept-btn">
+                                        <img src="{% static 'images/check.svg' %}" alt="Accept" class="action-icon" />
+                                    </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -197,7 +199,7 @@
         <br>
 
         <!-- ✅ PAST ORDERS -->
-        <div class="fixed-middle-section">
+        <div class="fixed-middle-section mt-2">
             <h5 class="xclv-text-grey fw-bold">PAST ORDERS</h5>
         </div>
         <div class="scrollable-past-orders">
@@ -210,19 +212,22 @@
                     clickable to its own order details -->
 
                     <div class="col">
-                        <div class="order-card px-3 py-2" style="height: 350px">
-                            <div class="row">
-                                <!-- Fetch time, status, and total of order -->
-                                <span class="fw-bold fs-2">7:15PM</span>
-                                <br>
-                                <span class="fs-5 fw-bold">SERVED</span>
-                                <span class="fs-5">Php 99 999.0</span>
-                            </div>
-                            <div class="row ps-2 pt-4">
-                                <!-- Loop items -->
-                                <li>x999 Beer
-                                <li>x999 Salisbury Steak</li>
-                                <li>x999 2 Face</li>
+                        <div class="order-item" style="">
+                            <div class="col">
+                                <div class="row">
+                                    <!-- Fetch time, status, and total of order -->
+                                    <span class="fw-bold fs-2">7:15PM</span>
+                                    <br>
+                                    <span class="fs-5 fw-bold">SERVED</span>
+                                    <span class="fs-5">Php 99 999.0</span>
+                                </div>
+                                <div class="row ms-2 pt-4">
+                                    <!-- Loop items -->
+                                    <li>x999 Beer
+                                    <li>x999 Salisbury Steak</li>
+                                    <li>x999 2 Face</li>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -286,9 +291,5 @@
     </script>
     <script src="{% static 'js/admin_table_overview.js' %}"></script>
     <script src="{% static 'js/admin_time.js' %}"></script>
-
-    <!-- TESTING WITHOUT DJANGO RUNNING -->
-     <script src="../../static/js/admin_table_overview.js"></script>
-     <script src="../../static/js/admin_time.js"></script>
 </body>
 </html>
