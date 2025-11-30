@@ -12,8 +12,9 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/edit_order.css' %}"/>
 
     <!-- Google Fonts -->
@@ -182,23 +183,23 @@
             <div class="d-flex justify-content-center container pt-2">
                 <div class="row w-100 g-2">
                     <div class="col">
-                        <button onclick="cancelEdit()" class="btn btn-secondary btn-lg w-100">
-                            Back
+                        <button onclick="cancelEdit()" class="btn btn-lg admin-grey-button fw-bold w-100">
+                            BACK
                         </button>
                     </div>
                     <div class="col">
-                        <button onclick="saveOrderChanges()" class="btn btn-primary btn-lg w-100">
-                            Edit Order
+                        <button onclick="saveOrderChanges()" class="btn btn-lg admin-gold-button fw-bold w-100">
+                            EDIT ORDER
                         </button>
                     </div>
                     <div class="col">
-                        <button onclick="deleteOrder()" class="btn btn-danger btn-lg w-100">
-                            Decline Order
+                        <button onclick="deleteOrder()" class="btn btn-lg btn-danger fw-bold w-100">
+                            DECLINE ORDER
                         </button>
                     </div>
                     <div class="col">
-                        <button onclick="completeOrder()" class="btn btn-success btn-lg w-100">
-                            Complete Order
+                        <button onclick="completeOrder()" class="btn btn-lg btn-success fw-bold w-100">
+                            COMPLETE ORDER
                         </button>
                     </div>
                 </div>
