@@ -1,75 +1,242 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<body class="p-4" style="font-family: 'Montserrat', sans-serif;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard | Table Overview</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-footer.png' %}">
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
-    <div class="container">
-        <h2 class="mb-4 text-center">Orders for Table: {{ table_order.table_order_id }}</h2>
+    <!-- CSS STATIC FILES TO BE LOADED BY DJANGO SERVER -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/pending_orders.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/table_overview.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/table_details.css' %}"/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <div>
+        <!-- Time section -->
+        <div class="time-section">
+            <h5 id="ph-time">5:00 PM</h5>
+            <small id="ph-date">07 JAN 2007</small>
+        </div>
+
+        <!-- Logo and title -->
+        <div class="logo-section d-flex align-items-center">
+            <img src="{% static 'images/logo-footer.png' %}" alt="Logo" />
+            <div class="ms-2">
+            <h6 class="mb-0 fw-bold text-white">Ordering</h6>
+            <h6 class="fw-bold text-white">System</h6>
+            </div>
+        </div>
+
+        <!-- Navigation links -->
+        <div class="nav-section">
+            <a href="{% url 'pending_table_orders' %}?admin=true" class="nav-link">
+            <img
+                src="{% static 'images/pending.svg' %}"
+                alt="Icon"
+                class="profile-img icon-small"
+            />
+            Pending Orders
+            </a>
+            <a href="{% url 'table_overview' %}" class="nav-link active">
+            <img src="{% static 'images/dining-table.png' %}" alt="Icon" class="profile-img" />
+            Table Overview
+            </a>
+            <a href="{% url 'view_menu' %}?admin=true" class="nav-link">
+            <img src="{% static 'images/menu.svg' %}" alt="Icon" class="profile-img" />
+            View Menu
+            </a>
+            <a href="{% url 'qr_management' %}" class="nav-link">
+            <img src="{% static 'images/qr_code.svg' %}" alt="Icon" class="profile-img" />
+            QR Codes
+            </a>
+        </div>
+        </div>
+
+        <!-- Bottom section -->
+        <div class="bottom-section">
+        <p>Logged in as <strong>Manager</strong></p>
+        <button class="logout-btn">
+            <img src="{% static 'images/logout.svg' %}" alt="Icon" class="profile-img2" />
+            LOGOUT
+        </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Header Section -->
+        <div class="fixed-top-section">
+            <!-- INSERT TABLE DESCRIPTION (e.g. VVIP1) AND TOTAL PRICE OF TABLE HERE -->
+            <h1 class="dashboard-heading">TABLE << ST1 >></h1>
+            <h2>Total Bill: <span class="xclv-text-accent-2">Php << 9999.00 >></span></h2>
+            <h5 class="xclv-text-grey fw-bold">QUEUED ORDERS</h5>
+        </div>
 
         <!-- ✅ PENDING ORDERS -->
-        <h4 class="text-warning">Pending Orders</h4>
-        {% if pending_orders %}
-        <table class="table table-bordered table-striped">
-            <thead class="table-light">
-                <tr>
-                    <th>Description</th>
-                    <th>Items</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in pending_orders %}
-                <tr>
-                    <td>
-                        {{ order.description }} <br>
-                        <small>{{ order.order_time|date:"Y-m-d H:i:s" }}</small>
-                    </td>
-                    <td>
-                        {{ order.item.name }} (x{{ order.quantity }}) — ₱{{ order.total_item_price }}
-                    </td>
-                    <td>
-                        <a href="{% url 'delete_order' order.order_id %}" class="btn btn-sm btn-danger">Delete</a>
-                        <a href="{% url 'complete_order' order.order_id %}" class="btn btn-sm btn-success">Mark Complete</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="text-muted">No pending orders for this table.</p>
-        {% endif %}
 
-        <hr>
+        <div class="scrollable-queued-orders">
+            <div class="container-fluid p-3">
+                <div class="row row-cols-1 g-2">
+
+                    <!-- Insert for loop of this entire col div below to render pending
+                    orders from the backend -->
+                    <div class="col">
+                        <div class="pending-order-card px-3 py-2">
+                            <div class="row">
+                                <div class="col-3">
+                                    <!-- Fetch time and total price of order -->
+                                    <span class="fw-bold fs-2">7:30PM</span>
+                                    <br>
+                                    <span class="fs-5">Php 9 999 999.99</span>
+                                </div>
+
+                                <div class="col">
+                                    <!-- Loop items -->
+                                    <li>x2 Rice</li>
+                                    <li>x2 French Fries</li>
+                                    <!-- Loop the remaining and just count-->
+                                    <li>(3 more...)</li>
+                                </div>
+
+                                <div class="col-4">
+                                    <!-- Point these buttons to its order -->
+                                    <div class="d-flex gap-3 justify-content-end">
+                                    <button class="action-btn edit-btn">
+                                        <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
+                                    </button>
+                                    <button class="action-btn reject-btn">
+                                        <img src="{% static 'images/x.svg' %}" alt="Reject" class="action-icon" />
+                                    </button>
+                                    <button class="action-btn accept-btn">
+                                        <img src="{% static 'images/check.svg' %}" alt="Accept" class="action-icon" />
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of For Loop Implementation -->
+
+                </div>
+            </div>
+        </div>
+
+        <br>
 
         <!-- ✅ PAST ORDERS -->
-        <h4 class="text-success mt-4">Past Orders</h4>
-        {% if past_orders %}
-        <table class="table table-bordered table-striped">
-            <thead class="table-light">
-                <tr>
-                    <th>Description</th>
-                    <th>Items</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in past_orders %}
-                <tr>
-                    <td>
-                        {{ order.description }} <br>
-                        <small>{{ order.order_time|date:"Y-m-d H:i:s" }}</small>
-                    </td>
-                    <td>
-                        {{ order.item.name }} (x{{ order.quantity }}) — ₱{{ order.total_item_price }}
-                    </td>
-                    <td><span class="badge bg-success">{{ order.status|capfirst }}</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="text-muted">No past orders yet.</p>
-        {% endif %}
+        <div class="fixed-middle-section mt-2">
+            <h5 class="xclv-text-grey fw-bold">PAST ORDERS</h5>
+        </div>
+        <div class="scrollable-past-orders">
+            <div class="container-fluid p-3">
+                <div class="row row-cols-3 g-3">
+
+                    <!-- Insert for loop of this entire col div below to render past
+                    orders from the backend -->
+                    <!-- Enclose this entire col div with an <a> element to make it
+                    clickable to its own order details -->
+
+                    <div class="col">
+                        <div class="past-order-card">
+                            <div class="col">
+                                <div class="row">
+                                    <!-- Fetch time, status, and total of order -->
+                                    <span class="fw-bold fs-2">7:15PM</span>
+                                    <br>
+                                    <span class="fs-5 fw-bold">SERVED</span>
+                                    <span class="fs-5">Php 99 999.0</span>
+                                </div>
+                                <div class="row ms-2 pt-4">
+                                    <!-- Loop items -->
+                                    <li>x999 Beer
+                                    <li>x999 Salisbury Steak</li>
+                                    <li>x999 2 Face</li>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+        <div class="fixed-bottom-section mb-2">
+            <div class="d-flex justify-content-center container pt-2">
+                <div class="row w-100 g-2">
+                    <div class="col">
+                        <a href="{% url 'table_overview' %}" class="btn btn-lg admin-grey-button w-100 fw-bold">
+                            <- BACK
+                        </a>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-lg admin-gold-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#archiveTableModal">
+                            ARCHIVE TABLE
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Modal to Archive Table -->
+    <div class="modal fade" id="archiveTableModal" tabindex="-1" aria-labelledby="archiveTableModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body pt-4">
+            <div class="text-center mb-3">
+                <span class="fs-5">Are you sure to archive</span>
+                <br>
+                <strong class="fs-3">TABLE XX 99?</strong>
+            </div>
+            <div class="fs-4 pt-2 px-3">
+              <span>Approved Orders: <strong>999 Orders</strong></span><br>
+              <span>Total Revenue: <strong>Php 9999.00</strong></span>
+            </div>
+          </div>
+          <br>
+          <div class="modal-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn btn-lg admin-grey-button fw-bold w-100" data-bs-dismiss="modal">CANCEL</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-lg admin-gold-button fw-bold w-100">ARCHIVE TABLE</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Make the URL available to external JavaScript
+        window.TABLE_STATUS_API_URL = '{% url "table_status_api" %}';
+    </script>
+    <script src="{% static 'js/admin_table_overview.js' %}"></script>
+    <script src="{% static 'js/admin_time.js' %}"></script>
 </body>
 </html>

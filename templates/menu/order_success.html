@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XCLV Menu - {{ table_display }}</title>
+</head>
+<body>
+    <div class="header">
+        <span>XCLV Club Davao</span>
+        <br>
+        <span>{{ table_display }}</span>
+        <a href="{% url 'table_details' %}">Table Details</a>
+    </div>
+
+    <h2>Your order is now in the bar!</h2>
+    <p>Our staff will review and confirm your order before serving it to your table.</p>
+
+    <a href="{% url 'view_menu' %}?table_id={{ table_id }}" class="back-button">← Back to Menu</a>
+</body>
+</html>

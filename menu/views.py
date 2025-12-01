@@ -81,6 +81,58 @@ def order_review(request):
     }
     return render(request, 'menu/order_review.html', context)
 
+def table_details(request):
+    """
+    Display table details including running bill and order history.
+    Shows all orders for the current table session.
+    """
+    # Get table information from session
+    table_id = request.session.get('active_table_id')
+    if not table_id:
+        messages.error(request, 'Invalid request. Try again by scanning your table\'s QR code.')
+        return redirect('/')
+    
+    # Fetch the table
+    table = get_object_or_404(Table, id=table_id)
+    
+    # Get all table orders for this table (ordered by time, newest first)
+    table_orders = TableOrder.objects.filter(table=table).order_by('-order_time')
+    
+    # Prepare order history with items
+    order_history = []
+    for table_order in table_orders:
+        orders = table_order.orders.all()
+        items_list = []
+        order_total = Decimal('0.00')
+        
+        for order in orders:
+            items_list.append({
+                'name': order.item.name,
+                'quantity': order.quantity,
+                'unit_price': order.item.unit_price,
+                'total_item_price': order.total_item_price
+            })
+            order_total += order.total_item_price
+        
+        order_history.append({
+            'table_order_db_id': table_order.id,  # Database ID for URL
+            'table_order_id': table_order.table_order_id,  # UUID for display
+            'order_time': table_order.order_time,
+            'order_status': table_order.order_status,
+            'items': items_list,
+            'order_total': order_total
+        })
+    
+    context = {
+        'table_display': table.description,
+        'table_id': table.id,
+        'running_bill': table.total_payment,
+        'order_history': order_history,
+        'table_status': 'Active' if table.table_status else 'Inactive'
+    }
+    
+    return render(request, 'menu/table_details.html', context)
+
 def close_menu(request):
     """
     Prevents customers from accessing the menu.

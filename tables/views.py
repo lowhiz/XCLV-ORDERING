@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from .models import TableOrder, Table
 from orders.models import Order
 
@@ -15,10 +16,10 @@ def pending_table_orders(request):
     for table_order in pending_orders:
         # Table description from Table entity
         table_description = table_order.table.description or str(table_order.table.table_id_number)
-        
+
         # Get all Orders linked to the TableOrder
         orders = table_order.orders.all()
-        
+
         items_list=[]
         # Collect all item details
         for order in orders:
@@ -27,7 +28,7 @@ def pending_table_orders(request):
                 "quantity": order.quantity,
                 "total_item_price":Decimal(order.total_item_price)
             })
-        
+
         table_orders_with_items.append({
             "table_order_id": table_order.id,
             "description": table_description,
@@ -104,7 +105,7 @@ def table_overview(request):
         else:
             # No orders at all
             status = "Inactive"
-    
+
         # Add to list for rendering
         tables_status.append({
             "table": table,
@@ -116,57 +117,44 @@ def table_overview(request):
     context = {"tables_status": tables_status}
     return render(request, "tables/table_overview.html", context)
 
-def table_details(request, table_id):
-    # Step 1: Get the Table using UUID
-    table = get_object_or_404(Table, table_id_number=table_id)
-    print(f"DEBUG: Table fetched: {table}")
+def table_status_api(request):
+    """
+    API endpoint to get live table status for all active tables
+    Returns JSON with table descriptions and their current status
+    """
+    active_tables = Table.objects.filter(table_status=True)
+    table_statuses = {}
 
-    # Step 2: Get all TableOrders for this table
-    table_orders = TableOrder.objects.filter(table=table).order_by("-order_time")
-    print(f"DEBUG: All TableOrders: {list(table_orders.values('table_order_id', 'order_status'))}")
+    for table in active_tables:
+        # Get all orders for this specific table
+        table_orders = TableOrder.objects.filter(table=table)
 
-    # Separate pending and completed TableOrders
-    pending_orders_list = []
-    completed_orders_list = []
+        # Determine status based on orders
+        has_pending = False
 
-    for table_order in table_orders:
-        # Table description
-        table_description = table_order.table.description or str(table_order.table.table_id_number)
-        
-        # Get all Orders linked to the TableOrder
-        orders = table_order.orders.all()
-        
-        # Collect items
-        items_list = []
-        for order in orders:
-            items_list.append({
-                "name": order.item.name,
-                "quantity": order.quantity,
-                "total_item_price": Decimal(order.total_item_price)
-            })
+        if table_orders.exists():
+            statuses = list(table_orders.values_list('order_status', flat=True))
+            has_pending = any(s.lower() == "pending" for s in statuses)
 
-        order_data = {
-            "table_order_id": table_order.table_order_id,
-            "description": table_description,
-            "items": items_list,
-            "order_status": table_order.order_status,
-            "order_time": table_order.order_time,
+        # Use table description as key (VVIP 1, ST 1, etc.)
+        table_key = table.description
+        table_statuses[table_key] = {
+            'has_pending_orders': has_pending,
+            'status': 'pending' if has_pending else 'available'
         }
 
-        # Separate based on TableOrder status
-        if table_order.order_status.lower() == "pending":
-            pending_orders_list.append(order_data)
-        elif table_order.order_status.lower() == "completed":
-            completed_orders_list.append(order_data)
+    return JsonResponse(table_statuses)
+
+def table_details(request, table_id):
+    """
+    View to display details of a specific table including its orders.
+    """
+    table = get_object_or_404(Table, id=table_id)
+    table_orders = TableOrder.objects.filter(table=table).order_by("-order_time")
 
     context = {
         "table": table,
-        "pending_orders": pending_orders_list,
-        "completed_orders": completed_orders_list,
+        "table_orders": table_orders,
+
     }
-
-    # Debug
-    print(f"DEBUG: Pending orders count: {len(pending_orders_list)}")
-    print(f"DEBUG: Completed orders count: {len(completed_orders_list)}")
-
-    return render(request, 'tables/table_details.html', context)
+    return render(request, "tables/table_details.html", context)
