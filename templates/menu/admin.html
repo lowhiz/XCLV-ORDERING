@@ -1,4 +1,4 @@
-{% load static %}
+{% load static menu_extras %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,7 +106,7 @@
                                     data-item-category="{{ category }}"
                                     data-item-image="{{ item.image.url }}">
                                     <span>
-                                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="item-icon" />
+                                        <img src="{% static 'images/' %}{{ category|category_icon }}" alt="{{ item.name }}" class="item-icon" />
                                     </span>
                                     {{ item.name }}
                                     <span class="info-icon" data-item-id="{{ item.id }}">
