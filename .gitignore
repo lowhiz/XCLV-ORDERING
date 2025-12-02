@@ -23,7 +23,7 @@ db.sqlite3-journal
 # Static files (collected)
 /staticfiles/
 /static_root/
-/static/
+
 
 # Media files (user uploads)
 /media/
