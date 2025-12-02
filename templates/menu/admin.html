@@ -17,10 +17,8 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/qr_codes_management.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/view_menu.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/menu_review1.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/menu_review2.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_view_menu.css' %}"/>
+
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -80,27 +78,27 @@
     </div>
 
     <div class="main-content">
-        <div class="fixed-top-section">
-            <h1 class="view-menu-title">VIEW MENU</h1>
+        <div class="fixed-top-section dashboard-heading">
+            <h1 class="fw-bold">VIEW MENU</h1>
         </div>
 
         <div class="scrollable-menu-section pt-3">
 
             {% if categories %}
-            <div class="category-dropdown-container">
+            <div class="container">
                 {% for category, items in categories.items %}
                 <div class="accordion" id="menu{{ category|capfirst }}Accordion">
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ category|capfirst }}">
-                            <button class="accordion-button category-dropdown-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|capfirst }}" aria-expanded="false" aria-controls="#collapse{{ category|capfirst }}">
-                                {{ category|capfirst }}
+                        <h1 class="accordion-header" id="heading{{ category|capfirst }}">
+                            <button class="accordion-button accordion-bg category-dropdown-toggle collapsed montserrat fw-bold fs-3 " type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ category|capfirst }}" aria-expanded="false" aria-controls="#collapse{{ category|capfirst }}">
+                                {{ category|upper }}
                             </button>
-                        </h2>
+                        </h1>
                         <div id="collapse{{ category|capfirst }}" class="accordion-collapse collapse show" aria-labelledby="heading{{ category|capfirst }}" data-bs-parent="#menu{{ category|capfirst }}Accordion">
                             <div class="accordion-body category-items-grid">
                                 {% for item in items %}
 
-                                <div class="menu-item-card"
+                                <div class="menu-item-card general-card"
                                     data-item-id="{{ item.id }}"
                                     data-item-name="{{ item.name }}"
                                     data-item-price="{{ item.unit_price }}"
@@ -118,6 +116,7 @@
                                 {% endfor %}
                             </div>
                         </div>
+                        <div class="mt-2"></div>
                         {% endfor %}
                         {% else %}
                         <p>No menu items found.</p>

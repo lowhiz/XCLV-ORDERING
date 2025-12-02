@@ -1,3 +1,9 @@
+:root {
+    --card-bg: #DFD8E8;
+    --card-bg-hover: #BFB4CD;
+    --accordion-bg: #363030;
+}
+
 .dashboard-heading {
     font-family: 'Montserrat', sans-serif;
     font-weight: bold;
@@ -5,8 +11,24 @@
     text-transform: uppercase;
 }
 
-body {
+body .main-content {
+    background-color: var(--white);
     font-family: 'Inter', sans-serif;
+}
+
+/* Color utilities */
+.general-card {
+    background-color: var(--card-bg);
+    transition: background-color 0.3s ease;
+}
+
+.general-card:hover {
+    background-color: var(--card-bg-hover);
+}
+
+.accordion-bg {
+    background-color: var(--accordion-bg) !important;
+    color: var(--white) !important;
 }
 
 .table-div {
@@ -107,7 +129,6 @@ body {
     border-width: 2px;
     border-radius: 8px;
 }
-
 
 .modal {
     left: 280px;
