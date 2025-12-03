@@ -33,7 +33,7 @@ def archive_and_delete_table(request, table_id):
                 "total_item_price": float(o.total_item_price),
                 "category": o.item.category,
             })
-        
+
         # Add processed data for this table order to the archive container
         archive_data.append({
             "order_status": t_order.order_status,
@@ -57,7 +57,7 @@ def archive_and_delete_table(request, table_id):
     # Delete the table itself from the database
     table.delete()
 
- 
+
     # Redirect to the table overview page after successful archiving
     return redirect("table_overview")
 

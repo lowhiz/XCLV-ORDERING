@@ -60,6 +60,10 @@
                 <img src="{% static 'images/qr_code.svg' %}" alt="Icon" class="profile-img" />
                 QR Codes
             </a>
+            <a href="{% url 'show_archive_data' %}" class="nav-link">
+                <img src="{% static 'images/archive.svg' %}" alt="Icon" class="profile-img" />
+                Archived Orders
+            </a>
     </div>
     </div>
 
@@ -115,17 +119,17 @@
                                     <!-- Action Buttons -->
                                     <div class="col-4">
                                         <div class="d-flex gap-3 justify-content-end">
-                                            <a href="{% url 'edit_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'edit_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn edit-btn">
                                                 <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
                                             </a>
 
-                                            <a href="{% url 'delete_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'delete_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn reject-btn">
                                                 <img src="{% static 'images/x.svg' %}" alt="Reject" class="action-icon" />
                                             </a>
 
-                                            <a href="{% url 'complete_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'complete_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn accept-btn">
                                                 <img src="{% static 'images/check.svg' %}" alt="Accept" class="action-icon" />
                                             </a>
