@@ -154,16 +154,54 @@ function sanitizeId(category) {
     return category.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-// Function to handle the toggle
+// Function to handle the toggle with sliding animation
 function setupDropdownToggle(category) {
     const id = sanitizeId(category);
     const toggle = document.getElementById(id + "Toggle");
     const content = document.getElementById(id + "Dropdown");
-    
+    const arrow = toggle.querySelector(".dropdown-arrow"); // Get the arrow element
+
     if (toggle && content) {
-        toggle.addEventListener("click", () => {
-            content.classList.toggle("show");
-        });
+        // 1. INITIALIZE (For "Default Show All" state)
+        // We set the max-height to a large value (like its scrollHeight) 
+        // to ensure it is visible and can contract properly on the first click.
+        // We run this AFTER the DOM is rendered (later in the script).
+        
+        // Function to set the dropdown height
+        function toggleDropdown() {
+            // Determine if the content is currently visible
+            const isVisible = content.style.maxHeight && content.style.maxHeight !== "0px";
+
+            if (isVisible) {
+                // If visible, collapse it (Slide Up)
+                content.style.maxHeight = "0px";
+                arrow.classList.remove("bi-caret-up-fill");
+                arrow.classList.add("bi-caret-down-fill");
+            } else {
+                // If collapsed, expand it (Slide Down)
+                // Set to the actual full height (scrollHeight) to enable the slide transition
+                content.style.maxHeight = content.scrollHeight + "px";
+                arrow.classList.remove("bi-caret-down-fill");
+                arrow.classList.add("bi-caret-up-fill");
+            }
+        }
+        
+        toggle.addEventListener("click", toggleDropdown);
+
+        // Optional: Ensure the dropdown is set to its initial full height after load
+        // We run this function outside the loop for the current element:
+        function setInitialHeight() {
+            // Only set height if the element is present, to ensure "Default Show All"
+            if (content) {
+                // Set max-height to its full content size
+                content.style.maxHeight = content.scrollHeight + "px";
+                // Change arrow direction to 'up' to show it's open
+                arrow.classList.remove("bi-caret-down-fill");
+                arrow.classList.add("bi-caret-up-fill");
+            }
+        }
+        // Run the setup after a short delay to ensure content has rendered
+        setTimeout(setInitialHeight, 10);
     }
 }
 
