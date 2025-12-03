@@ -28,18 +28,18 @@ def validation(request):
 
     # Case 1: Missing QR token
     if not token:
-        return render(request, 'error.html')
+        return render(request, 'qr_invalid.html')
 
     try:
         # Retrieve QR code and its batch in one query
         qr_code = QRCode.objects.select_related('batch').get(qr_hash=token)
     except QRCode.DoesNotExist:
         # Case 2: QR code not found
-        return render(request, 'error.html')
+        return render(request, 'qr_invalid.html')
 
     # Case 3: Batch is inactive
     if not qr_code.batch.batch_status:
-        return render(request, 'error.html')
+        return render(request, 'qr_invalid.html')
 
     # Save QR temporarily in session for next step
     request.session['pending_qr_token'] = token
@@ -56,7 +56,7 @@ def validation(request):
 @csrf_exempt
 def validate_location_ajax(request):
     """
-    STEP 2: AJAX call from geolocation_prompt.html.
+    STEP 2: AJAX call from validate_location.html.
     - Receives user's coordinates and QR token.
     - Validates QR, batch status, and distance.
     - Returns JSON response (redirects to menu if successful).
@@ -244,22 +244,89 @@ def get_qr_status(request):
                 # Circular: loop back to the first batch
                 next_batch = batch_names[0]
             
-    return render(request, "management.html", {
+    return render(request, "qr_batches.html", {
         "batches": batch_list,
         "menu_closed": menu_status,
         "active_batch": active_batch,
         "next_batch": next_batch
     })
 
-# This code will get the qr codes of the Batch
 def qr_details(request, batch_id):
     batch = get_object_or_404(QRBatch, id=batch_id)
     qr_codes = batch.qr_codes.all()
 
-    # Get the URL of each QR code image
-    qr_image_urls = [code.image.url for code in qr_codes]  # code.images is the ImageField
+    # In the original implemention, only image URLs were passed as qr_image_urls
+    # This does not pass the table description needed to display on the page
+    # We refactor qr_image_urls's loop...
 
-    return render(request, 'qr_details.html', {
+    ## qr_image_urls = [code.image.url for code in qr_codes]  # code.image is the ImageField of each QR code url as a list, qr_codes
+
+    #...to a list,
+
+    ## qr_data = []
+
+    # Where it will be passed as a context of both the image URL and the table
+    # description that the template can call as qr_item.table_description,
+    # assuming the loop is implemented as `for qr_item in qr_data`
+
+    # Prepare QR code data with table labels
+    qr_data = []
+    token_pattern = re.compile(r"xclv-([a-zA-Z]+)-(\d+)-")
+
+    for qr_code in qr_codes:
+        match = token_pattern.search(qr_code.unique_token)
+
+        if match:
+            # Extract category and number from token
+            category = match.group(1).upper()  # e.g., "ST", "VIP", "VVIP"
+            number = match.group(2)            # e.g., "1", "2", "3"
+            table_description = f"{category} {number}"  # e.g., "ST 1", "VIP 2"
+        else:
+            # Fallback if token doesn't match expected format
+            table_description = f"QR {qr_code.id}"
+
+        # For each index in the list contains both the image URL and table description
+        qr_data.append({
+            'qr_code': qr_code,
+            'image_url': qr_code.image.url,
+            'table_description': table_description,
+        })
+
+    return render(request, 'view_batch.html', {
         'batch': batch,
-        'qr_image_urls': qr_image_urls,
+        'qr_data': qr_data, 
+    })
+
+
+def print_qr_codes(request, batch_id):
+    batch = get_object_or_404(QRBatch, id=batch_id)
+    qr_codes = batch.qr_codes.all()
+
+    # Prepare QR code data with table labels
+    qr_data = []
+    token_pattern = re.compile(r"xclv-([a-zA-Z]+)-(\d+)-")
+
+    for qr_code in qr_codes:
+        match = token_pattern.search(qr_code.unique_token)
+
+        if match:
+            # Extract category and number from token
+            category = match.group(1).upper()  # e.g., "ST", "VIP", "VVIP"
+            number = match.group(2)            # e.g., "1", "2", "3"
+            table_description = f"{category} {number}"  # e.g., "ST 1", "VIP 2"
+        else:
+            # Fallback if token doesn't match expected format
+            table_description = f"Table {qr_code.id}"
+
+        qr_data.append({
+            'qr_code': qr_code,
+            'image_url': qr_code.image.url,
+            'table_description': table_description,
+            'token': qr_code.unique_token
+        })
+
+    return render(request, 'print_qr_codes.html', {
+        'batch': batch,
+        'qr_data': qr_data,
+        'total_codes': len(qr_data)
     })

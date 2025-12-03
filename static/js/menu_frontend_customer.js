@@ -1,37 +1,76 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // --- Dropdown toggle ---
-    const dropdownHeaders = document.querySelectorAll(".dropdown-header");
-    if (dropdownHeaders) {
-        dropdownHeaders.forEach(header => {
-            header.addEventListener("click", () => {
-                const slug = header.id.replace("Toggle", "");
-                const dropdown = document.getElementById(slug + "Dropdown");
-                if (dropdown) dropdown.classList.toggle("show");
-            });
-        });
-    }
 
+    // ------------------------------
+    // CATEGORY → ICON MAP
+    // ------------------------------
+    const iconMap = {
+        "Cocktails": "cocktail.png",
+        "Mocktails": "cocktail.png",
+        "Beers": "cocktail.png",
+        "Shooters": "shooter.png",
+        "Single Shots": "shot.png",
+        "Fruits": "fruit.png",
+        "Beverages": "soda.png",
+        "Food": "restaurant.png",
+        "Rum": "rum.png",
+        "Whisky/Scotch": "rum.png",
+        "Liquers": "rum.png",
+        "Tequila": "tequila.png",
+        "Vodka": "vodka.png",
+        "Gin": "gin.png",
+        "Wine": "gin.png"
+    };
+
+    // ------------------------------
+    // SET ICONS FOR ALL ITEMS
+    // ------------------------------
+    document.querySelectorAll(".item-card").forEach(card => {
+        const category = card.dataset.category;
+        const iconImg = card.querySelector(".drink-icon");
+        const staticPath = card.dataset.staticPath;
+
+        if (iconImg) {
+            const filename = iconMap[category] || "cocktail.png";
+            iconImg.src = staticPath + filename;
+        }
+    });
+
+    // ------------------------------
+    // DROPDOWN TOGGLE
+    // ------------------------------
+    const dropdownHeaders = document.querySelectorAll(".dropdown-header");
+    dropdownHeaders.forEach(header => {
+        header.addEventListener("click", () => {
+            const slug = header.id.replace("Toggle", "");
+            const dropdown = document.getElementById(slug + "Dropdown");
+            if (dropdown) dropdown.classList.toggle("show");
+        });
+    });
+
+    // ------------------------------
+    // MODAL OPEN
+    // ------------------------------
     const itemModalOverlay = document.getElementById("itemModalOverlay");
     const modalBody = itemModalOverlay.querySelector(".modal-body");
     const modalCloseBtn = document.getElementById("modalCloseBtn");
 
-    // --- Attach modal listeners ---
     document.querySelectorAll(".info-icon").forEach(icon => {
         icon.addEventListener("click", (e) => {
             e.stopPropagation();
 
             const itemId = icon.dataset.itemId;
-            const itemCard = document.querySelector(`.item-card[data-item="${itemId}"]`);
+            const itemCard = document.querySelector(`.item-card[data-item-id="${itemId}"]`);
             if (!itemCard) return;
 
-            // Get item data
-            const name = itemCard.querySelector(".drink-title")?.textContent || "";
-            const imgSrc = itemCard.querySelector("img.drink-icon")?.src || "/static/images/cocktail.png";
-            const price = itemCard.querySelector(".qty-btn.plus")?.dataset.itemPrice || "0";
-            const category = itemCard.dataset.category || "Cocktails"; // Add this in your HTML
+            const name = itemCard.dataset.name || "";
+            const category = itemCard.dataset.category || "Cocktails";
+            const price = itemCard.dataset.price || "0";
             const description = itemCard.dataset.description || "No description";
+            const staticPath = itemCard.dataset.staticPath;
 
-            // Insert into modal
+            const imgFilename = iconMap[category] || "cocktail.png";
+            const imgSrc = staticPath + imgFilename;
+
             modalBody.innerHTML = `
                 <div class="modal-info-card">
                     <div class="modal-item-header">
@@ -49,13 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
             `;
 
-            // Show modal
             itemModalOverlay.classList.add("show-modal");
             document.body.style.overflow = "hidden";
         });
     });
 
-    // --- Close modal ---
+    // ------------------------------
+    // MODAL CLOSE
+    // ------------------------------
     modalCloseBtn.addEventListener("click", () => {
         itemModalOverlay.classList.remove("show-modal");
         document.body.style.overflow = "";
@@ -67,4 +107,5 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.style.overflow = "";
         }
     });
+
 });

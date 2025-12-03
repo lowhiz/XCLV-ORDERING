@@ -8,7 +8,6 @@
 .fixed-top-section {
     flex-shrink: 0;
     z-index: 10;
-    padding-bottom: 1rem;
 }
 
 .scrollable-menu-section {
@@ -29,6 +28,29 @@
     padding: 1rem;
     z-index: 20;
 }
+
+/* Specific Accordion Styling */
+.accordion-button {
+    color: #212529 !important;
+    background-color: #ffffff !important;
+    transition: background-color 0.3s ease, filter 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #E5E3FF !important;
+    color: #212529 !important;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border-color: rgba(0,0,0,.125);
+}
+
+.accordion-button:hover {
+    filter: brightness(0.95);
+}
+
+
 
 .modal {
     left: 280px;

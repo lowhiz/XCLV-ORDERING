@@ -1,192 +1,264 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const reviewBtn = document.querySelector(".review-order-btn");
-    reviewBtn.addEventListener("click", () => {
-        const orderItems = Object.values(cart).filter((item) => item.quantity > 0);
 
-        if (orderItems.length === 0) {
-            alert("No items to order! Please add items to your cart first.");
-            return;
-        }
+document.addEventListener('DOMContentLoaded', function () {
+    // Restore previous order if available
+    const savedOrder = JSON.parse(sessionStorage.getItem('orderData') || '{}');
 
-        const menuData = document.getElementById("menu-data");
-        sessionStorage.setItem(
-            "orderData",
-            JSON.stringify({
-                items: orderItems,
-                table_id: menuData.dataset.tableId,
-                table_display: menuData.dataset.tableDisplay,
-            })
-        );
-
-        window.location.href = "/menu/review/";
-    });
-    const summaryList = document.getElementById("summaryList");
-    const itemModalOverlay = document.getElementById("itemModalOverlay");
-    const itemModalBody = document.querySelector(".modal-body");
-    const modalCloseBtn = document.getElementById("modalCloseBtn");
-
-    let cart = {};
-
-    // ----------------- CART FUNCTIONS -----------------
-    function increaseQuantity(itemId) {
-        const itemCard = document.querySelector(`.item-card[data-item-id="${itemId}"]`);
-        if (!itemCard) return;
-
-        const name = itemCard.dataset.name;
-        const price = parseFloat(itemCard.querySelector(".qty-btn.plus")?.dataset.itemPrice || 0);
-        const description = itemCard.dataset.description || "No description available";
-        const category = itemCard.dataset.category || "Uncategorized";
-
-        if (!cart[itemId]) {
-            cart[itemId] = {
-                id: itemId,
-                name,
-                price,
-                description,
-                category,
-                quantity: 0
+    if (savedOrder.items && Object.keys(savedOrder.items).length > 0) {
+        savedOrder.items.forEach(item => {
+            // Update cart object
+            cart[item.id] = {
+                id: item.id,
+                name: item.name,
+                price: parseFloat(item.unit_price || item.price) || 0,
+                quantity: parseInt(item.quantity) || 0
             };
-        }
 
-        cart[itemId].quantity++;
-        updateMenuQuantity(itemId);
+            // Update quantity display in menu
+            const qtySpan = document.getElementById(`quantity-${item.id}`);
+            if (qtySpan) {
+                qtySpan.textContent = cart[item.id].quantity;
+            }
+        });
+
+        // Update order summary
         updateOrderSummary();
     }
+});
 
-    function decreaseQuantity(itemId) {
-        if (cart[itemId]) {
-            cart[itemId].quantity--;
-            if (cart[itemId].quantity <= 0) delete cart[itemId];
-            updateMenuQuantity(itemId);
-            updateOrderSummary();
-        }
+// Grab table info from HTML data attributes
+let cart = {}; // Track quantities by item ID
+
+function increaseQuantity(itemId, itemName, itemPrice) {
+  // Initialize if doesn't exist
+  if (!cart[itemId]) {
+    cart[itemId] = {
+      id: itemId,
+      name: itemName,
+      price: parseFloat(itemPrice),
+      quantity: 0,
+    };
+  }
+
+  // Increase quantity
+  cart[itemId].quantity++;
+
+  // Update displays
+  updateMenuQuantity(itemId);
+  updateOrderSummary();
+  updateCartDisplay();
+}
+
+function decreaseQuantity(itemId) {
+  // Only decrease if item exists and quantity > 0
+  if (cart[itemId] && cart[itemId].quantity > 0) {
+    cart[itemId].quantity--;
+
+    // Remove from cart if quantity becomes 0
+    if (cart[itemId].quantity === 0) {
+      delete cart[itemId];
     }
 
-    function updateMenuQuantity(itemId) {
-        const qtySpan = document.getElementById(`quantity-${itemId}`);
-        qtySpan.textContent = cart[itemId] ? cart[itemId].quantity : 0;
-    }
+    // Update displays
+    updateMenuQuantity(itemId);
+    updateOrderSummary();
+    updateCartDisplay();
+  }
+}
 
-    // ----------------- ORDER SUMMARY -----------------
-    function updateOrderSummary() {
-        summaryList.innerHTML = "";
-        const items = Object.values(cart);
+function updateMenuQuantity(itemId) {
+  const quantityElement = document.getElementById("quantity-" + itemId);
+  if (quantityElement) {
+    quantityElement.textContent = cart[itemId] ? cart[itemId].quantity : 0;
+  }
+}
 
-        if (items.length === 0) {
-            summaryList.innerHTML = "<li>No items in order.</li>";
-            return;
-        }
+function updateOrderSummary() {
+    const orderItemsContainer = document.getElementById("order-items");
+    orderItemsContainer.innerHTML = "";
 
-        items.forEach(item => {
-            const itemCard = document.querySelector(`.item-card[data-item-id="${item.id}"] img.drink-icon`);
-            const imgSrc = itemCard ? itemCard.src : "/static/images/cocktail.png";
+    const cartItems = Object.values(cart).filter(item => item.quantity > 0);
 
-            const li = document.createElement("li");
-            li.className = "summary-item-card";
-            li.dataset.itemId = item.id;
-            li.dataset.name = item.name;
-            li.dataset.price = item.price.toFixed(2); // two decimals here
-            li.dataset.category = item.category;
-            li.dataset.description = item.description;
+    if (cartItems.length === 0) return;
 
-            li.innerHTML = `
-                <div class="left">
-                    <img src="${imgSrc}" class="drink-icon" />
-                    <i class="bi bi-info-circle info-icon"></i>
-                    <p class="drink-title">${item.name}</p>
-                </div>
-                <div class="right">
-                    <button class="qty-btn minus" data-item-id="${item.id}">−</button>
-                    <span class="qty summary-qty">${item.quantity}</span>
-                    <button class="qty-btn plus" data-item-id="${item.id}" data-item-price="${item.price}">+</button>
-                </div>
-            `;
-            summaryList.appendChild(li);
-        });
+        const iconMap = {
+            "Cocktails": "cocktail.png",
+            "Mocktails": "mocktail.png",
+            "Beers": "beer.png",
+            "Shooters": "shooter.png",
+            "Single Shots": "shot.png",
+            "Fruits": "fruit.png",
+            "Beverages": "soda.png",
+            "Food": "restaurant.png",
+            "Rum": "rum.png",
+            "Whisky/Scotch": "whisky.png",
+            "Liquers": "liqueur.png",
+            "Tequila": "tequila.png",
+            "Vodka": "vodka.png",
+            "Gin": "gin.png",
+            "Wine": "wine.png"
+        };
 
-        attachSummaryListeners();
-        attachInfoListeners();
-    }
+        cartItems.forEach(item => {
+        const originalCard = document.querySelector(`.item-card[data-item-id="${item.id}"]`);
+        if (!originalCard) return;
 
-    // ----------------- ATTACH SUMMARY BUTTONS -----------------
-    function attachSummaryListeners() {
-        document.querySelectorAll(".summary-item-card .plus").forEach(btn => {
-            btn.onclick = () => increaseQuantity(btn.dataset.itemId);
-        });
+        const name = originalCard.dataset.name;
+        const category = originalCard.dataset.category;
+        const price = originalCard.dataset.price;
+        const description = originalCard.dataset.description;
+        const staticPath = originalCard.dataset.staticPath; // keep this
 
-        document.querySelectorAll(".summary-item-card .minus").forEach(btn => {
-            btn.onclick = () => decreaseQuantity(btn.dataset.itemId);
-        });
-    }
+        // Map category to icon file
+        const iconMap = {
+            "Cocktails": "cocktail.png",
+            "Mocktails": "cocktail.png",
+            "Beers": "cocktail.png",
+            "Shooters": "shooter.png",
+            "Single Shots": "shot.png",
+            "Fruits": "fruit.png",
+            "Beverages": "soda.png",
+            "Food": "restaurant.png",
+            "Rum": "rum.png",
+            "Whisky/Scotch": "rum.png",
+            "Liquers": "rum.png",
+            "Tequila": "tequila.png",
+            "Vodka": "vodka.png",
+            "Gin": "gin.png",
+            "Wine": "gin.png"
+        };
 
-    // ----------------- INFO MODAL LISTENERS -----------------
-    function attachInfoListeners() {
-        document.querySelectorAll(".info-icon").forEach(icon => {
-            icon.addEventListener("click", (e) => {
-                e.stopPropagation();
+        const iconFilename = iconMap[category] || "cocktail.png"; 
+        const iconUrl = `${staticPath}${iconFilename}`;
 
-                const itemCard = icon.closest(".item-card, .summary-item-card");
-                if (!itemCard) return;
-
-                // Get correct price from plus button if exists
-                const plusBtn = itemCard.querySelector(".qty-btn.plus");
-                const rawPrice = plusBtn?.dataset.itemPrice || itemCard.dataset.price || 0;
-                const price = parseFloat(rawPrice).toFixed(2); // <-- TWO DECIMALS
-
-                const name = itemCard.dataset.name || "No name";
-                const category = itemCard.dataset.category || "No category";
-                const description = itemCard.dataset.description || "No description";
-                const imgSrc = itemCard.querySelector("img.drink-icon")?.src || "/static/images/cocktail.png";
-
-                // Show modal
-                showModal({ name, imgSrc, price, category, description });
-            });
-        });
-    }
-
-    // ----------------- MODAL -----------------
-    function showModal({ name, imgSrc, price, category, description }) {
-        itemModalBody.innerHTML = `
-            <div class="modal-info-card">
-                <div class="modal-item-header">
-                    <img src="${imgSrc}" class="drink-icon modal-icon" />
-                    <div class="modal-text-group">
-                        <p class="modal-item-title">${name}</p>
-                        <p class="modal-category">Category: ${category}</p>
-                        <p class="modal-price">Php ${price}</p>
-                    </div>
-                </div>
-                <div class="modal-description-section">
-                    <p class="modal-description-label">Description:</p>
-                    <p class="modal-description-text">${description}</p>
-                </div>
+        const li = document.createElement("li");
+        li.className = "summary-item-card";
+        li.innerHTML = `
+            <div class="left d-flex align-items-center gap-2">
+                <img src="${iconUrl}" class="drink-icon" alt="${name}">
+                <i class="bi bi-info-circle info-icon" data-item-id="${item.id}"></i>
+                <p class="drink-title mb-0">${name}</p>
+            </div>
+            <div class="right d-flex align-items-center gap-2">
+                <button class="qty-btn minus btn btn-sm btn-outline-secondary" data-item-id="${item.id}">−</button>
+                <span class="qty summary-qty">${item.quantity}</span>
+                <button class="qty-btn plus btn btn-sm btn-outline-primary" data-item-id="${item.id}" data-item-price="${price}">+</button>
             </div>
         `;
+        orderItemsContainer.appendChild(li);
 
-        itemModalOverlay.classList.add("show-modal");
-        document.body.style.overflow = "hidden";
-    }
+        // Modal popup for info icon
+        const infoIcon = li.querySelector(".info-icon");
+        infoIcon.addEventListener("click", e => {
+            e.stopPropagation();
+            const modalOverlay = document.getElementById("itemModalOverlay");
+            const modalBody = document.getElementById("modalBody");
+            modalBody.innerHTML = `
+                <div class="modal-info-card">
+                    <div class="modal-item-header">
+                        <img src="${iconUrl}" class="drink-icon modal-icon" alt="${name}">
+                        <div class="modal-text-group">
+                            <p class="modal-item-title">${name}</p>
+                            <p class="modal-category">Category: ${category}</p>
+                            <p class="modal-price">Php ${price}</p>
+                        </div>
+                    </div>
+                    <div class="modal-description-section">
+                        <p class="modal-description-label">Description:</p>
+                        <p class="modal-description-text">${description}</p>
+                    </div>
+                </div>
+            `;
+            modalOverlay.classList.add("show-modal");
+            document.body.style.overflow = "hidden";
+        });
+    });
+}
 
-    function closeModal() {
-        itemModalOverlay.classList.remove("show-modal");
+document.getElementById("modalCloseBtn").addEventListener("click", () => {
+    const modalOverlay = document.getElementById("itemModalOverlay");
+    modalOverlay.classList.remove("show-modal");
+    document.body.style.overflow = "";
+});
+
+document.getElementById("itemModalOverlay").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) {
+        e.currentTarget.classList.remove("show-modal");
         document.body.style.overflow = "";
     }
+});
 
-    modalCloseBtn.onclick = closeModal;
-    itemModalOverlay.onclick = (e) => {
-        if (e.target === itemModalOverlay) closeModal();
-    };
 
-    // ----------------- INITIAL ATTACH FOR MENU CARDS -----------------
-    document.querySelectorAll(".item-card .plus").forEach(btn => {
-        btn.addEventListener("click", () => increaseQuantity(btn.dataset.itemId));
+
+function updateCartDisplay() {
+  const cartElement = document.getElementById("cart");
+  const cartCount = document.getElementById("cart-count");
+}
+
+function placeOrder() {
+  const orderItems = Object.values(cart).filter((item) => item.quantity > 0);
+
+  if (orderItems.length === 0) {
+    alert("No items to order!");
+    return;
+  }
+
+  fetch("/menu/order/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": "{{ csrf_token }}",
+    },
+    body: JSON.stringify({
+      items: orderItems,
+      table_id: "{{ table_id }}",
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Order placed successfully!");
+
+        // Reset cart and quantities
+        const oldCart = Object.keys(cart);
+        cart = {};
+        oldCart.forEach((itemId) => {
+          updateMenuQuantity(itemId);
+        });
+        updateOrderSummary();
+        updateCartDisplay();
+      } else {
+        alert("Error placing order: " + data.error);
+      }
+    })
+    .catch((error) => {
+      alert("Network error. Please try again.");
     });
+}
 
-    document.querySelectorAll(".item-card .minus").forEach(btn => {
-        btn.addEventListener("click", () => decreaseQuantity(btn.dataset.itemId));
-    });
+function redirectForReview() {
+  const orderItems = Object.values(cart).filter((item) => item.quantity > 0);
 
-    attachInfoListeners();
-    updateOrderSummary();
-    
+  if (orderItems.length === 0) {
+    alert("No items to order! Please add items to your cart first.");
+    return;
+  }
+
+  // Store cart data in session storage for the review page
+  const menuData = document.getElementById("menu-data");
+  sessionStorage.setItem(
+    "orderData",
+    JSON.stringify({
+      items: orderItems,
+      table_id: menuData.dataset.tableId,
+      table_display: menuData.dataset.tableDisplay,
+    })
+  );
+  
+  // Redirect to review page
+  window.location.href = "/menu/review/";
+}
+
+// Initialize order summary on page load
+document.addEventListener("DOMContentLoaded", function () {
+  updateOrderSummary();
 });

@@ -33,4 +33,4 @@ def admin_login(request):
             messages.error(request, "Invalid Admin ID or Password")
     
     # Render the login page (GET request or failed login attempt)
-    return render(request, "login.html")
+    return render(request, "admin_auth.html")

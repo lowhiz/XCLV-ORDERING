@@ -35,35 +35,32 @@ function showEmptyOrder() {
 }
 
 function displayOrderItems() {
-  const reviewContainer = document.getElementById("review-items");
-  const grandTotalElement = document.getElementById("grand-total");
+    const reviewContainer = document.getElementById("review-items");
+    const grandTotalElement = document.getElementById("grand-total");
 
-  if (!orderData || !orderData.items || orderData.items.length === 0) {
-    showEmptyOrder();
-    return;
-  }
+    if (!orderData || !orderData.items || orderData.items.length === 0) {
+        showEmptyOrder();
+        return;
+    }
 
-  let itemsHtml = "";
-  let grandTotal = 0;
+    let itemsHtml = "";
+    let grandTotal = 0;
 
-  orderData.items.forEach((item) => {
-    const itemTotal = item.price * item.quantity;
-    grandTotal += itemTotal;
+    orderData.items.forEach((item) => {
+        const itemTotal = item.price * item.quantity;
+        grandTotal += itemTotal;
 
-    itemsHtml += `
-                  <div class="order-item">
-                      <div class="item-details">
-                          <div class="item-name">${item.name}</div>
-                          <div class="item-price">₱${item.price.toFixed(2)} each</div>
-                      </div>
-                      <div class="item-quantity">×${item.quantity}</div>
-                      <div class="item-total">₱${itemTotal.toFixed(2)}</div>
-                  </div>
-              `;
-  });
+        itemsHtml += `
+            <div class="order-item d-flex mb-2">
+                <span class="item-name flex-grow-1">${item.name}</span>
+                <span class="item-qty mx-3">x${item.quantity}</span>
+                <span class="item-price">₱${itemTotal.toFixed(2)}</span>
+            </div>
+        `;
+    });
 
-  reviewContainer.innerHTML = itemsHtml;
-  grandTotalElement.textContent = `Total: ₱${grandTotal.toFixed(2)}`;
+    reviewContainer.innerHTML = itemsHtml;
+    grandTotalElement.textContent = `₱${grandTotal.toFixed(2)}`;
 }
 
 function confirmOrder() {

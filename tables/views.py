@@ -17,7 +17,7 @@ def pending_table_orders(request):
 
     for table_order in pending_orders:
         # Table description from Table entity
-        table_description = table_order.table.description or str(table_order.table.table_id_number)
+        table_description = table_order.table.description or str(table_order.table.id)
 
         # Get all Orders linked to the TableOrder
         orders = table_order.orders.all()
@@ -42,7 +42,7 @@ def pending_table_orders(request):
     context = {
         "pending_orders": table_orders_with_items
     }
-    return render(request, "index.html", context)
+    return render(request, "pending_orders.html", context)
 
 # This section will retrieve the orders of the TableOrder
 def table_order_data(request, table_order_id):
@@ -141,7 +141,7 @@ def table_overview(request):
 # then the past orders
 def table_description(request, table_id):
     if table_id == 0:
-        return render(request, 'no_table.html')
+        return render(request, 'table_not_available.html')
 
     table = get_object_or_404(Table, id=table_id)
 
@@ -166,7 +166,7 @@ def table_description(request, table_id):
             past_orders.append(order_data)
             completed_count += 1  # Increment the counter
         else:
-            print(f"TableOrder ID {table_order.table_order_id} has unhandled status: {table_order.order_status}")
+            print(f"TableOrder ID {table_order.id} has unhandled status: {table_order.order_status}")
 
     context = {
         'table': table,
@@ -181,7 +181,7 @@ def table_description(request, table_id):
 def edit_order(request, table_order_id):
     """
     Allow admin to edit an existing order by displaying current items
-    in a similar interface to menu_list.html with pre-populated quantities.
+    in a similar interface to customer_menu.html with pre-populated quantities.
     """
     from menu.models import Item
 
@@ -302,8 +302,7 @@ def table_details(request):
             order_total += order.total_item_price
 
         order_data = {
-            'table_order_db_id': table_order.id,
-            'table_order_id': table_order.table_order_id,
+            'table_order_id': table_order.id,
             'order_time': table_order.order_time,
             'order_status': table_order.order_status,
             'items': items_list,
@@ -325,4 +324,4 @@ def table_details(request):
         'table_status': 'Active' if table.table_status else 'Inactive'
     }
 
-    return render(request, 'table_details.html', context)
+    return render(request, 'customer_table.html', context)

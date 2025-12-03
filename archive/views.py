@@ -63,18 +63,28 @@ def archive_and_delete_table(request, table_id):
 
 # Function that allow to display all archive orders
 def show_archive_data(request):
-    # Get the latest archive time for each table for sorting
+    # Get latest archive time per table
     tables = TableArchive.objects.values('table_name').annotate(
         latest_archived_at=Max('archived_at')
-    ).order_by('-latest_archived_at')  # newest table first
+    ).order_by('-latest_archived_at')
 
-    return render(request, 'archive.html', {'tables': tables})
+    # Get the most recent archive timestamp overall
+    last_archived_at = TableArchive.objects.aggregate(
+        Max('archived_at')
+    )['archived_at__max']
+
+    context = {
+        'tables': tables,
+        'last_archived_at': last_archived_at
+    }
+
+    return render(request, 'archive_details.html', context)
 
 # Function that show all the archive instance of the table
 def archive_details(request, table_name):
     archives = TableArchive.objects.filter(table_name=table_name).order_by('-archived_at')
 
-    return render(request, 'archive_details.html', {
+    return render(request, 'archived_tables_list.html', {
         'table_name': table_name,
         'archives': archives
     })

@@ -6,5 +6,6 @@ urlpatterns = [
     path('toggle-batch/', views.toggle_batch, name='toggle_batch'),
     path('order/validate-location/', views.validate_location_ajax, name='validate_location_ajax'),
     path('management/', views.get_qr_status, name='qr_management'),
-    path('qr_details/<int:batch_id>/', views.qr_details, name='qr_details')
+    path('qr_details/<int:batch_id>/', views.qr_details, name='qr_details'),
+    path('batch/<int:batch_id>/print/', views.print_qr_codes, name='print_qr_codes'),
 ]

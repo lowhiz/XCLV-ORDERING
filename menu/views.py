@@ -27,7 +27,7 @@ def view_menu(request):
     # Check if menu is closed
     if MENU_CLOSED and not request.GET.get('admin'):
         table_id = request.GET.get('table_id')
-        return render(request, 'menu_closed.html', {
+        return render(request, 'customer_menu_closed.html', {
             'table_id': table_id
         })
     # Fetch all menu items and group them by category
@@ -54,15 +54,15 @@ def view_menu(request):
             'table_display': table.description,
             'qr_hash': qr_hash,
         })
-        return render(request, 'menu_list.html', context)
+        return render(request, 'customer_menu.html', context)
 
     elif is_admin:  # Admin view (dashboard)
-        return render(request, 'admin.html', context)
+        return render(request, 'admin_menu.html', context)
 
     # Fallback: customer-style view without a specific table
-    return render(request, 'menu_list.html', context)
+    return render(request, 'error.html', context)
 
-def order_review(request):
+def review(request):
     """
     Display order review page where customers confirm their order
     """
@@ -81,7 +81,7 @@ def order_review(request):
         'table_id': table_id,
         'validated_qr_id': validated_qr_id,
     }
-    return render(request, 'order_review.html', context)
+    return render(request, 'customer_order_review.html', context)
 
 
 def close_menu(request):

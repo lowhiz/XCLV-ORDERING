@@ -98,7 +98,7 @@ def create_order(request):
 
     # ------------------- STORE LAST ORDER IN SESSION -------------------
     request.session['last_order'] = {
-        'table_order_id': str(table_order.table_order_id),
+        'table_order_id': str(table_order.id),
         'table_id': table.id,
         'table_display': table.description,
         'order_total': float(table_total),
@@ -127,10 +127,10 @@ def order_success(request):
 
     context = {
         'table_display': last_order.get('table_display', 'Unknown Table'),
-        'table_id': last_order.get('table_id'),
+        'table_id': last_order.get('table.id'),
         'order_total': last_order.get('order_total', 0),
         'items_count': last_order.get('items_count', 0),
-        'table_order_id': last_order.get('table_order_id')
+        'table_order_id': last_order.get('table_order.id')
     }
 
     return render(request, 'menu/order_success.html', context)
@@ -191,7 +191,7 @@ def past_order_details(request, order_id):
     context = {
         'table_display': table.description,
         'table_id': table.id,
-        'table_order_id': table_order.table_order_id,
+        'table_order_id': table_order.id,
         'order_time': table_order.order_time,
         'order_status': table_order.order_status,
         'items': items_list,
@@ -297,8 +297,8 @@ def update_order(request):
     return JsonResponse({'success': True, 'message': 'Order updated successfully!'})
 
 def edit_order(request, table_order_id):
-    table_order = get_object_or_404(TableOrder, table_order_id=table_order_id)
-    return render(request, 'orders/edit_order.html', {'table_order': table_order})
+    table_order = get_object_or_404(TableOrder, id=table_order_id)
+    return render(request, 'edit_order.html', {'table_order': table_order})
 
 
 def review_order(request, table_id):
