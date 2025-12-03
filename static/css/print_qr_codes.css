@@ -1,0 +1,95 @@
+/* Print-specific styles */
+@page {
+    size: A4;
+    margin: 10mm; /* Standard margin for printing */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+
+/* Screen-only controls (hidden when printing) */
+.print-controls {
+    background: #2C2133;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 2px solid #dee2e6;
+}
+
+@media print {
+    .print-controls {
+        display: none !important;
+    }
+}
+
+.print-controls h1 {
+    margin: 0 0 15px 0;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.print-controls .btn {
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+/* A4 Page Container */
+.page-container {
+    display: flex;
+    flex-wrap: wrap;
+    page-break-after: always; /* Each container is a new page */
+}
+
+/* A6 Card (col-6 makes it 50% width for a 2-column layout) */
+.qr-card {
+    height: 129.5mm; /* A6 height (A4 height / 2) */ /* ORIGINALLY 148.5mm */
+    padding: 8mm; /* ORIGINALLY 8mm */
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.qr-card img {
+    max-width: 70mm;
+    max-height: 70mm;
+    margin-bottom: 8mm;
+}
+
+.qr-card .table-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16pt;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 4mm;
+}
+
+.qr-card .batch-label {
+    font-size: 10pt;
+    color: #666;
+}
+
+/* Print optimization */
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .qr-card {
+        border: 1px solid #eee; /* Lighter border for printing */
+    }
+}
+
+/* Screen view adjustments for a better preview */
+@media screen {
+    .page-container {
+        width: 210mm; /* A4 width */
+        margin: 20px auto;
+    }
+}

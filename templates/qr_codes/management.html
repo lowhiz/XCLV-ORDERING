@@ -96,18 +96,20 @@
                     {% for batch in batches %}
 
                     <div class="col">
-                        <div class="batch-card text-center" style="{% if batch.batch_status %}background-color: palegreen;{% else %} background-color: white;{% endif %}">
-                            <div class="py-5">
-                                <div class="pt-3"></div>
-                                <span class="fs-6 fw-light"> {% if batch.batch_status %} CURRENT {% endif %} BATCH</span>
-                                <h2 class="display-3 fw-bold inter">{{ batch.batch_name|last }}</h2>
-                                <div class="pt-3"></div>
-
+                        <a href="{% url 'qr_details' batch.id %}" class="text-decoration-none xclv-text-black">
+                            <div class="batch-card text-center" style="{% if batch.batch_status %}background-color: palegreen;{% else %} background-color: white;{% endif %}">
+                                <div class="py-5">
+                                    <div class="pt-3"></div>
+                                    <span class="fs-6 fw-light"> {% if batch.batch_status %} CURRENT {% endif %} BATCH</span>
+                                    <h2 class="display-3 fw-bold inter text-dark">{{ batch.batch_name|last }}</h2>
+                                    <div class="pt-3"></div>
+                                </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
                     {% endfor %}
+
 
                 </div>
             </div>
@@ -134,7 +136,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- ====== -->
@@ -145,7 +146,7 @@
         <div class="modal fade" id="toggleMenuModal" tabindex="-1" aria-labelledby="toggleMenuModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-body m-2">
+                    <div class="modal-body m-2 text-center">
                         {% if menu_closed %}
                         <span class="fs-4">Opening menu access will allow customers to place new orders using their table QRs beyond this action. Are you sure to do this?</span>
                         {% else %}
@@ -176,7 +177,7 @@
         <div class="modal fade" id="moveBatchModal" tabindex="-1" aria-labelledby="moveBatchModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                    <div class="modal-body m-2">
+                    <div class="modal-body m-2 text-center">
                         <span class="fs-4">Moving to the next batch of QR Codes will render the current batch of QR codes inactive. Are you sure to do this?</span>
                         <br><br>
                         <div class="text-center">
