@@ -1,0 +1,22 @@
+<!-- XCLV-ORDERING/templates/qr_codes/error.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XCLV Ordering - Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; }
+        .error { color: #d32f2f; background: #ffebee; padding: 20px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error">
+            <h2>{{ error_title }}</h2>
+            <p>{{ error_message }}</p>
+        </div>
+    </div>
+</body>
+</html>

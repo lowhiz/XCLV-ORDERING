@@ -1,0 +1,128 @@
+.dashboard-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.table-div {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.table-status-available {
+    background-color: var(--success-green) !important;
+    color: var(--white) !important;
+}
+
+.table-status-pending {
+    background-color: var(--danger-red) !important;
+    color: var(--white) !important;
+}
+
+.admin-grey-button {
+    background-color: var(--lighter-grey);
+    color: var(--black);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-grey-button:hover {
+    background-color: var(--grey);
+    color: var(--black);
+}
+
+.admin-grey-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.admin-gold-button {
+    background-color: var(--accent-gold);
+    color: var(--black);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.admin-gold-button:hover {
+    background-color: var(--accent-color-1);
+    color: var(--black);
+}
+.admin-gold-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.admin-danger-button {
+    background-color: var(--danger-red);
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-danger-button:hover {
+    background-color: #9b3030;
+    color: var(--white);
+}
+.admin-danger-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.admin-safe-button {
+    background-color: #48B639;
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-safe-button:hover {
+    background-color: #327f28;
+    color: var(--white);
+}
+
+.admin-safe-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
+.batch-card {
+    max-width: 300px;
+    border-style: solid;
+    border-color: var(--black) !important;
+    border-width: 2px;
+    border-radius: 8px;
+}
+
+
+.modal {
+    left: 280px;
+    /* Width of the sidebar */
+    width: calc(100% - 280px);
+}
+
+/* Responsive adjustment */
+@media (max-width: 992px) {
+    .fixed-bottom-section {
+        left: 0;
+    }
+
+    .modal {
+        left: 0;
+        width: 100%;
+    }
+}

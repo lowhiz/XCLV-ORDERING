@@ -1,0 +1,213 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR Codes Management</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/admin/logo-footer.png' %}">
+
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/qr_codes_management.css' %}"/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <div>
+        <!-- Time section -->
+        <div class="time-section">
+            <h5 id="ph-time">5:00 PM</h5>
+            <small id="ph-date">07 JAN 2007</small>
+        </div>
+
+        <!-- Logo and title -->
+        <div class="logo-section d-flex align-items-center">
+            <img src="{% static 'images/logo-footer.png' %}" alt="Logo" />
+            <div class="ms-2">
+            <h6 class="mb-0 fw-bold text-white montserrat">Ordering</h6>
+            <h6 class="fw-bold text-white montserrat">System</h6>
+            </div>
+        </div>
+
+        <!-- Navigation links -->
+        <div class="nav-section">
+            <a href="{% url 'pending_table_orders' %}?admin=true" class="nav-link">
+            <img
+                src="{% static 'images/pending.svg' %}"
+                alt="Icon"
+                class="profile-img icon-small"
+            />
+            Pending Orders
+            </a>
+            <a href="{% url 'table_overview' %}" class="nav-link">
+            <img src="{% static 'images/dining-table.png' %}" alt="Icon" class="profile-img" />
+            Table Overview
+            </a>
+            <a href="{% url 'view_menu' %}?admin=true" class="nav-link">
+            <img src="{% static 'images/menu.svg' %}" alt="Icon" class="profile-img" />
+            View Menu
+            </a>
+            <a href="{% url 'qr_management' %}" class="nav-link active">
+            <img src="{% static 'images/qr_code.svg' %}" alt="Icon" class="profile-img" />
+            QR Codes
+            </a>
+        </div>
+        </div>
+
+        <!-- Bottom section -->
+        <div class="bottom-section">
+        <p>Logged in as <strong>Manager</strong></p>
+        <button class="logout-btn">
+            <img src="{% static 'images/logout.svg' %}" alt="Icon" class="profile-img2" />
+            LOGOUT
+        </button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="fixed-top-section">
+            <h1 class="dashboard-heading">QR CODES MANAGEMENT</h1>
+            <h4 class="montserrat">Current Ordering QR Code Batch: <strong>{{ current_batch }}</strong></h4>
+            <h4 class="montserrat">Customer QR Code Access Status: <strong>{{ menu_closed|yesno:"Closed,Open" }}</strong></h4>
+        </div>
+
+        <div class="scrollable-menu-section" style="background-color: #CEC8D6;">
+            <div class="mx-4">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+                    {% for batch in batches %}
+
+                    <div class="col">
+                        <a href="{% url 'qr_details' batch.id %}" class="text-decoration-none xclv-text-black">
+                            <div class="batch-card text-center" style="{% if batch.batch_status %}background-color: palegreen;{% else %} background-color: white;{% endif %}">
+                                <div class="py-5">
+                                    <div class="pt-3"></div>
+                                    <span class="fs-6 fw-light"> {% if batch.batch_status %} CURRENT {% endif %} BATCH</span>
+                                    <h2 class="display-3 fw-bold inter text-dark">{{ batch.batch_name|last }}</h2>
+                                    <div class="pt-3"></div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed-bottom-section mb-2">
+            <div class="d-flex justify-content-center container pt-2">
+                <div class="row w-100 g-2">
+                    <div class="col">
+                        {% if menu_closed %}
+                            <button class="btn btn-lg admin-safe-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#toggleMenuModal">
+                                OPEN MENU ACCESS
+                            </button>
+                        {% else %}
+                            <button class="btn btn-lg admin-danger-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#toggleMenuModal">
+                                CLOSE MENU ACCESS
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-lg admin-gold-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#moveBatchModal">
+                            MOVE TO NEXT BATCH
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== -->
+        <!-- MODALS -->
+        <!-- ====== -->
+
+        <!-- TOGGLE MENU MODAL -->
+        <div class="modal fade" id="toggleMenuModal" tabindex="-1" aria-labelledby="toggleMenuModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body m-2 text-center">
+                        {% if menu_closed %}
+                        <span class="fs-4">Opening menu access will allow customers to place new orders using their table QRs beyond this action. Are you sure to do this?</span>
+                        {% else %}
+                        <span class="fs-4">Closing menu access will block customers’ access to the menu and not place new orders beyond this action. Are you sure to do this?</span>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-lg admin-grey-button fw-bold w-100" data-bs-dismiss="modal">CANCEL</button>
+                                </div>
+                                <div class="col-8">
+                                {% if menu_closed %}
+                                    <a href="{% url 'admin_toggle_menu' %}" class="btn btn-lg admin-safe-button fw-bold w-100">OPEN MENU ACCESS</a>
+                                {% else %}
+                                    <a href="{% url 'close_menu' %}" class="btn btn-lg admin-danger-button fw-bold w-100">CLOSE MENU ACCESS</a>
+                                {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOVE TO NEXT BATCH MODAL -->
+        <div class="modal fade" id="moveBatchModal" tabindex="-1" aria-labelledby="moveBatchModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body m-2 text-center">
+                        <span class="fs-4">Moving to the next batch of QR Codes will render the current batch of QR codes inactive. Are you sure to do this?</span>
+                        <br><br>
+                        <div class="text-center">
+                        <span class="text-center fs-3">{{ current_batch }} --> <strong>{{ next_batch }}</strong></span>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4">
+                                    <button type="button" class="btn btn-lg admin-grey-button fw-bold w-100" data-bs-dismiss="modal">CANCEL</button>
+                                </div>
+                                <div class="col-8">
+                                    <a href="{% url 'toggle_batch' %}" class="btn btn-lg admin-gold-button fw-bold w-100">MOVE TO NEXT BATCH</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== -->
+        <!-- END MODALS -->
+        <!-- ========== -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/admin_table_overview.js' %}"></script>
+    <script src="{% static 'js/admin_time.js' %}"></script>
+</body>
+</html>

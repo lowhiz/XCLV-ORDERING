@@ -1,0 +1,54 @@
+/* Formal color specifications as per brand guide in Figma */
+:root {
+    --accent-color-1: #DFB871;
+    --accent-color-2: #A12AE8;
+    --black: #121212;
+    --hi-black: #1A1A1A;
+    --grey: #A79FB1;
+    --light-grey: #BFB4CD;
+    --lighter-grey: #CBC4D4;
+    --white: #E6E1ED;
+    --accent-gold: #F3D5A2;
+    --hi-accent-color-1: #F3D5A2;
+    --hi-accent-color-2: #B671DF;
+    --danger-red: #DD4444;
+    --success-green: #48B639;
+}
+
+/* Background color utilities */
+.xclv-bg-accent-1 { background-color: var(--accent-color-1); }
+.xclv-bg-accent-2 { background-color: var(--accent-color-2); }
+.xclv-bg-black { background-color: var(--black); }
+.xclv-bg-hi-black { background-color: var(--hi-black); }
+.xclv-bg-white { background-color: var(--white); }
+.xclv-bg-grey { background-color: var(--grey); }
+.xclv-bg-light-grey { background-color: var(--light-grey); }
+.xclv-bg-lighter-grey { background-color: var(--lighter-grey); }
+.xclv-bg-gold { background-color: var(--accent-gold); }
+.xclv-bg-danger { background-color: var(--danger-red); }
+.xclv-bg-success { background-color: var(--success-green); }
+
+/* Text color utilities */
+.xclv-text-accent-1 { color: var(--accent-color-1); }
+.xclv-text-accent-2 { color: var(--accent-color-2); }
+.xclv-text-black { color: var(--black); }
+.xclv-text-white { color: var(--white); }
+.xclv-text-grey { color: var(--grey); }
+.xclv-text-light-grey { color: var(--light-grey); }
+.xclv-text-lighter-grey { color: var(--lighter-grey); }
+.xclv-text-danger { color: var(--danger-red); }
+.xclv-text-success { color: var(--success-green); }
+
+/* Border utilities */
+.border-accent-1 { border-color: var(--accent-color-1); }
+.border-accent-2 { border-color: var(--accent-color-2); }
+.border-danger { border-color: var(--danger-red); }
+.border-success { border-color: var(--success-green); }
+
+.montserrat {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.inter {
+    font-family: 'Inter', sans-serif;
+}
