@@ -4,13 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>View Menu</title>
-    <link rel="icon" type="image/png" href="logo-footer.png">
+    <link rel="icon" type="image/png" href="logo-footer.png" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="admin_nav_bar.css" />
-    <link rel="stylesheet" href="view_menu.css" /> <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="view_menu.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
@@ -70,87 +71,170 @@
         </button>
       </div>
     </div>
+
     <div class="main-content">
-        <h1 class="view-menu-title">VIEW MENU</h1>
+      <h1 class="view-menu-title">VIEW MENU</h1>
 
-        <div class="category-dropdown-container">
-            <div class="accordion" id="menuCategoryAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingCocktails">
-                        <button class="accordion-button category-dropdown-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCocktails" aria-expanded="false" aria-controls="collapseCocktails">
-                            COCKTAILS
-                            </button>
-                    </h2>
-                    <div id="collapseCocktails" class="accordion-collapse collapse show" aria-labelledby="headingCocktails" data-bs-parent="#menuCategoryAccordion">
-                        <div class="accordion-body category-items-grid">
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> The Aperol Affair <span class="info-icon">i</span>
-                            </button>
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> White Sangria Special <span class="info-icon">i</span>
-                            </button>
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron Ala Mojito <span class="info-icon">i</span>
-                            </button>
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron De Strawberry <span class="info-icon">i</span>
-                            </button>
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> Patron De Chocolate <span class="info-icon">i</span>
-                            </button>
-                            <button class="menu-item-card">
-                                <span><img src="cocktail.png" alt="Cocktail Icon" class="item-icon"/></span> XCLV Martini <span class="info-icon">i</span>
-                            </button>
-                        </div>
-                    </div>
+      <div class="category-dropdown-container">
+        <div class="accordion" id="menuCategoryAccordion">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingCocktails">
+              <button
+                class="accordion-button category-dropdown-toggle collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseCocktails"
+                aria-expanded="false"
+                aria-controls="collapseCocktails"
+              >
+                COCKTAILS
+              </button>
+            </h2>
+
+            <div
+              id="collapseCocktails"
+              class="accordion-collapse collapse show"
+              aria-labelledby="headingCocktails"
+              data-bs-parent="#menuCategoryAccordion"
+            >
+              <div class="accordion-body category-items-grid">
+                
+                <div class="menu-item-card" data-item-id="aperol">
+                  <div class="item-details">
+                    <span class="item-visual-group">
+                      <img
+                        src="cocktail.png"
+                        alt="Cocktail Icon"
+                        class="item-icon"
+                      />
+                      <span
+                        class="info-icon info-icon-btn"
+                        data-item-name="The Aperol Affair"
+                        data-item-category="Cocktails"
+                        data-item-price="450.00"
+                        data-item-desc="A perfect balance of bitter and sweet, crafted with premium Aperol, Prosecco, and a splash of soda water."
+                      >
+                        i
+                      </span>
+                    </span>
+                    <span class="item-name-text">The Aperol Affair</span>
+                  </div>
+                  <div class="quantity-controls">
+                    <button class="qty-minus" aria-label="Decrease quantity">−</button>
+                    <span class="qty-display" data-current-qty="99">0</span>
+                    <button class="qty-plus" aria-label="Increase quantity">+</button>
+                  </div>
                 </div>
+
+                <div class="menu-item-card" data-item-id="sangria">
+                  <div class="item-details">
+                    <span class="item-visual-group">
+                      <img
+                        src="cocktail.png"
+                        alt="Cocktail Icon"
+                        class="item-icon"
+                      />
+                      <span
+                        class="info-icon info-icon-btn"
+                        data-item-name="White Sangria Special"
+                        data-item-category="Cocktails"
+                        data-item-price="500.00"
+                        data-item-desc="Cupcake Ipsum Dolor Sit Amet Jelly Beans Ice Cream Caramels Sugar Plum. Gummi Bears Candy Canes Sugar Plum Bear Claw Bonbon Brownie Dessert Bear Claw Sweet. Sesame Snaps Marshmallow Powder Lemon Drops Candy Canes Marzipan Jelly-O. Chocolate Bar Halvah Wafer Brownie Jelly Ice Cream Oat Cake."
+                      >
+                        i
+                      </span>
+                    </span>
+                    <span class="item-name-text">White Sangria Special</span>
+                  </div>
+                  <div class="quantity-controls">
+                    <button class="qty-minus" aria-label="Decrease quantity">−</button>
+                    <span class="qty-display" data-current-qty="0">0</span>
+                    <button class="qty-plus" aria-label="Increase quantity">+</button>
+                  </div>
                 </div>
+
+                <div class="menu-item-card" data-item-id="mojito">
+                  <div class="item-details">
+                    <span class="item-visual-group">
+                      <img
+                        src="cocktail.png"
+                        alt="Cocktail Icon"
+                        class="item-icon"
+                      />
+                      <span
+                        class="info-icon info-icon-btn"
+                        data-item-name="Patron Ala Mojito"
+                        data-item-category="Cocktails"
+                        data-item-price="550.00"
+                        data-item-desc="A premium twist on the classic Mojito, featuring Patron Silver tequila, fresh mint, lime, and a hint of cane sugar."
+                      >
+                        i
+                      </span>
+                    </span>
+                    <span class="item-name-text">Patron Ala Mojito</span>
+                  </div>
+                  <div class="quantity-controls">
+                    <button class="qty-minus" aria-label="Decrease quantity">−</button>
+                    <span class="qty-display" data-current-qty="0">0</span>
+                    <button class="qty-plus" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-    // JavaScript to update time and date
-    function updatePhilippineTime() {
-        // --- Date/Time Options ---
-        const optionsTime = { hour: '2-digit', minute: '2-digit', hour12: true };
-        const optionsDateDay = { day: '2-digit' };
-        const optionsDateMonth = { month: 'short' };
-        const optionsDateYear = { year: 'numeric' };
 
-        // Get Philippine time zone
-        // Note: Using the US locale with the Manila timezone is generally the most reliable way 
-        // to control the output format without relying on the user's local settings.
-        const now = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+    <div id="itemDetailsModal" class="modal-overlay">
+      <div class="modal-content-container modal-dark-bg">
+        <button class="modal-close-btn">&times;</button>
+
+        <div class="modal-header-section">
+          <img src="cocktail.png" alt="Icon" class="modal-cocktail-icon" />
+          <h2 id="modalItemName" class="modal-title"></h2>
+        </div>
+
+        <div class="modal-body-details">
+          <p>
+            <span class="detail-label">Category:</span>
+            <span id="modalCategory"></span>
+          </p>
+          <p class="price-line">
+            <span class="detail-label">Php </span>
+            <span id="modalPrice" class="modal-price-value"></span>
+          </p>
+          <p class="description-heading">Description:</p>
+          <p id="modalDescription" class="modal-description-text"></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="view_menu.js"></script>
+
+    <script>
+      // JavaScript to update time and date (kept in the HTML for simple clock)
+      function updatePhilippineTime() {
+        const optionsTime = { hour: "2-digit", minute: "2-digit", hour12: true };
+        const optionsDate = { day: "2-digit", month: "short", year: "numeric" };
+
+        const now = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" });
         const phDate = new Date(now);
 
-        // --- Formatting Time (e.g., 05:00 PM) ---
-        // toLocaleTimeString returns "05:00 PM" (with a space)
-        const timeStr = phDate.toLocaleTimeString('en-US', optionsTime).toUpperCase(); 
+        const timeStr = phDate.toLocaleTimeString("en-US", optionsTime).toUpperCase();
+        const dateStr = phDate
+          .toLocaleDateString("en-US", optionsDate)
+          .toUpperCase()
+          .replace(",", "");
 
-        // --- Formatting Date (e.g., 07 JAN 2007) ---
-        const dayStr = phDate.toLocaleDateString('en-US', optionsDateDay);
-        const monthStr = phDate.toLocaleDateString('en-US', optionsDateMonth).toUpperCase();
-        const yearStr = phDate.toLocaleDateString('en-US', optionsDateYear);
+        document.getElementById("ph-time").textContent = timeStr;
+        document.getElementById("ph-date").textContent = dateStr;
+      }
 
-        // Combine day, short month (uppercase), and year with spaces
-        const dateStr = `${dayStr} ${monthStr} ${yearStr}`;
-
-        // --- Output to HTML ---
-        // Note: You must ensure your HTML structure has elements with these IDs:
-        // <div id="ph-time-display"></div>
-        // <div id="ph-date-display"></div>
-        
-        document.getElementById('ph-time').textContent = timeStr;
-        document.getElementById('ph-date').textContent = dateStr;
-    }
-
-    // Update immediately and then every second
-    updatePhilippineTime();
-    setInterval(updatePhilippineTime, 1000);
+      setInterval(updatePhilippineTime, 1000);
+      updatePhilippineTime();
     </script>
-
   </body>
-
 </html>
-
