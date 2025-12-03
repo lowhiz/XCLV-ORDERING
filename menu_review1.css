@@ -44,15 +44,14 @@
   font-size: 1.3rem;
 }
 
-/* CONTENT WRAPPER */
+/* CONTENT WRAPPER (Sliding Mechanism) */
 .dropdown-content {
-  display: none;
-  margin-top: 12px;
+  /* No initial max-height: 0, as JS will set it on load to be visible */
+  overflow: hidden; /* Hides content that exceeds max-height during collapse */
+  transition: max-height 0.4s ease-in-out; /* The animation speed */
+  margin-top: 12px; 
 }
-
-.dropdown-content.show {
-  display: block;
-}
+/* No need for a .show class; JS handles the max-height value directly. */
 
 /* ITEM CARD */
 .item-card {
@@ -198,8 +197,8 @@
 .review-order-btn:active {
   transform: translateY(2px);
   box-shadow: 0 2px 0 #6d28d9;
-
 }
+
 .comma {
     height: 15px; /* Adjust height for desired spacing */
 }
