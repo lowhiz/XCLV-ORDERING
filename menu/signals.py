@@ -21,15 +21,15 @@ def load_menu_items(sender, **kwargs):
 
         # Only load if table exists and is empty
         if not Item.objects.exists():
-            with open(csv_path, newline='', encoding='utf-8') as f:
+            with open(csv_path, newline='', encoding='utf-8-sig') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     Item.objects.get_or_create(
-                        name=row['name'].strip(),
+                        name=row['Item Name'].strip(),
                         defaults={
-                            'description': row['description'].strip(),
-                            'unit_price': row['unit_price'],
-                            'category': row['category'].strip(),
+                            'description': row['Description'].strip(),
+                            'unit_price': row['Price'],
+                            'category': row['Category'].strip(),
                         }
                     )
     except (OperationalError, ProgrammingError):
