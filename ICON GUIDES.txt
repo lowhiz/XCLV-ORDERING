@@ -1,0 +1,36 @@
+ICON GUIDES
+
+cocktail.png
+- COCKTAILS
+- MOCKTAILS
+- BEERS
+
+shooter.png
+- SHOOTERS
+
+shot.png
+- SINGLE SHOTS
+
+fruit.png
+- FRUITS
+
+soda.png
+- BEVERAGES
+
+restaurant.png
+- FOOD
+
+rum.png
+- RUM
+- WHISKY/SCOTCH
+- LIQUERS
+
+tequila.png
+- TEQUILA
+
+vodka.png
+- VODKA
+
+gin.png
+- GIN
+- WINE
