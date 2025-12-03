@@ -95,45 +95,49 @@
     border-bottom-right-radius: 8px;
 }
 
-/* Menu Item Card Styling */
+/* Menu Item Card Styling (UPDATED to match screenshot) */
 .menu-item-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    background-color: #e5d7f0; /* Light purple background for cards */
-    color: #4a4a4a;
+    padding: 10px 15px; /* Slightly smaller padding */
+    background-color: #cdc2d8; /* Light purple background from screenshot */
+    color: #3c304d; /* Dark purple/grey text color */
     border: none;
     border-radius: 8px; 
     font-size: 1rem;
-    font-weight: 400;
-    cursor: pointer;
+    font-weight: 600; /* Bold text for item name */
+    cursor: default; 
     transition: background-color 0.2s;
 }
 
-.menu-item-card:hover {
-    background-color: #d8c3e6; /* Darker hover effect */
-}
-
-/* --- NEW / MODIFIED: Styling for the left content (icon + text) within the card --- */
-.menu-item-card > span:first-child {
+/* Left side of the card (Icon + Text + Info Icon) */
+.item-details {
     display: flex;
     align-items: center;
-    /* Adjust margin here to control closeness of icon to text */
-    /* You can make this smaller if you want them even closer */
-    margin-right: 5px; 
+    flex-grow: 1; 
 }
 
+.item-visual-group {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Space before item name */
+}
 
+.item-name-text {
+    flex-shrink: 1; /* Allow the text to wrap if needed */
+}
+
+/* Item Icon (using cocktail.png) */
 .item-icon {
-    width: 20px;
-    height: 20px;
-    /* --- MODIFIED: Reduce margin-right to bring text closer to icon --- */
+    width: 25px; /* Larger icon */
+    height: 25px;
     margin-right: 5px; 
-    filter: invert(30%) sepia(10%) saturate(1000%) hue-rotate(240deg) brightness(80%);
+    /* Filter to change the SVG/PNG color to dark purple/grey (#3c304d) */
+    filter: invert(13%) sepia(35%) saturate(1478%) hue-rotate(240deg) brightness(50%) contrast(100%);
 }
 
-/* Info Icon Styling (Using 'i' character) */
+/* Info Icon Styling (to look like the screenshot 'i' button) */
 .info-icon {
     display: flex;
     align-items: center;
@@ -141,12 +145,161 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 1px solid #4a4a4a;
+    border: 1px solid #3c304d; /* Dark purple border */
     font-size: 0.8rem;
     font-weight: 700;
-    margin-left: 10px;
-    flex-shrink: 0;
-    color: #4a4a4a;
+    margin-left: 5px; /* Closer to the icon */
+    color: #3c304d;
+    cursor: pointer; 
+    background-color: transparent;
+    transition: background-color 0.1s;
+}
+
+.info-icon:hover {
+    background-color: rgba(60, 48, 77, 0.1); /* Subtle hover */
+}
+
+/* --- Quantity Controls Styling --- */
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    margin-left: 15px; 
+    background-color: transparent; /* Remove background color */
+    border-radius: 8px; 
+    overflow: hidden; 
+    border: 1px solid #999999; /* Lighter grey border */
+    flex-shrink: 0; 
+}
+
+.qty-minus,
+.qty-plus {
+    background-color: transparent;
+    border: none;
+    color: #3c304d; 
+    font-weight: 900; 
+    font-size: 1.5rem; 
+    width: 35px; 
+    height: 35px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    padding: 0;
+    line-height: 35px; 
+}
+
+.qty-minus:hover,
+.qty-plus:hover {
+    background-color: #d8c3e6;
+}
+
+.qty-display {
+    padding: 0 15px; 
+    font-size: 1.5rem; 
+    font-weight: 900;
+    color: #723e9c; /* The specific purple color for the number */
+    min-width: 30px; 
+    text-align: center;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #999999;
+    height: 35px;
+    line-height: 35px; 
+}
+
+/* --- Image Modal Styling (White Sangria) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9); /* Darker background as seen in image */
+    display: none; 
+    justify-content: center;
+    align-items: center;
+    z-index: 1050; 
+}
+
+.modal-content-container {
+    background-color: #1a1a1a; /* Dark background for modal content */
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.9);
+    position: relative;
+    max-width: 400px; 
+    max-height: 90%;
+    text-align: left; 
+    color: white;
+}
+
+.modal-header-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-cocktail-icon {
+    width: 40px;
+    height: 40px;
+    filter: invert(1); /* Makes the icon white on the dark background */
+    margin-right: 10px;
+}
+
+.modal-title {
+    margin-bottom: 0;
+    font-size: 1.8rem;
+    color: white;
+    font-weight: bold;
+}
+
+.modal-body-details p {
+    margin-bottom: 5px; 
+}
+
+.detail-label {
+    color: #ccc; 
+    font-weight: normal;
+}
+
+.price-line {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.description-heading {
+    font-weight: bold;
+    color: white;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.modal-description-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #eee;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    color: white; 
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.modal-close-btn:hover {
+    opacity: 1;
 }
 
 /* --- Responsiveness for Sidebar/Main Content --- */
@@ -170,5 +323,16 @@
     }
     .category-items-grid {
         grid-template-columns: 1fr;
+    }
+    .menu-item-card {
+        flex-direction: row; /* Keep it horizontal */
+        align-items: center;
+        padding: 10px;
+    }
+    .item-details {
+        margin-bottom: 0;
+    }
+    .quantity-controls {
+        margin-left: auto; /* Push controls to the right */
     }
 }
