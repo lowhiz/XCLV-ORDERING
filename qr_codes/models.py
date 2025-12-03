@@ -48,3 +48,13 @@ class QRCode(models.Model):
     
     def __str__(self):
         return self.unique_token
+    
+    @property
+    def display_name(self):
+        """
+        Extract a clean name like 'VVIP 1' from the unique_token.
+        Example token: xclv-vvip-1-BatchA-uuid
+        """
+        parts = self.unique_token.split('-')  # ['xclv', 'vvip', '1', 'BatchA', 'uuid...']
+        name = f"{parts[1].upper()} {parts[2]}"  # 'VVIP 1'
+        return name

@@ -1,4 +1,3 @@
-# admin_auth/signals.py
 from django.db.models.signals import post_migrate
 from django.dispatch import receiver
 from django.db.utils import OperationalError, ProgrammingError

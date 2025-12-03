@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Batch or QR Code Not Active</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-footer.png' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/customer_nav_bar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/geoloc_landing_page.css' %}" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-dark custom-navbar">
+      <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="{% static 'images/logo-footer.png' %}" alt="XCLV Logo" class="logo" />
+
+          <div class="ms-4">
+            <h1 class="mb-0 text-white fw-semibold">XCLV Club Davao</h1>
+          </div>
+        </div>
+
+        
+      </div>
+    </nav>
+
+    <section class="welcome-section d-flex flex-column justify-content-center align-items-center text-center">
+      <div class="welcome-icon mb-4">
+        <img src="{% static 'images/stop_sign.svg' %}" alt="Utensils Icon" class="utensil-icon" />
+      </div>
+      <h2 class="fw-bold text-white mb-2">Batch or QR Code<br> is not active </h2>
+      <p class="text-light mb-4">
+        Your scanned batch or QR Code<br>
+        may not be active or not valid<br>
+        Please scan a valid and active<br>
+        Batch or QR Code.
+      </p>
+      
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

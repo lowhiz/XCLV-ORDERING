@@ -9,7 +9,7 @@ from tables.models import Table, TableOrder
 from orders.models import Order
 from .models import Item
 from django.views.decorators.csrf import csrf_exempt
-# Global toggle variable
+
 MENU_CLOSED = False
 
 def view_menu(request):
@@ -26,8 +26,10 @@ def view_menu(request):
     
     # Check if menu is closed
     if MENU_CLOSED and not request.GET.get('admin'):
-        return render(request, 'menu/menu_closed.html')
-    
+        table_id = request.GET.get('table_id')
+        return render(request, 'menu_closed.html', {
+            'table_id': table_id
+        })
     # Fetch all menu items and group them by category
     items = Item.objects.all().order_by('category', 'name')
     categories = {}
@@ -52,13 +54,13 @@ def view_menu(request):
             'table_display': table.description,
             'qr_hash': qr_hash,
         })
-        return render(request, 'menu/menu_list.html', context)
+        return render(request, 'menu_list.html', context)
 
     elif is_admin:  # Admin view (dashboard)
-        return render(request, 'menu/admin.html', context)
+        return render(request, 'admin.html', context)
 
     # Fallback: customer-style view without a specific table
-    return render(request, 'menu/menu_list.html', context)
+    return render(request, 'menu_list.html', context)
 
 def order_review(request):
     """
@@ -79,59 +81,8 @@ def order_review(request):
         'table_id': table_id,
         'validated_qr_id': validated_qr_id,
     }
-    return render(request, 'menu/order_review.html', context)
+    return render(request, 'order_review.html', context)
 
-def table_details(request):
-    """
-    Display table details including running bill and order history.
-    Shows all orders for the current table session.
-    """
-    # Get table information from session
-    table_id = request.session.get('active_table_id')
-    if not table_id:
-        messages.error(request, 'Invalid request. Try again by scanning your table\'s QR code.')
-        return redirect('/')
-    
-    # Fetch the table
-    table = get_object_or_404(Table, id=table_id)
-    
-    # Get all table orders for this table (ordered by time, newest first)
-    table_orders = TableOrder.objects.filter(table=table).order_by('-order_time')
-    
-    # Prepare order history with items
-    order_history = []
-    for table_order in table_orders:
-        orders = table_order.orders.all()
-        items_list = []
-        order_total = Decimal('0.00')
-        
-        for order in orders:
-            items_list.append({
-                'name': order.item.name,
-                'quantity': order.quantity,
-                'unit_price': order.item.unit_price,
-                'total_item_price': order.total_item_price
-            })
-            order_total += order.total_item_price
-        
-        order_history.append({
-            'table_order_db_id': table_order.id,  # Database ID for URL
-            'table_order_id': table_order.table_order_id,  # UUID for display
-            'order_time': table_order.order_time,
-            'order_status': table_order.order_status,
-            'items': items_list,
-            'order_total': order_total
-        })
-    
-    context = {
-        'table_display': table.description,
-        'table_id': table.id,
-        'running_bill': table.total_payment,
-        'order_history': order_history,
-        'table_status': 'Active' if table.table_status else 'Inactive'
-    }
-    
-    return render(request, 'menu/table_details.html', context)
 
 def close_menu(request):
     """
@@ -140,14 +91,22 @@ def close_menu(request):
     """
     global MENU_CLOSED
     MENU_CLOSED = True
+    request.session["menu_closed"] = True
     messages.success(request, "Menu has been closed for customers.")
     return redirect('qr_management')
 
-def open_menu(is_open: bool):
+def open_menu(request):
     """Helper to toggle global menu availability."""
     global MENU_CLOSED
-    MENU_CLOSED = not is_open
+    MENU_CLOSED = False
+    request.session["menu_closed"] = False
+    
 
 def admin_toggle_menu(request):
-    open_menu(is_open=True)
-    return redirect('qr_management')
+    """Opens the menu for customers from the admin side."""
+    open_menu(request)
+    return redirect("qr_management")
+
+def check_menu_status(request):
+    global MENU_CLOSED
+    return JsonResponse({"menu_closed": MENU_CLOSED})

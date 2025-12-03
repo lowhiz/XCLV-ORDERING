@@ -14,6 +14,8 @@ from django.shortcuts import render, get_object_or_404
 from qr_codes.models import QRCode
 from tables.models import Table
 from menu.views import open_menu
+from menu.views import MENU_CLOSED
+
 def validation(request):
     """
     STEP 1: Customer scans QR code.
@@ -26,24 +28,18 @@ def validation(request):
 
     # Case 1: Missing QR token
     if not token:
-        return render(request, 'qr_codes/error.html', {
-            'message': 'No QR code provided.'
-        })
+        return render(request, 'error.html')
 
     try:
         # Retrieve QR code and its batch in one query
         qr_code = QRCode.objects.select_related('batch').get(qr_hash=token)
     except QRCode.DoesNotExist:
         # Case 2: QR code not found
-        return render(request, 'qr_codes/error.html', {
-            'message': 'Invalid or unknown QR code.'
-        })
+        return render(request, 'error.html')
 
     # Case 3: Batch is inactive
     if not qr_code.batch.batch_status:
-        return render(request, 'qr_codes/error.html', {
-            'message': 'This QR code belongs to an inactive batch.'
-        })
+        return render(request, 'error.html')
 
     # Save QR temporarily in session for next step
     request.session['pending_qr_token'] = token
@@ -52,7 +48,7 @@ def validation(request):
     # Step 3: Ask for geolocation (client-side JS will call validate_location_ajax)
     # @luigi-ichi, implement your geo-location here
     # >> Geolocation now implemented; template now points to its app template
-    return render(request, 'geolocation/validate_location.html', {
+    return render(request, 'validate_location.html', {
         'qr_hash': token, # Gets from token declaration (line 18)
         'qr_code': qr_code   # Pass the qr_code object
     })
@@ -189,7 +185,7 @@ def toggle_batch(request):
         first_batch.save()
 
         # Automatically open the menu
-        open_menu(True)
+        open_menu(request)
         return
 
     # Find index of the current active batch
@@ -207,9 +203,63 @@ def toggle_batch(request):
 
     next_batch.batch_status = True
     next_batch.save()
-    open_menu(True)
+    open_menu(request)
     return redirect('qr_management')
 
 def qr_management(request):
-    return render(request, 'qr_codes/management.html')
-    
+    return render(request, 'management.html')
+
+# This code will show all the QR Code Batches together with their status
+# Also retrieve the QR
+def get_qr_status(request):
+    batches = QRBatch.objects.all().order_by('id')
+
+    batch_list = []
+    menu_status = request.session.get("menu_closed", True)
+
+    # Prepare a list of batch names for easier next-batch lookup
+    batch_names = [batch.batch_name for batch in batches]
+
+    active_batch = None
+    next_batch = None
+    for batch in batches:
+        parts = batch.batch_name.split()
+        batch_letter = parts[-1]          
+        
+        batch_list.append({
+            "id": batch.id,                
+            "letter": batch_letter,        
+            "status": batch.batch_status,
+        })
+
+        if batch.batch_status:
+            active_batch = batch.batch_name
+
+        # Find the next batch
+        if active_batch:
+            active_index = batch_names.index(active_batch)
+            if active_index + 1 < len(batch_names):
+                next_batch = batch_names[active_index + 1]
+            else:
+                # Circular: loop back to the first batch
+                next_batch = batch_names[0]
+            
+    return render(request, "management.html", {
+        "batches": batch_list,
+        "menu_closed": menu_status,
+        "active_batch": active_batch,
+        "next_batch": next_batch
+    })
+
+# This code will get the qr codes of the Batch
+def qr_details(request, batch_id):
+    batch = get_object_or_404(QRBatch, id=batch_id)
+    qr_codes = batch.qr_codes.all()
+
+    # Get the URL of each QR code image
+    qr_image_urls = [code.image.url for code in qr_codes]  # code.images is the ImageField
+
+    return render(request, 'qr_details.html', {
+        'batch': batch,
+        'qr_image_urls': qr_image_urls,
+    })

@@ -1,0 +1,8 @@
+.pending-order-card, .past-order-card {
+    background-color: #ffffff; /* White background for each order block */
+    padding: 15px 20px;
+    border-radius: 10px;
+    /* subtle shadow as seen in the image */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+    border: 1px solid #a79fb1; /* UNIFORM ORDER ITEM BORDER */; /* Light border for definition */
+}

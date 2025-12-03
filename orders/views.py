@@ -9,88 +9,106 @@ from .models import Order
 from menu.models import Item
 from django.views.decorators.csrf import csrf_exempt
 
+
 # This section creates the customer's order.
 # It is also used when the customer requests to modify their existing order.
 @csrf_exempt
 def create_order(request):
     """
-    Handle order creation and store into Order, then Order to TableOrder, and TableOrder to Table.
-    TableOrder is the Cart
-    Order is the items group by it's name
+    Handle order creation:
+    - TableOrder acts as the cart
+    - Order represents each item in the TableOrder
+    - Updates Table's total_payment
     """
 
-    # Validate QR/auth session from the current session
+    # ------------------- VALIDATE SESSION -------------------
     validated_qr_id = request.session.get('active_qr_hash')
     if not validated_qr_id:
         return JsonResponse({'error': 'No valid QR session'}, status=403)
 
-    # Ensure the request method is POST
+    # ------------------- CHECK REQUEST METHOD -------------------
     if request.method != 'POST':
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-    # Parse JSON payload
+    # ------------------- PARSE JSON -------------------
     try:
         data = json.loads(request.body)
         items = data.get("items", [])
         table_id = data.get("table_id")
-    except json.JSONDecodeError as e:
+    except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON data'}, status=400)
 
-    # Validate table_id and items
+    # ------------------- VALIDATE INPUT -------------------
     if not table_id:
         return JsonResponse({'error': 'Table ID is required'}, status=400)
+
     if not items or not isinstance(items, list):
         return JsonResponse({'error': 'No items in order or invalid format'}, status=400)
 
-    # Fetch the Table object
-    try:
-        table = Table.objects.get(id=table_id)
-    except Table.DoesNotExist:
-        return JsonResponse({'error': 'Table not found'}, status=404)
+    # ------------------- FETCH TABLE -------------------
+    table = get_object_or_404(Table, id=table_id)
 
-    # Initialize total
+    # ------------------- INITIALIZE TOTAL -------------------
     table_total = Decimal('0.00')
 
-    # Create one TableOrder for this request
+    # ------------------- CREATE TABLEORDER -------------------
     table_order = TableOrder.objects.create(
         table=table,
         order_status="pending"
     )
 
-    table_total = Decimal('0.00')
-
-    # Create Order linked to TableOrder
-    for i, item_data in enumerate(items, start=1):
+    # ------------------- CREATE ORDERS -------------------
+    for item_data in items:
         item_id = item_data.get("id")
         quantity = int(item_data.get("quantity", 0))
-        price = Decimal(str(item_data.get("price", 0)))
+        price = item_data.get("price", 0)
 
-        menu_item = Item.objects.get(id=item_id)
+        # Validate item_id and price
+        if not item_id:
+            continue  # skip invalid item
 
-        order = Order.objects.create(
-            table_order=table_order,  # link to single TableOrder
+        try:
+            menu_item = Item.objects.get(id=item_id)
+        except Item.DoesNotExist:
+            continue  # skip invalid item
+
+        try:
+            price = Decimal(str(price))
+        except:
+            price = menu_item.unit_price  # fallback to default price
+
+        if quantity <= 0:
+            continue  # skip items with zero quantity
+
+        Order.objects.create(
+            table_order=table_order,
             item=menu_item,
             quantity=quantity,
             total_item_price=price * quantity
         )
+
         table_total += price * quantity
 
-    # Update Table total_payment
+    # ------------------- UPDATE TABLEORDER AND TABLE -------------------
+    table_order.total_order_price = table_total
+    table_order.save()
+
     table.total_payment += table_total
     table.save()
 
-    # Store order details in session for the success page
+    # ------------------- STORE LAST ORDER IN SESSION -------------------
     request.session['last_order'] = {
         'table_order_id': str(table_order.table_order_id),
         'table_id': table.id,
         'table_display': table.description,
         'order_total': float(table_total),
-        'items_count': len(items)
+        'items_count': len([i for i in items if i.get("quantity", 0) > 0])
     }
 
+    # ------------------- RETURN SUCCESS -------------------
     return JsonResponse({
         'success': True,
-        'redirect_url': '/orders/order-success/'  # Add this line
+        'redirect_url': '/orders/order-success/'
     })
 
 def order_success(request):
@@ -102,7 +120,7 @@ def order_success(request):
     if not last_order:
         # If no order in session, redirect to menu
         messages.error(request, 'No recent order found.')
-        return redirect('menu:view_menu')
+        return redirect('view_menu')
 
     # Clear the order from session after displaying
     del request.session['last_order']
@@ -219,31 +237,93 @@ def complete_order(response, table_order_id):
 
     # Update the status to complete
     table_order.order_status = "Completed"
-    table_order.save
+    table_order.save()
 
     return redirect("pending_table_orders")
 
-# Archive all TableOrders associated with the table.
-# This ensures that previous orders are hidden when a new customer occupies the table.
-# Admins are advised to archive the table once a new customer is seated,
-# so the new customer won't see the previous customer's orders.
-def archive_order(response, table_order_id):
-    # Fetch the specific TableOrder
-    table_order = get_object_or_404(TableOrder, id=table_order_id)
+@csrf_exempt
+def update_order(request):
+    """
+    Update an existing order (admin functionality).
+    Replaces all items in a TableOrder with new quantities.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-    # Get the table details
+    try:
+        data = json.loads(request.body)
+        table_order_id = data.get("table_order_id")
+        items = data.get("items", [])
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    if not table_order_id:
+        return JsonResponse({'error': 'Table order ID is required'}, status=400)
+
+    try:
+        table_order = TableOrder.objects.get(id=table_order_id)
+    except TableOrder.DoesNotExist:
+        return JsonResponse({'error': 'Table order not found'}, status=404)
+
+    # Delete existing orders
+    Order.objects.filter(table_order=table_order).delete()
+
+    # Calculate new total
+    new_total = Decimal('0.00')
+    old_total = table_order.table.total_payment
+
+    # Create new orders
+    for item_data in items:
+        item_id = item_data.get("id")
+        quantity = int(item_data.get("quantity", 0))
+        price = Decimal(str(item_data.get("price", 0)))
+
+        if quantity > 0:
+            menu_item = Item.objects.get(id=item_id)
+
+            Order.objects.create(
+                table_order=table_order,
+                item=menu_item,
+                quantity=quantity,
+                total_item_price=price * quantity
+            )
+            new_total += price * quantity
+
+    # Update table total (subtract old total, add new total)
     table = table_order.table
-
-    # Get the related TableOrders
-    related_orders = TableOrder.objects.filter(table=table)
-
-    # Archive all orders under the same table
-    for order in related_orders:
-        order.order_status = "Archived"
-        order.save()
-        
-    # Update the table status to False
-    table.table_status = False
+    table.total_payment = table.total_payment - old_total + new_total
     table.save()
 
-    return redirect("pending_table_orders")
+    return JsonResponse({'success': True, 'message': 'Order updated successfully!'})
+
+def edit_order(request, table_order_id):
+    table_order = get_object_or_404(TableOrder, table_order_id=table_order_id)
+    return render(request, 'orders/edit_order.html', {'table_order': table_order})
+
+
+def review_order(request, table_id):
+    table = get_object_or_404(Table, id=table_id)
+    # Assuming you have a session or QR validation
+    validated_qr_id = request.session.get('active_qr_hash')
+
+    # Get the latest TableOrder for this table
+    try:
+        table_order = TableOrder.objects.filter(table=table).latest('order_time')
+        orders = table_order.orders.all()
+    except TableOrder.DoesNotExist:
+        table_order = None
+        orders = []
+
+    # Calculate total
+    total = sum([o.total_item_price for o in orders]) if orders else Decimal('0.00')
+
+    context = {
+        'table_id': table.id,
+        'table_display': table.description,
+        'validated_qr_id': validated_qr_id,
+        'orders': orders,
+        'total': total,
+    }
+
+    return render(request, 'orders/review_order.html', context)
+

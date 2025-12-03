@@ -5,8 +5,8 @@ from . import views
 urlpatterns = [
     path('view/', views.view_menu, name='view_menu'),
     path('review/', views.order_review, name='order_review'),
-    path('table-details/', views.table_details, name='table_details'),
     path('close_menu/', views.close_menu, name='close_menu'),
     path('open_menu/', views.open_menu, name='open_menu'),
     path('admin_toggle_menu/', views.admin_toggle_menu, name='admin_toggle_menu'),
+    path('check_menu_status/', views.check_menu_status, name='check_menu_status'),
 ]

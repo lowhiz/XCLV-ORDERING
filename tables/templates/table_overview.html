@@ -1,0 +1,1009 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Table Overview</title>
+  <link rel="icon" type="image/png" href="{% static 'images/logo-footer.png' %}" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/pending_orders.css' %}" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="sidebar">
+        <div>
+        <!-- Time section -->
+        <div class="time-section">
+            <h5 id="ph-time">5:00 PM</h5>
+            <small id="ph-date">07 JAN 2007</small>
+        </div>
+
+        <!-- Logo and title -->
+        <div class="logo-section d-flex align-items-center">
+            <img src="{% static 'images/logo-footer.png' %}" alt="Logo" />
+            <div class="ms-2">
+            <h6 class="mb-0 fw-bold text-white">Ordering</h6>
+            <h6 class="fw-bold text-white">System</h6>
+            </div>
+        </div>
+
+        <!-- Navigation links -->
+        <div class="nav-section">
+            <a href="{% url 'pending_table_orders' %}?admin=true" class="nav-link">
+            <img
+                src="{% static 'images/pending.svg' %}"
+                alt="Icon"
+                class="profile-img icon-small"
+            />
+            Pending Orders
+            </a>
+            <a href="{% url 'table_overview' %}" class="nav-link active">
+                <img src="{% static 'images/dining-table.png' %}" alt="Icon" class="profile-img" />
+                Table Overview
+            </a>
+            <a href="{% url 'view_menu' %}?admin=true" class="nav-link">
+                <img src="{% static 'images/menu.svg' %}" alt="Icon" class="profile-img" />
+                View Menu
+            </a>
+            <a href="{% url 'qr_management' %}" class="nav-link">
+                <img src="{% static 'images/qr_code.svg' %}" alt="Icon" class="profile-img" />
+                QR Codes
+            </a>
+            <a href="{% url 'show_archive_data' %}" class="nav-link">
+                <img src="{% static 'images/archive.svg' %}" alt="Icon" class="profile-img" />
+                Archived Orders
+            </a>
+        </div>
+        </div>
+
+        <!-- Bottom section -->
+        <div class="bottom-section">
+        <p>Logged in as <strong>Manager</strong></p>
+        <button class="logout-btn">
+            <img src="{% static 'images/logout.svg' %}" alt="Icon" class="profile-img2" />
+            LOGOUT
+        </button>
+        </div>
+    </div>
+
+    <div class="main-content fw-bold">
+        <!-- Header Section -->
+        <div>
+            <h1 class="dashboard-heading">Table Overview</h1>
+
+            <div class="container">
+                <div class="container-fluid py-4">
+                    <!-- Row 1 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-3">
+                            {% for table in tables_status %}
+                                {% if table.name == "VVIP 2" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-5 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-gold xclv-text-black
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-5">
+                            <div class="xclv-bg-hi-black text-center py-5 rounded">
+                                <img src="{% static 'images/logo-footer.png' %}" class="img-fluid" style="max-width: 75px";/>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VVIP 3" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-5 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-gold xclv-text-black
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VVIP 4" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-5 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-gold xclv-text-black
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-2">
+                            <div class="xclv-bg-gold xclv-text-black table-div text-center py-3 rounded" style="position: absolute; width: 11.25vw; height: 15vh;" data-table="VVIP 1">
+                                <span style="position: relative; top: 35%">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "VVIP 1" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-gold xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-8">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 1" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 2" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 3" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 4" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 5" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 6" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 7" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 4" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-8 offset-2">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 8" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 9" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 10" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 11" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 12" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 13" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 14" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 5" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Row 4 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 3" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-8">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 15" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 16" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 17" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 18" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 19" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 20" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 21" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 6" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Row 5 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 2" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-8">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 22" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 23" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 24" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 25" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 26" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 27" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 28" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 7" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Row 6 -->
+                    <div class="row g-2 mb-2">
+                        <div class="col-2">
+                            {% for table in tables_status %}
+                                {% if table.name == "VIP 1" %}
+                                    <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                        <div class="table-div text-center py-3 rounded
+                                                    {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                    {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                    {% elif table.status == 'Inactive' %} xclv-bg-accent-2 xclv-text-white
+                                                    {% endif %}"
+                                            data-table="{{ table.name }}">
+                                            {{ table.name }}
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        <div class="col-8">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 29" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 30" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 31" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 32" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 33" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 34" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 35" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 7 -->
+                    <div class="row g-2">
+                        <div class="col-6 offset-3">
+                            <div class="row g-2">
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 36" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 37" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 38" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 39" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="col">
+                                    {% for table in tables_status %}
+                                        {% if table.name == "ST 40" %}
+                                            <a href="{% url 'table_description' table.id %}" style="text-decoration: none;">
+                                                <div class="table-div text-center py-3 rounded
+                                                            {% if table.status == 'Pending' %} xclv-bg-danger xclv-text-white
+                                                            {% elif table.status == 'Completed' %} xclv-bg-success xclv-text-black
+                                                            {% elif table.status == 'Inactive' %} xclv-bg-light-grey xclv-text-black
+                                                            {% endif %}"
+                                                    data-table="{{ table.name }}">
+                                                    {{ table.name }}
+                                                </div>
+                                            </a>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<body>
+    <script>
+        function fetchTableStatus() {
+            fetch("{% url 'table_status_api' %}")
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(table => {
+                        const tableDiv = document.querySelector(`[data-table="${table.name}"]`);
+                        if (tableDiv) {
+                            // Reset classes
+                            tableDiv.className = "table-div text-center py-3 rounded";
+
+                            // Apply new classes based on status
+                            if (table.status === "Pending") {
+                                tableDiv.classList.add("xclv-bg-danger", "xclv-text-white");
+                            } else if (table.status === "Completed") {
+                                tableDiv.classList.add("xclv-bg-success", "xclv-text-black");
+                            } else {
+                                tableDiv.classList.add("xclv-bg-light-grey", "xclv-text-black");
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.error('Error fetching table status:', err));
+        }
+
+        // Poll every 1 second
+        setInterval(fetchTableStatus, 1000);
+        fetchTableStatus();
+        </script>
+
+    <script src="{% static 'js/admin_table_overview.js' %}"></script>
+    <script src="{% static 'js/admin_time.js' %}"></script>
+</body>
+</html>
