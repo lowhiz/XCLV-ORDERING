@@ -60,11 +60,13 @@
 
       {% if ongoing_orders %}
         {% for order in ongoing_orders %}
+        <a href="{% url 'order_details' order.table_order_id %}" style="text-decoration: none; color: inherit;">
           <div class="order-card ongoing">
               <p class="order-time">{{ order.order_time|date:"g:i A" }}</p>
               <p class="order-price">Php {{ order.order_total }}</p>
               <p class="order-status">Status: {{ order.order_status }}</p>
           </div>
+        </a>
         {% endfor %}
       {% else %}
           <p class="text-muted">No ongoing orders.</p>
