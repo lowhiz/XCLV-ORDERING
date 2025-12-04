@@ -127,13 +127,13 @@ def order_success(request):
 
     context = {
         'table_display': last_order.get('table_display', 'Unknown Table'),
-        'table_id': last_order.get('table.id'),
+        'table_id': last_order.get('table_id'),             # table.id conflicts with delimiting characters
         'order_total': last_order.get('order_total', 0),
         'items_count': last_order.get('items_count', 0),
-        'table_order_id': last_order.get('table_order.id')
+        'table_order_id': last_order.get('table_order_id')  # table_order.id conflicts with delimiting characters
     }
 
-    return render(request, 'menu/order_success.html', context)
+    return render(request, 'customer_order_success.html', context)
 
 
 def past_order_details(request, order_id):
@@ -197,7 +197,7 @@ def past_order_details(request, order_id):
         'items': items_list,
         'order_total': order_total,
     }
-    return render(request, 'orders/past_order_details.html', context)
+    return render(request, 'customer_order_details.html', context)
     return JsonResponse({'success': True, 'message': 'Order placed successfully!'})
 
 # This section deletes the customer's order when they request the admin to remove it.
