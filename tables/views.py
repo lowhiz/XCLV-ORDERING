@@ -324,4 +324,4 @@ def table_details(request):
         'table_status': 'Active' if table.table_status else 'Inactive'
     }
 
-    return render(request, 'customer_table.html', context)
+    return render(request, 'customer_order_history.html', context)
