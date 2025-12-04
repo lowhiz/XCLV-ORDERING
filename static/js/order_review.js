@@ -96,13 +96,15 @@ function confirmOrder() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Order placed successfully!");
-
         // Clear order data
         sessionStorage.removeItem("orderData");
 
-        // Redirect back to menu
-        window.location.href = `/menu/view/?table_id=${tableId}`;
+        // Redirect to order success page
+        if (data.redirect_url) {
+          window.location.href = data.redirect_url;
+        } /* else {
+          window.location.href = `/order-success/${data.table_id}/`;
+        }*/
       } else {
         alert("Error placing order: " + data.error);
 
