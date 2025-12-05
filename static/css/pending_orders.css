@@ -1,18 +1,8 @@
-/* Ensure the main content area matches the body background color */
-.main-content {
-    background-color: #e6e6fa !important; 
-    /* The !important ensures it overrides the general background-color set in admin_nav_bar.css */
-}
-
-
 /* --- Pending Orders Section Styles --- */
 
-/* Page Title Styling */
-.page-title {
-    font-size: 2.5rem;
-    font-weight: 800; /* Extra bold */
-    margin-bottom: 2rem;
-    color: #2C2133; /* Dark purple from sidebar */
+.scrollable-orders-section {
+     overflow-y: auto;
+     max-height: calc(100vh - 120px);
 }
 
 /* Order List Container */
@@ -31,7 +21,7 @@
     padding: 15px 20px;
     border-radius: 10px;
     /* subtle shadow as seen in the image */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     border: 1px solid #a79fb1; /* UNIFORM ORDER ITEM BORDER */; /* Light border for definition */
 }
 
@@ -54,13 +44,12 @@
 }
 
 .order-time {
-    font-size: 1rem;
-    color: #503a5d; /* Medium purple from time section */
+    color: var(--hi-accent-color-2); /* Lighter purple for time */
     font-weight: 600;
 }
 
 .order-items {
-    padding-left: 5px; 
+    padding-left: 5px;
 }
 
 .item-name {
@@ -81,7 +70,7 @@
 .order-actions {
     display: flex;
     gap: 10px;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .action-btn {
@@ -95,7 +84,7 @@
     background-color: #ffffff;
     transition: background-color 0.2s;
     padding: 0; /* Remove default padding */
-    
+
 }
 
 .action-icon {
@@ -105,7 +94,7 @@
 
 /* Specific Button Styles */
 .edit-btn {
-    border: 2px solid #A5A5A5; /* Light gray border for edit */
+    border: 3px solid #A5A5A5; /* Light gray border for edit */
 }
 .edit-btn:hover {
     background-color: #d8d6d6;
@@ -122,19 +111,19 @@
     background-color: #e42712;
 }
 .reject-btn .action-icon {
-    filter: none; 
+    filter: none;
     filter: invert(100%) brightness(200%);
 }
 
 .accept-btn {
     background-color: #58d48c; /* Light green background to match image */
     border: none;
-    
+
 }
 .accept-btn:hover {
     background-color: #15c45d;
 }
 .accept-btn .action-icon {
-    filter: none; 
+    filter: none;
     filter: invert(100%) brightness(200%);
 }
