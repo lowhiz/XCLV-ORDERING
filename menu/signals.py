@@ -21,7 +21,7 @@ def load_menu_items(sender, **kwargs):
 
         # Only load if table exists and is empty
         if not Item.objects.exists():
-            with open(csv_path, newline='', encoding='utf-8') as f:
+            with open(csv_path, newline='', encoding='utf-8-sig') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
                     Item.objects.get_or_create(
