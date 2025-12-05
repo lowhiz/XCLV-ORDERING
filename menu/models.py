@@ -12,9 +12,9 @@ class Item(models.Model):
     name = models.CharField(max_length=255)
     
     # An explanation or detailing of the item.
-    description = models.CharField(max_length=255)
-    
-    # The selling price of one unit of this item. 
+    description = models.TextField()
+
+    # The selling price of one unit of this item.
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
