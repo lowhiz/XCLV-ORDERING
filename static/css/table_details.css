@@ -1,11 +1,3 @@
-
-
-/* Fix for the white outline below the navbar */
-.custom-navbar {
-    border-bottom: 1px solid #1A1A1A !important;
-}
-
-
 /* Styles for the main content container */
 .table-details-container {
     padding: 20px;
