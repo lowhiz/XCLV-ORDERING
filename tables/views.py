@@ -220,7 +220,7 @@ def edit_order(request, table_order_id):
         'is_admin_edit': True,  # Flag to identify this as admin edit mode
     }
 
-    return render(request, 'tables/edit_order.html', context)
+    return render(request, 'edit_order.html', context)
 
 # This function is used for live updating of table statuses and incoming orders.
 # While we already have table_overview to display the current status of all tables,
