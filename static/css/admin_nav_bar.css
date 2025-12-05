@@ -1,7 +1,6 @@
-
 body {
-    background-color: #ffffff;
-    font-family: "Montserrat", sans-serif;
+    /* background-color: #ffffff;
+    font-family: "Montserrat", sans-serif;*/
     margin: 0;
 }
 
@@ -9,7 +8,7 @@ body {
     width: 280px;
     height: 100vh;
     background-color: #2C2133;
-    color: #ffffff;
+    color: var(--white);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -24,6 +23,7 @@ body {
     background-color: #503a5d;
     text-align: center;
     padding: 1rem 0;
+    line-height: 1;
 }
 
 .time-section h5 {
@@ -34,7 +34,7 @@ body {
 }
 
 .time-section small {
-    color: #ffffff;
+    color: var(--white);
     font-size: 1rem;
 }
 
@@ -58,7 +58,7 @@ body {
 }
 
 .text-white {
-    color: #ffffff;
+    color: var(--white);
 }
 
 /* Navigation buttons */
@@ -70,12 +70,12 @@ body {
 .nav-link {
     text-align: center;
     display: block;
-    color: #ffffff;
+    color: var(--white);
     border: 3px solid #544b5c;
     border-radius: 10px;
     padding: 1rem;
+    font-size: 1.1rem;
     margin-bottom: 1rem;
-    font-weight: 500;
     text-decoration: none;
     transition: background-color 0.3s;
 }
