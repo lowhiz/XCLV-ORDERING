@@ -30,6 +30,16 @@
     z-index: 20;
 }
 
+
+.batch-card {
+    max-width: 300px;
+    border-style: solid;
+    border-color: var(--black) !important;
+    border-width: 2px;
+    border-radius: 8px;
+}
+
+
 .modal {
     left: 280px;
     /* Width of the sidebar */
