@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const quantityElement = document.getElementById(`quantity-${itemId}`);
                     if (quantityElement) {
                         const menuItem = quantityElement.closest('.menu-item');
-                        const itemName = menuItem.querySelector('h6').textContent.trim();
+                        const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                         const priceText = menuItem.querySelector('.text-muted').textContent;
                         const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
 
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (displayedQuantity > 0 && !cart[itemId]) {
                 const menuItem = element.closest('.menu-item');
-                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
 
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (displayedQuantity > 0) {
                 const menuItem = element.closest('.menu-item');
-                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
 
@@ -88,7 +88,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    console.log('Final cart state:', cart); // Debug line
+    console.log('=== INITIALIZATION COMPLETE ===');
+    console.log('Final cart state:', cart);
+    console.log('Total items in cart:', Object.keys(cart).length);
+    console.log('Items:', Object.values(cart).map(item => `${item.name} x${item.quantity}`));
+    console.log('================================');
     updateOrderSummary();
 });
 
@@ -104,12 +108,14 @@ function increaseQuantity(itemId, itemName, itemPrice) {
         };
     }
 
-    cart[itemId].quantity++;
-    updateDisplay(itemId);
-    updateOrderSummary();
-    highlightChangedItem(itemId);
+    if (cart[itemId].quantity < 99) {
+        cart[itemId].quantity++;
+        updateDisplay(itemId);
+        updateOrderSummary();
+    }
 
     console.log('Cart after increase:', cart[itemId]); // Debug line
+    console.log('Full cart now:', Object.keys(cart)); // Debug line
 }
 
 function decreaseQuantity(itemId) {
@@ -123,7 +129,7 @@ function decreaseQuantity(itemId) {
             const currentDisplayed = parseInt(quantityElement.textContent) || 0;
             if (currentDisplayed > 0) {
                 const menuItem = quantityElement.closest('.menu-item');
-                const itemName = menuItem.querySelector('h6').textContent.trim();
+                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
 
@@ -150,7 +156,6 @@ function decreaseQuantity(itemId) {
         }
         updateDisplay(itemId);
         updateOrderSummary();
-        highlightChangedItem(itemId);
     } else {
         console.log(`Cannot decrease ${itemId}: not in cart or quantity is 0`); // Debug line
     }
@@ -172,44 +177,24 @@ function updateDisplay(itemId) {
     console.log(`Updated display for ${itemId}: ${quantity}`); // Debug line
 }
 
-function highlightChangedItem(itemId) {
-    const menuItem = document.getElementById(`quantity-${itemId}`).closest('.menu-item');
-    menuItem.style.border = '2px solid #ffc107';
-    setTimeout(() => {
-        if (cart[itemId] && cart[itemId].quantity > 0) {
-            menuItem.style.border = '2px solid #28a745';
-        } else {
-            menuItem.style.border = '';
-        }
-    }, 1000);
-}
-
 function updateOrderSummary() {
-    const summaryElement = document.getElementById('current-order-summary');
-    const totalElement = document.getElementById('order-total');
-
-    let summaryHTML = '';
+    // Update the order total display
     let total = 0;
 
     for (const item of Object.values(cart)) {
         if (item.quantity > 0) {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
-            summaryHTML += `
-                <div class="d-flex justify-content-between align-items-center py-1">
-                    <span>${item.name}</span>
-                    <span>${item.quantity} × ₱${item.price} = ₱${itemTotal.toFixed(2)}</span>
-                </div>
-            `;
         }
     }
 
-    if (summaryHTML === '') {
-        summaryHTML = '<p class="text-muted">No items in order</p>';
+    // Find and update the total in the fixed bottom section
+    const totalElement = document.querySelector('.fixed-bottom-section h3 strong');
+    if (totalElement) {
+        totalElement.textContent = `PhP ${total.toFixed(2)}`;
     }
 
-    summaryElement.innerHTML = summaryHTML;
-    totalElement.textContent = `Total: ₱${total.toFixed(2)}`;
+    console.log('Order summary updated. Total:', total); // Debug line
 }
 
 function saveOrderChanges() {
@@ -218,6 +203,13 @@ function saveOrderChanges() {
 
     // Prepare order items
     const orderItems = Object.values(cart).filter(item => item.quantity > 0);
+
+    console.log('=== SAVE ORDER DEBUG ===');
+    console.log('Full cart object:', cart);
+    console.log('Cart keys:', Object.keys(cart));
+    console.log('Order items to save:', orderItems);
+    console.log('Number of items:', orderItems.length);
+    console.log('========================');
 
     if (confirm('Are you sure you want to save these changes to the order?')) {
         // Send updated order to server
