@@ -9,6 +9,5 @@ urlpatterns = [
     path('order/delete/<int:table_order_id>/', views.delete_order, name='delete_order'),
     path('order/complete/<int:table_order_id>/', views.complete_order, name='complete_order'),
     path('update-order/', views.update_order, name='update_order'),
-    path('order/edit_order/<int:table_order_id>/', views.edit_order, name='edit_order'),
     path('review-order/<int:table_id>/', views.review_order, name='review_order'),
 ]

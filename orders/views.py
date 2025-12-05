@@ -296,11 +296,6 @@ def update_order(request):
 
     return JsonResponse({'success': True, 'message': 'Order updated successfully!'})
 
-def edit_order(request, table_order_id):
-    table_order = get_object_or_404(TableOrder, id=table_order_id)
-    return render(request, 'edit_order.html', {'table_order': table_order})
-
-
 def review_order(request, table_id):
     table = get_object_or_404(Table, id=table_id)
     # Assuming you have a session or QR validation
@@ -326,4 +321,3 @@ def review_order(request, table_id):
     }
 
     return render(request, 'orders/review_order.html', context)
-
