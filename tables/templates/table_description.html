@@ -21,57 +21,7 @@
 </head>
 
 <body>
-    <!-- Sidebar -->
-  <div class="sidebar">
-    <div>
-    <!-- Time Section -->
-    <div class="time-section">
-        <h5 id="ph-time">5:00 PM</h5>
-        <small id="ph-date">07 JAN 2007</small>
-    </div>
-
-    <!-- Logo Section -->
-    <div class="logo-section d-flex align-items-center">
-        <img src="{% static 'images/logo-footer.png' %}" alt="Logo" />
-        <div class="ms-2">
-        <h6 class="mb-0 fw-bold text-white">Ordering</h6>
-        <h6 class="fw-bold text-white">System</h6>
-        </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="nav-section">
-            <a href="{% url 'pending_table_orders' %}?admin=true" class="nav-link">
-                <img src="{% static 'images/pending.svg' %}" alt="Icon" class="profile-img icon-small" />
-                Pending Orders
-            </a>
-
-            <a href="{% url 'table_overview' %}" class="nav-link">
-                <img src="{% static 'images/dining-table.png' %}" alt="Icon" class="profile-img" />
-                Table Overview
-            </a>
-
-            <a href="{% url 'view_menu' %}?admin=true" class="nav-link">
-                <img src="{% static 'images/menu.svg' %}" alt="Icon" class="profile-img" />
-                View Menu
-            </a>
-
-            <a href="{% url 'qr_management' %}" class="nav-link">
-                <img src="{% static 'images/qr_code.svg' %}" alt="Icon" class="profile-img" />
-                QR Codes
-            </a>
-    </div>
-    </div>
-
-    <!-- Bottom Section -->
-    <div class="bottom-section">
-        <p>Logged in as <strong>Manager</strong></p>
-    <button class="logout-btn">
-        <img src="{% static 'images/logout.svg' %}" alt="Icon" class="profile-img2" />
-        LOGOUT
-    </button>
-    </div>
-    </div>
+    {% block sidebar %} {% include 'admin_navbar.html' %} {% endblock sidebar %}
 
     <div class="main-content fw-bold">
         <!-- Header Section -->
@@ -115,17 +65,17 @@
                                     <!-- Action Buttons -->
                                     <div class="col-4">
                                         <div class="d-flex gap-3 justify-content-end">
-                                            <a href="{% url 'edit_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'edit_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn edit-btn">
                                                 <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
                                             </a>
 
-                                            <a href="{% url 'delete_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'delete_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn reject-btn">
                                                 <img src="{% static 'images/x.svg' %}" alt="Reject" class="action-icon" />
                                             </a>
 
-                                            <a href="{% url 'complete_order' table_order_id=table_order_data.table_order.id %}" 
+                                            <a href="{% url 'complete_order' table_order_id=table_order_data.table_order.id %}"
                                             class="action-btn accept-btn">
                                                 <img src="{% static 'images/check.svg' %}" alt="Accept" class="action-icon" />
                                             </a>
