@@ -1,0 +1,105 @@
+
+/* Custom Purple Background (Using Light Greys from the palette) */
+.bg-light-purple {
+    background-color: #BFB4CD; 
+}
+
+/* Container for Centering Title and Card */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title Styling */
+.login-title {
+    margin-bottom: 20px;
+}
+
+.text-dark-grey {
+    color: #121212; 
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+/* Card Styling */
+.login-card {
+    max-width: 450px;
+    width: 100%;
+    background-color: #E6E1ED; 
+    border: none;
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+}
+
+/* Input Field Styling */
+.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #A79FB1;
+    padding: 0.75rem 1rem;
+    background-color: #fcfcfc;
+    color: #121212;
+    height: 50px;
+}
+
+.form-control::placeholder {
+    color: #A79FB1; 
+}
+
+.form-control:focus {
+    border-color: #B671DF;
+    box-shadow: 0 0 0 0.25rem rgba(182, 113, 223, 0.25);
+}
+
+/* Login Button Styling (Default) */
+.btn-login {
+    background-color: #B671DF; 
+    border-color: #B671DF;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
+}
+
+/* State when the mouse hovers over the button */
+.btn-login:hover {
+    background-color: #544B5C;
+    border-color: #544B5C;
+}
+
+/* State when the button is actively being clicked (THE FIX) */
+.btn-login:active {
+    background-color: #544B5C !important; /* Use !important to override Bootstrap's default active styles */
+    border-color: #544B5C !important;
+    box-shadow: none !important; /* Remove any active box-shadow */
+    transform: translateY(1px); /* Optional: Gives a slight "pressed" look */
+}
+
+/* State when the button is focused (tab key or after a click) */
+.btn-login:focus {
+    background-color: #544B5C; 
+    border-color: #544B5C;     
+    box-shadow: none;         
+    outline: none;             
+}
+
+
+/* Custom Icon Styling */
+.custom-login-icon {
+    width: 20px; 
+    height: 20px; 
+    vertical-align: middle; 
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%); 
+}
+
+/* Error Message Styling */
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.75rem 1.25rem;
+}

@@ -1,0 +1,117 @@
+/* Styles for the main content container */
+.table-details-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Table Title (Table ST 1) */
+.table-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #FFFFFF;
+}
+
+/* Table Bill (Table Bill: Php 1 638.00) */
+.table-bill {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 25px;
+    color: #FFFFFF;
+}
+
+/* Section titles (Ongoing Orders, Order History) */
+.section-title {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #A79FB1; /* Greys */
+}
+
+/* --- Order Card Styles --- */
+
+.order-card {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    /* Reduced shadow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+    border: none; /* Removed borders for flatter look */
+}
+
+/* Specific style for Ongoing Orders card (Lighter Purple) */
+.order-card.ongoing {
+    /* Using a lighter purple close to #5D3E71 but brighter */
+    background-color: #383838; 
+}
+
+.order-card.ongoing:hover {
+    /* Using a lighter purple close to #5D3E71 but brighter */
+    background-color: #544B5C; 
+}
+
+/* Specific style for Served Orders card (Slightly Lighter Dark grey) */
+.order-card.served {
+    /* A slightly lighter dark grey for better contrast with #1A1A1A */
+    background-color: #383838; 
+}
+
+.order-card.served:hover {
+    /* Using a lighter purple close to #5D3E71 but brighter */
+    background-color: #544B5C; 
+}
+
+/* Order Time (e.g., 7:30 PM) */
+.order-time {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    line-height: 1;
+    color: #E6E1ED; /* Whites */
+}
+
+/* Order Price (e.g., Php 555.00) */
+.order-price {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 5px;
+    line-height: 1.2;
+    /* NEW: Using Accent Gold/Tan for the price text */
+    color: #DFB871; 
+}
+
+/* Order Status (e.g., Status: Preparing) */
+.order-status {
+    font-size: 14px;
+    font-weight: 400;
+    color: #A79FB1; /* Greys */
+    margin-bottom: 0;
+}
+
+
+/* --- Back to Menu Button Styles (Static) --- */
+
+.back-to-menu-btn {
+    width: 100%;
+    /* Button color matching the lighter ongoing card */
+    background-color: #9a73d9; 
+    border-color: #6C4880;
+    color: #E6E1ED; /* Whites */
+    font-size: 16px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-top: 25px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+    display: block;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Keep some shadow for the button */
+}
+
+.back-to-menu-btn:hover {
+    background-color: #b191f0;
+}

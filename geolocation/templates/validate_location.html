@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Ordering Closed</title>
+    <link rel="icon" type="image/png" href="{% static 'images/logo-footer.png' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/customer_nav_bar.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/geoloc_landing_page.css' %}" />
+  </head>
+<body>
+    <nav class="navbar navbar-dark custom-navbar">
+      <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="{% static 'images/logo-footer.png' %}" alt="XCLV Logo" class="logo" />
+
+          <div class="ms-4">
+            <h1 class="mb-0 text-white fw-semibold">XCLV Club Davao</h1>
+          </div>
+        </div>
+
+        
+      </div>
+    </nav>
+    <section class="welcome-section d-flex flex-column justify-content-center align-items-center text-center">
+      <div class="welcome-icon mb-4">
+        <img src="{% static 'images/fork_and_knife.svg' %}" alt="Utensils Icon" class="utensil-icon" />
+      </div>
+      <h2 class="fw-bold text-white mb-2">Welcome to XCLV!</h2>
+      <p class="text-light mb-4">
+        We need to verify your<br>
+        location to proceed with<br>
+        ordering.
+      </p>
+      
+      
+      <div class="status-container mb-3">
+        <div id="initialMessage" class="info-card d-flex align-items-center">
+            <p class="info-text mb-0">We need to verify your location first...</p>
+        </div>
+        <div id="success" class="success-card d-none d-flex align-items-center">
+            <p class="success-text mb-0"></p>
+        </div>
+        <div id="error" class="error-card d-none d-flex align-items-center">
+            <p class="error-text mb-0"></p>
+        </div>
+        <div id="loading" style="display: none;" class="loading">
+            <p>Validating your location...</p>
+        </div>
+      </div>
+      <button id="validateLocationBtn" class="btn allow-btn px-4 py-2" onclick="validateLocation()">ALLOW LOCATION ACCESS</button>
+    </section>
+
+    
+
+    <script>
+        const qr_hash = '{{ qr_hash }}';
+
+        function showInitial() {
+            document.getElementById('initialMessage').classList.remove("d-none");
+            document.getElementById('success').classList.add("d-none");
+            document.getElementById('error').classList.add("d-none");
+        }
+
+        function showSuccess(message) {
+            document.getElementById('initialMessage').classList.add("d-none");
+            const successDiv = document.getElementById('success');
+            successDiv.querySelector(".success-text").textContent = message;
+            successDiv.classList.remove("d-none");
+        }
+
+        function showError(message) {
+            document.getElementById('initialMessage').classList.add("d-none");
+            const errDiv = document.getElementById('error');
+            errDiv.querySelector(".error-text").textContent = message;
+            errDiv.classList.remove("d-none");
+            document.getElementById('validateLocationBtn').disabled = false;
+        }
+
+        function validateLocation() {
+            showInitial(); // always reset to initial message first
+            document.getElementById('validateLocationBtn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+
+            if (!navigator.geolocation) {
+                showError("Geolocation is not supported by your browser.");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    sendLocationToServer(position.coords.latitude, position.coords.longitude);
+                },
+                function(error) {
+                    let msg = "Unable to get your location. ";
+
+                    if (error.code === error.PERMISSION_DENIED) msg += "Please allow location access.";
+                    if (error.code === error.POSITION_UNAVAILABLE) msg += "Location unavailable.";
+                    if (error.code === error.TIMEOUT) msg += "Location request timed out.";
+
+                    showError(msg);
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
+            );
+        }
+
+        function sendLocationToServer(latitude, longitude) {
+            fetch('/order/validate-location/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    qr_token: qr_hash,
+                    latitude: latitude,
+                    longitude: longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading').style.display = 'none';
+
+                if (data.success) {
+                    showSuccess("Location validated successfully! Redirecting to menu...");
+                    setTimeout(() => window.location.href = data.redirect_url, 1500);
+                } else {
+                    showError("Location couldn't be verified. You appear to be outside the establishment.");
+                }
+            })
+            .catch(() => {
+                document.getElementById('loading').style.display = 'none';
+                showError("Network error. Please try again.");
+            });
+        }
+    </script>
+
+</body>
+</html>

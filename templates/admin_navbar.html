@@ -1,0 +1,54 @@
+{% load static %}
+<div class="sidebar">
+    <!-- Time section -->
+    <div class="time-section montserrat">
+        <h5 id="ph-time">--:-- --</h5>
+        <small id="ph-date">Loading...</small>
+    </div>
+
+    <!-- Logo and title -->
+    <div class="logo-section d-flex align-items-center montserrat">
+        <img src="{% static 'images/logo-footer.png' %}" alt="Logo" />
+        <div class="ms-2">
+            <h6 class=" fw-bold text-white">Ordering</h6>
+            <h6 class="fw-bold text-white">System</h6>
+        </div>
+    </div>
+
+    <!-- Navigation links -->
+    <div class="nav-section">
+        <a href="{% url 'pending_table_orders' %}?admin=true" class="nav-link" data-page="pending_table_orders">
+            <img
+                src="{% static 'images/pending.svg' %}"
+                alt="Pending Orders Icon"
+                class="profile-img icon-small"
+            />
+            Pending Orders
+        </a>
+        <a href="{% url 'table_overview' %}" class="nav-link" data-page="table_overview">
+            <img src="{% static 'images/dining-table.png' %}" alt="Table Overview Icon" class="profile-img" />
+            Table Overview
+        </a>
+        <a href="{% url 'view_menu' %}?admin=true" class="nav-link" data-page="view_menu">
+            <img src="{% static 'images/menu.svg' %}" alt="View Menu Icon" class="profile-img" />
+            View Menu
+        </a>
+        <a href="{% url 'qr_management' %}" class="nav-link" data-page="qr_management">
+            <img src="{% static 'images/qr_code.svg' %}" alt="QR Codes Icon" class="profile-img" />
+            QR Codes
+        </a>
+        <a href="{% url 'show_archive_data' %}" class="nav-link" data-page="show_archive_data">
+            <img src="{% static 'images/archive.svg' %}" alt="Archived Orders Icon" class="profile-img" />
+            Archived Orders
+        </a>
+    </div>
+
+    <!-- Bottom section -->
+    <div class="bottom-section">
+        <p>Logged in as <strong>Manager</strong></p>
+        <a class="logout-btn" onclick="return confirm('Are you sure you want to logout?');">
+            <img src="{% static 'images/logout.svg' %}" alt="Logout Icon" class="profile-img2" />
+            LOGOUT
+        </a>
+    </div>
+</div>

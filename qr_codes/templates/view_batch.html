@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QR Codes - {{ batch.batch_name }}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'images/logo-footer.png' %}">
+
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/admin_nav_bar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/qr_codes_management.css' %}"/>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% block sidebar %} {% include 'admin_navbar.html' %} {% endblock sidebar %}
+
+    <div class="main-content">
+        <div class="fixed-top-section">
+            <div class="d-flex align-items-center mb-3">
+                <div>
+                    <h1 class="dashboard-heading mb-0">QR CODES MANAGEMENT</h1>
+                    <h4 class="montserrat">
+                        {{ batch.batch_name }} QR Codes
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="scrollable-menu-section" style="background-color: #CEC8D6;">
+            <div class="mx-4">
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
+
+                    <!-- Originally looping in the old implementation of... -->
+                    <!-- for qr_url in qr_image_urls -->
+                    <!-- ... appending qr_url in <img src> -->
+
+                    {% for qr_item in qr_data %}
+                    <div class="col">
+
+                    <!-- Code block area to freely customize the output of the QR code papers -->
+                    <!-- For spacing, margins, alignments, and padding, use Bootstrap classes -->
+                    <!-- Decorative or override styles not possible with Bootstrap can be defined in print_qr_codes.css -->
+                        <div class="card text-center h-100">
+                            <div class="card-body p-3">
+                                <img src="{{ qr_item.image_url }}" alt="QR Code" class="img-fluid">
+                                <div class="mt-2">
+                                    <small class="text-muted">{{ qr_item.table_description }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                    <!-- End of code block area for the individual QR codes -->
+                    </div>
+                    {% empty %}
+                    <div class="col">
+                        <div class="card text-center ">
+
+                            <!-- Code block area serving the fallback error
+                            if no QR codes exist. -->
+                            <div class="card-body p-4">
+                                <p class="text-muted text-center fw-bold">No QR codes available in this batch.</p>
+                            </div>
+
+                            <!-- End of code block area for the fallback error -->
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed-bottom-section mb-2">
+            <div class="d-flex justify-content-center container pt-2">
+                <div class="row w-100 g-2">
+                    <div class="col">
+                        <a href="{% url 'qr_management' %}" class="btn btn-lg admin-grey-button w-100 fw-bold">
+                            <- BACK
+                        </a>
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'print_qr_codes' batch.id %}" class="btn btn-lg admin-gold-button w-100 fw-bold">
+                            PRINT QR CODES
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/admin_table_overview.js' %}"></script>
+    <script src="{% static 'js/admin_time.js' %}"></script>
+</body>
+</html>
