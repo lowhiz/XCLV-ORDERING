@@ -1,7 +1,7 @@
 
 /* Custom Purple Background (Using Light Greys from the palette) */
 .bg-light-purple {
-    background-color: #BFB4CD; 
+    background-color: var(--black);
 }
 
 /* Container for Centering Title and Card */
@@ -17,7 +17,7 @@
 }
 
 .text-dark-grey {
-    color: #121212; 
+    color: #121212;
     font-weight: 700;
     font-size: 1.8rem;
 }
@@ -26,7 +26,7 @@
 .login-card {
     max-width: 450px;
     width: 100%;
-    background-color: #E6E1ED; 
+    background-color: #2C2133;
     border: none;
     border-radius: 0.75rem;
     padding: 2.5rem;
@@ -43,7 +43,7 @@
 }
 
 .form-control::placeholder {
-    color: #A79FB1; 
+    color: #A79FB1;
 }
 
 .form-control:focus {
@@ -53,14 +53,14 @@
 
 /* Login Button Styling (Default) */
 .btn-login {
-    background-color: #B671DF; 
+    background-color: #B671DF;
     border-color: #B671DF;
     color: white;
     padding: 0.75rem 1.5rem;
     font-size: 1.1rem;
     font-weight: 500;
     border-radius: 0.5rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* State when the mouse hovers over the button */
@@ -79,19 +79,19 @@
 
 /* State when the button is focused (tab key or after a click) */
 .btn-login:focus {
-    background-color: #544B5C; 
-    border-color: #544B5C;     
-    box-shadow: none;         
-    outline: none;             
+    background-color: #544B5C;
+    border-color: #544B5C;
+    box-shadow: none;
+    outline: none;
 }
 
 
 /* Custom Icon Styling */
 .custom-login-icon {
-    width: 20px; 
-    height: 20px; 
-    vertical-align: middle; 
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%); 
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
 /* Error Message Styling */
