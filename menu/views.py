@@ -9,6 +9,7 @@ from tables.models import Table, TableOrder
 from orders.models import Order
 from .models import Item
 from django.views.decorators.csrf import csrf_exempt
+from admin_auth.views import admin_required
 
 MENU_CLOSED = False
 
@@ -23,7 +24,7 @@ def view_menu(request):
     table_id = request.GET.get('table_id')
     is_admin = request.GET.get('admin') == 'true'  # /menu/view?admin=true
 
-    
+
     # Check if menu is closed
     if MENU_CLOSED and not request.GET.get('admin'):
         table_id = request.GET.get('table_id')
@@ -66,7 +67,7 @@ def review(request):
     """
     Display order review page where customers confirm their order
     """
-   
+
     # Validates QR/auth session
     validated_qr_id = request.session.get('active_qr_hash')
     if not validated_qr_id:
@@ -100,7 +101,7 @@ def open_menu(request):
     global MENU_CLOSED
     MENU_CLOSED = False
     request.session["menu_closed"] = False
-    
+
 
 def admin_toggle_menu(request):
     """Opens the menu for customers from the admin side."""

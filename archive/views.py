@@ -5,11 +5,13 @@ from orders.models import Order
 from .models import TableArchive
 from django.shortcuts import redirect, render
 from django.db.models import Max
+from admin_auth.views import admin_required # Middleware to restrict access to admin users only
 
 # Archive all TableOrders associated with the table.
 # This ensures that previous orders are hidden when a new customer occupies the table.
 # Admins are advised to archive the table once a new customer is seated,
 # so the new customer won't see the previous customer's orders.
+@admin_required
 def archive_and_delete_table(request, table_id):
     # Get the table to be archived
     table= get_object_or_404(Table, id=table_id)
@@ -33,7 +35,7 @@ def archive_and_delete_table(request, table_id):
                 "total_item_price": float(o.total_item_price),
                 "category": o.item.category,
             })
-        
+
         # Add processed data for this table order to the archive container
         archive_data.append({
             "order_status": t_order.order_status,
@@ -57,11 +59,12 @@ def archive_and_delete_table(request, table_id):
     # Delete the table itself from the database
     table.delete()
 
- 
+
     # Redirect to the table overview page after successful archiving
     return redirect("table_overview")
 
 # Function that allow to display all archive orders
+@admin_required
 def show_archive_data(request):
     # Get latest archive time per table
     tables = TableArchive.objects.values('table_name').annotate(
@@ -81,6 +84,7 @@ def show_archive_data(request):
     return render(request, 'archive_details.html', context)
 
 # Function that show all the archive instance of the table
+@admin_required
 def archive_details(request, table_name):
     archives = TableArchive.objects.filter(table_name=table_name).order_by('-archived_at')
 

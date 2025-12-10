@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
+from functools import wraps
 from .models import AdminUser
 
 def admin_login(request):
@@ -34,6 +35,18 @@ def admin_login(request):
 
     # Render the login page (GET request or failed login attempt)
     return render(request, "admin_auth.html")
+
+def admin_required(view_func):
+    """
+    Decorator to ensure only logged-in admins can access certain views.
+    """
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if 'admin_id' not in request.session:
+            messages.error(request, "Please log in to access this page.")
+            return redirect('admin_login')
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 def admin_logout(request):
     """

@@ -15,6 +15,7 @@ from qr_codes.models import QRCode
 from tables.models import Table
 from menu.views import open_menu
 from menu.views import MENU_CLOSED
+from admin_auth.views import admin_required # Middleware to restrict access to admin users only
 
 def validation(request):
     """
@@ -152,6 +153,7 @@ def validate_location_ajax(request):
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON format.'}, status=400)
 
+@admin_required
 def toggle_batch(request):
     """
     Toggle the active QR batch.
@@ -170,7 +172,7 @@ def toggle_batch(request):
     5. Determine the next batch using modulo for circular rotation.
     6. Deactivate current batch and activate the next batch.
     """
-    
+
     batches = list(QRBatch.objects.all().order_by('id'))
     if not batches:
         return
@@ -206,11 +208,13 @@ def toggle_batch(request):
     open_menu(request)
     return redirect('qr_management')
 
+@admin_required
 def qr_management(request):
     return render(request, 'management.html')
 
 # This code will show all the QR Code Batches together with their status
 # Also retrieve the QR
+@admin_required
 def get_qr_status(request):
     batches = QRBatch.objects.all().order_by('id')
 
@@ -224,11 +228,11 @@ def get_qr_status(request):
     next_batch = None
     for batch in batches:
         parts = batch.batch_name.split()
-        batch_letter = parts[-1]          
-        
+        batch_letter = parts[-1]
+
         batch_list.append({
-            "id": batch.id,                
-            "letter": batch_letter,        
+            "id": batch.id,
+            "letter": batch_letter,
             "status": batch.batch_status,
         })
 
@@ -243,7 +247,7 @@ def get_qr_status(request):
             else:
                 # Circular: loop back to the first batch
                 next_batch = batch_names[0]
-            
+
     return render(request, "qr_batches.html", {
         "batches": batch_list,
         "menu_closed": menu_status,
@@ -251,6 +255,7 @@ def get_qr_status(request):
         "next_batch": next_batch
     })
 
+@admin_required
 def qr_details(request, batch_id):
     batch = get_object_or_404(QRBatch, id=batch_id)
     qr_codes = batch.qr_codes.all()
@@ -294,10 +299,10 @@ def qr_details(request, batch_id):
 
     return render(request, 'view_batch.html', {
         'batch': batch,
-        'qr_data': qr_data, 
+        'qr_data': qr_data,
     })
 
-
+@admin_required
 def print_qr_codes(request, batch_id):
     batch = get_object_or_404(QRBatch, id=batch_id)
     qr_codes = batch.qr_codes.all()
