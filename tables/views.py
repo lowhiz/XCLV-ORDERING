@@ -274,7 +274,7 @@ def table_status_api(request):
     # Return the table statuses as JSON for AJAX polling
     return JsonResponse(tables_status, safe=False)
 
-@admin_required
+# Customer-side view to display their table details and order history
 def table_details(request):
     """
     Display table details including running bill and separate:
