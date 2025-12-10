@@ -13,6 +13,7 @@
 }
 
 /* Button styling */
+/* Button styling */
 .allow-btn {
   background-color: #9a73d9;
   color: #fff;
@@ -20,12 +21,30 @@
   border: none;
   border-radius: 8px;
   transition: background-color 0.3s ease;
-  margin-top: 1.rem; 
+  margin-top: 1.rem;
 }
 
 .allow-btn:hover {
   background-color: #b191f0;
+  color: #fff;
 }
+
+.allow-btn:active {
+  color: #fff;
+  background-color: #7a4ec1;
+}
+
+.allow-btn:disabled {
+  background-color: #4a4a4a;
+  color: #888;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.allow-btn:disabled:hover {
+  background-color: #4a4a4a; /* Prevent hover effect when disabled */
+}
+
 
 
 
@@ -33,20 +52,20 @@
 .status-container {
   width: 100%;
   max-width: 320px; /* Limits width on large screens */
-  padding-left: 1.5rem !important; 
-  padding-right: 1.5rem !important; 
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
 }
 
 .success-card {
   /* Styling for the dark, rounded box */
-  background-color: #212529; 
+  background-color: #212529;
   color: #fff;
   padding: 12px 20px;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  width: 100%; 
-  text-align: center; 
-  justify-content: center; 
+  width: 100%;
+  text-align: center;
+  justify-content: center;
   flex-direction: column;
 }
 
@@ -54,8 +73,8 @@
   /* Style for 'Location validated successfully' */
   font-weight: 600;
   font-size: 0.9rem;
-  color: #fff; 
-  text-align: center; 
+  color: #fff;
+  text-align: center;
 }
 
 .redirect-text {
@@ -63,7 +82,7 @@
   font-weight: 400;
   font-size: 0.8rem;
   color: #adb5bd; /* Light gray for subtle secondary text */
-  text-align: center; 
+  text-align: center;
 }
 
 /* Responsive adjustments */
@@ -85,17 +104,17 @@
     font-size: 0.9rem;
     padding: 0.6rem 1.2rem;
   }
-  
+
   /* Responsive adjustment for success card */
   .status-container {
       /* On small screens, we want it to align with the button which is full-width less margin */
-      padding-left: 1.5rem !important; 
+      padding-left: 1.5rem !important;
       padding-right: 1.5rem !important;
   }
   .success-card {
       padding: 10px 15px;
       /* The card's width is now implicitly controlled by .status-container */
-      max-width: 100%; 
+      max-width: 100%;
   }
   .success-text {
       font-size: 0.85rem;

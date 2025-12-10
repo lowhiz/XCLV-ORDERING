@@ -33,7 +33,7 @@
           </div>
         </div>
 
-        
+
       </div>
     </nav>
     <section class="welcome-section d-flex flex-column justify-content-center align-items-center text-center">
@@ -46,11 +46,14 @@
         location to proceed with<br>
         ordering.
       </p>
-      
-      
+
+
       <div class="status-container mb-3">
-        <div id="initialMessage" class="info-card d-flex align-items-center">
-            <p class="info-text mb-0">We need to verify your location first...</p>
+        <div id="initialMessage" class="info-card d-flex align-items-center success-card">
+            <p class="info-text success-text mb-0">We need to verify your location first...</p>
+            <div id="loading" style="display: none;" class="loading mt-3 fw-bold">
+                <p>Validating your location...</p>
+            </div>
         </div>
         <div id="success" class="success-card d-none d-flex align-items-center">
             <p class="success-text mb-0"></p>
@@ -58,14 +61,11 @@
         <div id="error" class="error-card d-none d-flex align-items-center">
             <p class="error-text mb-0"></p>
         </div>
-        <div id="loading" style="display: none;" class="loading">
-            <p>Validating your location...</p>
-        </div>
       </div>
       <button id="validateLocationBtn" class="btn allow-btn px-4 py-2" onclick="validateLocation()">ALLOW LOCATION ACCESS</button>
     </section>
 
-    
+
 
     <script>
         const qr_hash = '{{ qr_hash }}';
@@ -94,7 +94,7 @@
         function validateLocation() {
             showInitial(); // always reset to initial message first
             document.getElementById('validateLocationBtn').disabled = true;
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading').style.display = 'inline';
 
             if (!navigator.geolocation) {
                 showError("Geolocation is not supported by your browser.");
