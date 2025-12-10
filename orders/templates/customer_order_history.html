@@ -64,7 +64,7 @@
           <div class="order-card ongoing">
               <p class="order-time">{{ order.order_time|date:"g:i A" }}</p>
               <p class="order-price">Php {{ order.order_total }}</p>
-              <p class="order-status">Status: {{ order.order_status }}</p>
+              <p class="order-status">Status: {{ order.order_status|capfirst }}</p>
           </div>
         </a>
         {% endfor %}
@@ -78,11 +78,13 @@
 
       {% if completed_orders %}
         {% for order in completed_orders %}
+        <a href="{% url 'order_details' order.table_order_id %}" style="text-decoration: none; color: inherit;">
           <div class="order-card served">
               <p class="order-time">{{ order.order_time|date:"g:i A" }}</p>
               <p class="order-price">Php {{ order.order_total }}</p>
-              <p class="order-status">Status: {{ order.order_status }}</p>
+              <p class="order-status">Status: {{ order.order_status|capfirst }}</p>
           </div>
+        </a>
         {% endfor %}
       {% else %}
           <p class="text-muted">No completed orders yet.</p>
