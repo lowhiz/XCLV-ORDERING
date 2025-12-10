@@ -31,6 +31,22 @@ def admin_login(request):
         except AdminUser.DoesNotExist:
             # Display an error message if the admin ID does not exist in the database
             messages.error(request, "Invalid Admin ID or Password")
-    
+
     # Render the login page (GET request or failed login attempt)
     return render(request, "admin_auth.html")
+
+def admin_logout(request):
+    """
+    Handles admin logout functionality.
+    - Clears the admin session.
+    - Redirects to the admin login page.
+    """
+    # Clear the admin_id from session
+    if 'admin_id' in request.session:
+        del request.session['admin_id']
+
+    # Display a success message
+    messages.success(request, "You have been logged out successfully.")
+
+    # Redirect to the login page
+    return redirect("admin_login")
