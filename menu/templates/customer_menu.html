@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
     <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}" />
     <link rel="stylesheet" href="{% static 'css/customer_nav_bar.css' %}" />
     <link rel="stylesheet" href="{% static 'css/menu_review1.css'%}" />
     <link rel="stylesheet" href="{% static 'css/menu_review2.css'%}" />
@@ -44,6 +45,7 @@
 
     <!-- Menu Wrapper -->
     <div class="menu-wrapper container mt-4">
+        <h1 class="pb-3 fw-bold xclv-text-white">Menu</h1>
         {% for category, items in categories.items %}
             <!-- Dropdown Header -->
             <div class="dropdown-header" id="{{ category|slugify }}Toggle">
