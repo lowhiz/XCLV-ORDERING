@@ -28,24 +28,17 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-dark custom-navbar">
       <div class="container-fluid d-flex justify-content-between align-items-center">
-
-        <!-- Left Side: Logo + Title + Table -->
         <div class="d-flex align-items-center">
           <img src="{% static 'images/logo-footer.png' %}" alt="XCLV Logo" class="logo" />
-
           <div class="ms-2">
             <h1 class="mb-0 text-white fw-semibold">XCLV Club Davao</h1>
             <h3 class="for_h3">Table <strong>{{ table_display }}</strong></h3>
           </div>
         </div>
 
-        <!-- Right Icon -->
-        <div class="icon-container">
-          <a href="{% url 'table_details' %}">
-            <img src="{% static 'images/dining-table.png' %}" alt="Dining Table Icon" class="icon2" />
-          </a>
-        </div>
-
+        <a href="{% url 'view_menu' %}?table_id={{ table_id }}" class="btn btn-primary table-details-btn table-details-btn-active">
+            <img src="{% static 'images/dining-table.png' %}" alt="Dining Table Icon" class="icon2-inverted" />
+        </a>
       </div>
     </nav>
 

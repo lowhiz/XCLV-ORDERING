@@ -21,18 +21,19 @@
 <body>
     <!-- Navigation bar -->
     <nav class="navbar navbar-dark custom-navbar">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <img src="{% static 'images/logo-footer.png' %}" alt="XCLV Logo" class="logo" />
-                <div class="ms-2">
-                    <h1 class="mb-0 text-white fw-semibold">XCLV Club Davao</h1>
-                    <small class="text-warning fw-semibold">Table {{ table_display }}</small>
-                </div>
-            </div>
-            <div class="icon-container">
-                <img src="{% static 'images/dining-table.png' %}" alt="Cart Icon" class="icon2" />
-            </div>  
+      <div class="container-fluid d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+          <img src="{% static 'images/logo-footer.png' %}" alt="XCLV Logo" class="logo" />
+          <div class="ms-2">
+            <h1 class="mb-0 text-white fw-semibold">XCLV Club Davao</h1>
+            <h3 class="for_h3">Table <strong>{{ table_display }}</strong></h3>
+          </div>
         </div>
+
+        <a href="{% url 'table_details' %}" class="btn btn-primary table-details-btn">
+            <img src="{% static 'images/dining-table.png' %}" alt="Dining Table Icon" class="icon2" />
+        </a>
+      </div>
     </nav>
     <section class="order-section d-flex flex-column align-items-center justify-content-start py-4">
         <div class="order-card p-4">
@@ -40,7 +41,7 @@
             <p class="status-text order-summary-title mb-4">Order Summary</p>
 
             <div class="order-list" id="review-items">
-                <!-- JS will dynamically insert each order item as: 
+                <!-- JS will dynamically insert each order item as:
                     <div class="order-item d-flex mb-2">
                         <span class="item-name">Item Name</span>
                         <span class="item-qty">xQty</span>
