@@ -201,7 +201,7 @@ def past_order_details(request, order_id):
     return JsonResponse({'success': True, 'message': 'Order placed successfully!'})
 
 # This section deletes the customer's order when they request the admin to remove it.
-def delete_order(response, table_order_id):
+def delete_order(request, table_order_id):  # Changed from 'response' to 'request'
     # Fetch the specific TableOrder
     table_order = get_object_or_404(TableOrder, id=table_order_id)
 
@@ -227,11 +227,13 @@ def delete_order(response, table_order_id):
     # Delete the Table order
     table_order.delete()
 
-    return redirect("pending_table_orders")
+    # Redirect back to the referring page
+    return redirect(request.META.get('HTTP_REFERER', 'pending_table_orders'))
+
 
 # This section sets the status of the TableOrder
 # after the admin reviews it and finds no issues with the customer's order.
-def complete_order(response, table_order_id):
+def complete_order(request, table_order_id):
     # Fetch the specific TableOrder
     table_order = get_object_or_404(TableOrder, id=table_order_id)
 
@@ -239,7 +241,7 @@ def complete_order(response, table_order_id):
     table_order.order_status = "Completed"
     table_order.save()
 
-    return redirect("pending_table_orders")
+    return redirect(request.META.get('HTTP_REFERER', 'pending_table_orders'))
 
 @csrf_exempt
 def update_order(request):
