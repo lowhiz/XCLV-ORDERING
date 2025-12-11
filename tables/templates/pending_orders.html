@@ -29,6 +29,9 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 
+    <script>
+      window.PENDING_ORDERS_API_URL = "{% url 'pending_orders_api' %}";
+    </script>
 
   </head>
 
@@ -41,66 +44,44 @@
         <h1 class="fw-bold">PENDING ORDERS</h1>
       </div>
 
-      {% if pending_orders %}
+      <!-- Always render the scrollable section, content inside changes -->
       <div class="scrollable-orders-section pt-3">
-        <div class="order-list">
+        {% if pending_orders %}
+          <div class="order-list">
             <!-- Example Order Item -->
             {% for order in pending_orders %}
             <div class="order-item">
-            <div class="order-details">
+              <div class="order-details">
                 <div class="table-id-time">
-                <span class="table-id montserrat">{{ order.description }}</span>
-                <span class="order-time fs-4"
-                    >{{ order.order_time|date:"h:i A" }}</span
-                >
+                  <span class="table-id montserrat">{{ order.description }}</span>
+                  <span class="order-time fs-4">{{ order.order_time|date:"h:i A" }}</span>
                 </div>
                 <div class="order-items">
-                {% for item in order.items %}
-                <p class="item-name">x{{ item.quantity }} {{ item.name }}</p>
-                {% endfor %}
+                  {% for item in order.items %}
+                  <p class="item-name">x{{ item.quantity }} {{ item.name }}</p>
+                  {% endfor %}
                 </div>
-            </div>
-            <div class="order-actions">
-                <a
-                href="{% url 'edit_order' table_order_id=order.table_order_id %}"
-                class="action-btn edit-btn"
-                >
-                <img
-                    src="{% static 'images/edit.svg' %}"
-                    alt="Edit"
-                    class="action-icon"
-                />
+              </div>
+              <div class="order-actions">
+                <a href="{% url 'edit_order' table_order_id=order.table_order_id %}" class="action-btn edit-btn">
+                  <img src="{% static 'images/edit.svg' %}" alt="Edit" class="action-icon" />
                 </a>
-                <a
-                href="{% url 'delete_order' table_order_id=order.table_order_id %}"
-                class="action-btn reject-btn"
-                >
-                <img
-                    src="{% static 'images/x.svg' %}"
-                    alt="Reject"
-                    class="action-icon"
-                />
+                <a href="{% url 'delete_order' table_order_id=order.table_order_id %}" class="action-btn reject-btn">
+                  <img src="{% static 'images/x.svg' %}" alt="Reject" class="action-icon" />
                 </a>
-                <a
-                href="{% url 'complete_order' table_order_id=order.table_order_id %}"
-                class="action-btn accept-btn"
-                >
-                <img
-                    src="{% static 'images/check.svg' %}"
-                    alt="Accept"
-                    class="action-icon"
-                />
+                <a href="{% url 'complete_order' table_order_id=order.table_order_id %}" class="action-btn accept-btn">
+                  <img src="{% static 'images/check.svg' %}" alt="Accept" class="action-icon" />
                 </a>
-            </div>
+              </div>
             </div>
             {% endfor %}
-        </div>
+          </div>
         {% else %}
-            <div class="d-flex flex-column justify-content-center align-items-center pt-5" style="min-height: calc(100vh - 200px);">
-                <img src="{% static 'images/pending.svg' %}" alt="Inactive Table" class="mb-3" style="max-width: 100px; opacity: 35%;">
-                <h2 class="text-center">No pending orders currently in queue</h2>
-                <p class="text-center">Customers and their orders after filling up in the menu <br> are showed on this page.</p>
-            </div>
+          <div class="empty-state d-flex flex-column justify-content-center align-items-center pt-5" style="min-height: calc(100vh - 200px);">
+            <img src="{% static 'images/pending.svg' %}" alt="Inactive Table" class="mb-3" style="max-width: 100px; opacity: 35%;">
+            <h2 class="text-center">No pending orders currently in queue</h2>
+            <p class="text-center">Customers and their orders after filling up in the menu <br> are showed on this page.</p>
+          </div>
         {% endif %}
       </div>
     </div>
@@ -108,5 +89,6 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/admin_time.js' %}"></script>
+    <script src="{% static 'js/pending_orders.js' %}"></script>
   </body>
 </html>

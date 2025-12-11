@@ -332,3 +332,38 @@ def table_details(request):
     }
 
     return render(request, 'customer_order_history.html', context)
+
+def pending_orders_api(request):
+    """
+    API endpoint for fetching pending orders in JSON format.
+    Used for live updates without page refresh.
+    """
+    pending_orders = TableOrder.objects.filter(
+        order_status__iexact="pending"
+    ).order_by("-order_time")
+
+    orders_list = []
+
+    for table_order in pending_orders:
+        # Table description from Table entity
+        table_description = table_order.table.description or str(table_order.table.id)
+
+        # Get all Orders linked to the TableOrder
+        orders = table_order.orders.all()
+
+        items_list = []
+        # Collect all item details
+        for order in orders:
+            items_list.append({
+                "name": order.item.name,
+                "quantity": order.quantity,
+            })
+
+        orders_list.append({
+            "table_order_id": table_order.id,
+            "description": table_description,
+            "items": items_list,
+            "order_time": table_order.order_time.strftime("%I:%M %p"),  # Format time
+        })
+
+    return JsonResponse(orders_list, safe=False)
