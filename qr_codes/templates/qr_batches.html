@@ -40,19 +40,18 @@
                     {% for batch in batches %}
 
                         <div class="col">
-                            <div class="batch-card text-center" style="background-color: {% if batch.status %}palegreen{% else %}white{% endif %};">
-                                <div class="py-5">
-                                    <div class="pt-3"></div>
-                                    <span class="fs-6 fw-light"> {% if batch.status %} CURRENT {% endif %} BATCH</span>
-                                    <h2 class="display-3 fw-bold inter">
-                                        <a href="{% url 'qr_details' batch.id %}"
-                                            style="text-decoration: none; color: inherit;">
+                            <a href="{% url 'qr_details' batch.id %}" style="text-decoration: none; color: inherit;">
+                                <div class="batch-card text-center" style="background-color: {% if batch.status %}palegreen{% else %}white{% endif %};">
+                                    <div class="py-5">
+                                        <div class="pt-3"></div>
+                                        <span class="fs-6 fw-light"> {% if batch.status %} CURRENT {% endif %} BATCH</span>
+                                        <h2 class="display-3 fw-bold inter">
                                             {{ batch.letter }}
-                                        </a>
-                                    </h2>
-                                    <div class="pt-3"></div>
+                                        </h2>
+                                        <div class="pt-3"></div>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
