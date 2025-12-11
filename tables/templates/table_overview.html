@@ -97,7 +97,7 @@
                     <!-- Row 2 -->
                     <div class="row g-2 mb-2">
                         <div class="col-2">
-                            <div class="xclv-bg-gold xclv-text-black table-div text-center py-3 rounded" style="position: absolute; width: 11.25vw; height: 15vh;" data-table="VVIP 1">
+                            <div class="xclv-bg-gold xclv-text-black table-div text-center py-3 rounded" data-table="VVIP 1">
                                 <span style="position: relative; top: 35%">
                                     {% for table in tables_status %}
                                         {% if table.name == "VVIP 1" %}
@@ -934,8 +934,14 @@
                     data.forEach(table => {
                         const tableDiv = document.querySelector(`[data-table="${table.name}"]`);
                         if (tableDiv) {
-                            // Reset classes
-                            tableDiv.className = "table-div text-center py-3 rounded";
+                            // Determine padding based on table type
+                            let paddingClass = "py-3";
+                            if (table.name.startsWith("VVIP") && table.name !== "VVIP 1") {
+                                paddingClass = "py-5";
+                            }
+
+                            // Reset classes but preserve padding based on table type
+                            tableDiv.className = `table-div text-center ${paddingClass} rounded`;
 
                             // Apply new classes based on status
                             if (table.status === "Pending") {
@@ -943,7 +949,14 @@
                             } else if (table.status === "Completed") {
                                 tableDiv.classList.add("xclv-bg-success", "xclv-text-black");
                             } else {
-                                tableDiv.classList.add("xclv-bg-light-grey", "xclv-text-black");
+                                // Inactive - apply original colors based on table type
+                                if (table.name.startsWith("VVIP")) {
+                                    tableDiv.classList.add("xclv-bg-success", "xclv-text-black");
+                                } else if (table.name.startsWith("VIP")) {
+                                    tableDiv.classList.add("xclv-bg-accent-2", "xclv-text-white");
+                                } else {
+                                    tableDiv.classList.add("xclv-bg-light-grey", "xclv-text-black");
+                                }
                             }
                         }
                     });
@@ -954,9 +967,8 @@
         // Poll every 1 second
         setInterval(fetchTableStatus, 1000);
         fetchTableStatus();
-        </script>
+    </script>
 
-    <script src="{% static 'js/admin_table_overview.js' %}"></script>
     <script src="{% static 'js/admin_time.js' %}"></script>
 </body>
 </html>
