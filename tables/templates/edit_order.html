@@ -65,7 +65,7 @@
                                                                 <div class="d-flex align-items-center gap-2">
                                                                     <div>
                                                                         <span class="mb-1">{{ item.name }}</span><br>
-                                                                        <small class="text-muted">₱{{ item.unit_price }}</small>
+                                                                        <small class="text-muted">Php {{ item.unit_price }}</small>
                                                                     </div>
                                                                     <a data-bs-toggle="modal" data-bs-target="#itemModal{{ item.id }}">
                                                                         <i class="bi bi-info-circle info-icon"></i>
@@ -101,7 +101,7 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <p>{{ item.description }}</p>
-                                                                <p><strong>Price:</strong> ₱{{ item.unit_price }}</p>
+                                                                <p><strong>Price:</strong> Php {{ item.unit_price }}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -128,7 +128,7 @@
         <!-- Fixed Bottom Section -->
         <div class="fixed-bottom-section mb-3">
             <div class="container">
-                <h3 class="text-end">Order Total: <strong>PhP {{ current_total }}</strong></h3>
+                <h3 class="text-end">Order Total: <strong>Php {{ current_total }}</strong></h3>
             </div>
             <div class="d-flex justify-content-center container pt-2">
                 <div class="row w-100 g-2">

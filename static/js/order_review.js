@@ -54,13 +54,13 @@ function displayOrderItems() {
             <div class="order-item d-flex mb-2">
                 <span class="item-name flex-grow-1">${item.name}</span>
                 <span class="item-qty mx-3">x${item.quantity}</span>
-                <span class="item-price">₱${itemTotal.toFixed(2)}</span>
+                <span class="item-price">Php ${itemTotal.toFixed(2)}</span>
             </div>
         `;
     });
 
     reviewContainer.innerHTML = itemsHtml;
-    grandTotalElement.textContent = `₱${grandTotal.toFixed(2)}`;
+    grandTotalElement.textContent = `Php ${grandTotal.toFixed(2)}`;
 }
 
 function confirmOrder() {
@@ -81,7 +81,7 @@ function confirmOrder() {
   confirmBtn.textContent = "Processing...";
 
   const menuData = document.getElementById("menu-data");
-  const tableId = menuData.dataset.tableId; 
+  const tableId = menuData.dataset.tableId;
   fetch("/orders/order/", {
       method: "POST",
       headers: {
@@ -90,7 +90,7 @@ function confirmOrder() {
       },
       body: JSON.stringify({
           items: orderData.items,
-          table_id: tableId, 
+          table_id: tableId,
       }),
   })
     .then((response) => response.json())

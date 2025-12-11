@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const menuItem = quantityElement.closest('.menu-item');
                         const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                         const priceText = menuItem.querySelector('.text-muted').textContent;
-                        const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+                        const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
                         cart[itemId] = {
                             id: itemId,
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const menuItem = element.closest('.menu-item');
                 const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
-                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+                const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
                 cart[itemId] = {
                     id: itemId,
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const menuItem = element.closest('.menu-item');
                 const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
-                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+                const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
                 cart[itemId] = {
                     id: itemId,
@@ -131,7 +131,7 @@ function decreaseQuantity(itemId) {
                 const menuItem = quantityElement.closest('.menu-item');
                 const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
-                const itemPrice = parseFloat(priceText.replace('₱', '').replace(',', ''));
+                const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
                 cart[itemId] = {
                     id: itemId,
@@ -191,7 +191,7 @@ function updateOrderSummary() {
     // Find and update the total in the fixed bottom section
     const totalElement = document.querySelector('.fixed-bottom-section h3 strong');
     if (totalElement) {
-        totalElement.textContent = `PhP ${total.toFixed(2)}`;
+        totalElement.textContent = `Php ${total.toFixed(2)}`;
     }
 
     console.log('Order summary updated. Total:', total); // Debug line
