@@ -31,28 +31,32 @@
             <h1 class="dashboard-heading">ARCHIVED ORDERS</h1>
         </div>
 
-        <div class="scrollable-menu-section">
-            <div class="row row-cols-2 row-cols-md-3 g-3">
-            {% if tables %}
-                {% for table in tables %}
-                    <a href="{% url 'archive_details' table.table_name %}" style="text-decoration: none; color: inherit;">
-                        <div class="col">
-                            <div class="card mb-3 shadow-sm">
-                                <div class="card-body">
-                                    <h4 class="inter fw-bold">
-                                        {{ table.table_name }}
-                                    </h4>
-                                    Last Archived at {{ table.last_archived_at|date:"M d, Y H:i A" }}
+        {% if tables %}
+            <div class="scrollable-menu-section">
+                <div class="row row-cols-2 row-cols-md-3 g-3">
+                    {% for table in tables %}
+                        <a href="{% url 'archive_details' table.table_name %}" style="text-decoration: none; color: inherit;">
+                            <div class="col">
+                                <div class="card mb-3 shadow-sm">
+                                    <div class="card-body">
+                                        <h4 class="inter fw-bold">
+                                            {{ table.table_name }}
+                                        </h4>
+                                        Last Archived at <br><strong>{{ table.latest_archived_at|date:"M d, Y h:i A" }}</strong>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted text-center">No archived tables yet.</p>
-            {% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        {% else %}
+            <div class="d-flex flex-column justify-content-center align-items-center h-100 pb-4">
+                <img src="{% static 'images/dining-table.png' %}" alt="Inactive Table" class="mb-3" style="max-width: 100px; opacity: 35%;">
+                <h2 class="text-center">No tables have been archived yet</h2>
+                <p class="text-center">Tables that are cleared after customers leave <br> are archived and showed on this page.</p>
+            </div>
+        {% endif %}
 
     </div>
     <script src="{% static 'js/admin_time.js' %}"></script>

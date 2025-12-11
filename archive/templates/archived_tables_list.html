@@ -28,7 +28,7 @@
     <div class="main-content">
         <div class="fixed-top-section">
             <h1 class="dashboard-heading">{{ table_name }} Past Orders</h1>
-            <h5 style="position: relative; bottom: 5px">Last Archived: <span class="xclv-text-accent-2 fw-bold">{{ archives.0.archived_at|date:"h:i A" }}</span></h5>
+            <h5 style="position: relative; bottom: 5px">Last Archived: <span class="xclv-text-accent-2 fw-bold">{{ archives.0.archived_at|date:"M d, Y h:i A" }}</span></h5>
         </div>
 
         <div class="scrollable-menu-section xclv-bg-lighter-grey px-3">
@@ -38,7 +38,7 @@
             <div class="col mb-3 inter">
 
                 <div class="mb-3">
-                    <span class="xclv-text-black fw-bold fs-5">Archived At: {{ archive.archived_at|date:"h:i A" }}</span>
+                    <span class="xclv-text-black fw-bold fs-5">Archived At: {{ archive.archived_at|date:"M d, Y h:i A" }}</span>
                     <br>
                     <span class="fs-6">Total Payment: Php {{ archive.total_payment }}</span>
                 </div>
