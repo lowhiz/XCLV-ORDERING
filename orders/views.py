@@ -93,8 +93,9 @@ def create_order(request):
     table_order.total_order_price = table_total
     table_order.save()
 
-    table.total_payment += table_total
-    table.save()
+    # Do NOT add to table.total_payment here; only on completion
+    # table.total_payment += table_total
+    # table.save()
 
     # ------------------- STORE LAST ORDER IN SESSION -------------------
     request.session['last_order'] = {
@@ -217,19 +218,19 @@ def delete_order(request, table_order_id):  # Changed from 'response' to 'reques
         total_deduction += order.total_item_price
         order.delete()
 
-    # Update table total payment
-    if table.total_payment is not None:
-        table.total_payment -= total_deduction
-        if table.total_payment < 0:
-            table.total_payment = 0
-        table.save()
+    # Update table total payment ONLY if the order was Completed
+    if table_order.order_status.lower() == "completed":
+        if table.total_payment is not None:
+            table.total_payment -= total_deduction
+            if table.total_payment < 0:
+                table.total_payment = 0
+            table.save()
 
     # Delete the Table order
     table_order.delete()
 
     # Redirect back to the referring page
     return redirect(request.META.get('HTTP_REFERER', 'pending_table_orders'))
-
 
 # This section sets the status of the TableOrder
 # after the admin reviews it and finds no issues with the customer's order.
@@ -240,6 +241,11 @@ def complete_order(request, table_order_id):
     # Update the status to complete
     table_order.order_status = "Completed"
     table_order.save()
+
+    # Add this order's total to the table's total_payment on completion
+    table = table_order.table
+    table.total_payment += table_order.total_order_price
+    table.save()
 
     return redirect(request.META.get('HTTP_REFERER', 'pending_table_orders'))
 
@@ -272,7 +278,7 @@ def update_order(request):
 
     # Calculate new total
     new_total = Decimal('0.00')
-    old_total = table_order.table.total_payment
+    old_order_total = table_order.total_order_price
 
     # Create new orders
     for item_data in items:
@@ -291,10 +297,18 @@ def update_order(request):
             )
             new_total += price * quantity
 
-    # Update table total (subtract old total, add new total)
-    table = table_order.table
-    table.total_payment = table.total_payment - old_total + new_total
-    table.save()
+    # Update the TableOrder's own total
+    table_order.total_order_price = new_total
+    table_order.save()
+
+    # If the order is Completed, adjust the table total by the delta.
+    # If Pending, do not change table.total_payment.
+    if table_order.order_status.lower() == "completed":
+        table = table_order.table
+        table.total_payment += (new_total - old_order_total)
+        if table.total_payment < 0:
+            table.total_payment = 0
+        table.save()
 
     return JsonResponse({'success': True, 'message': 'Order updated successfully!'})
 
