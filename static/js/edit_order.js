@@ -98,18 +98,23 @@ document.addEventListener('DOMContentLoaded', function() {
     updateOrderSummary();
 });
 
-function increaseQuantity(itemId, itemName, itemPrice) {
-    console.log(`Increase: ${itemId}, ${itemName}, ${itemPrice}`); // Debug line
+function increaseQuantity(itemId) {
+    console.log(`Increase: ${itemId}`); // Debug line
 
     if (!cart[itemId]) {
-        // Initialize from currently displayed quantity instead of starting at 0
+        // Initialize from currently displayed quantity and DOM data attributes
         const quantityElement = document.getElementById(`quantity-${itemId}`);
         const currentDisplayed = quantityElement ? parseInt(quantityElement.textContent) || 0 : 0;
+
+        // Find the associated menu-item and read data safely
+        const menuItem = quantityElement ? quantityElement.closest('.menu-item') : null;
+        const itemName = menuItem ? (menuItem.dataset.itemName || menuItem.querySelector('.col-8 span')?.textContent?.trim() || '') : '';
+        const itemPrice = menuItem ? parseFloat(menuItem.dataset.itemPrice || menuItem.querySelector('.text-muted')?.textContent?.replace('Php ', '').replace(',', '') || '0') : 0;
 
         cart[itemId] = {
             id: itemId,
             name: itemName,
-            price: parseFloat(itemPrice),
+            price: itemPrice,
             quantity: currentDisplayed
         };
     }

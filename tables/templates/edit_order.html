@@ -57,7 +57,10 @@
                                         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
                                             {% for item in items %}
                                             <div class="col">
-                                                <div class="menu-item admin-menu-card px-3 py-2 {% if item.current_quantity > 0 %}current-item{% endif %}">
+                                                <div class="menu-item admin-menu-card px-3 py-2 {% if item.current_quantity > 0 %}current-item{% endif %}"
+                                                     data-item-id="{{ item.id }}"
+                                                     data-item-name="{{ item.name|escape }}"
+                                                     data-item-price="{{ item.unit_price }}">
                                                     <div class="card-body">
                                                         <div class="row align-items-center">
                                                             <!-- Item Info -->
@@ -84,7 +87,7 @@
                                                                     </span>
 
                                                                     <button class="admin-quantity-button"
-                                                                            onclick="increaseQuantity('{{ item.id }}', '{{ item.name }}', {{ item.unit_price }})">+</button>
+                                                                            onclick="increaseQuantity('{{ item.id }}')">+</button>
                                                                 </div>
                                                             </div>
                                                         </div>

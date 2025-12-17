@@ -28,14 +28,22 @@ document.addEventListener('DOMContentLoaded', function () {
 // Grab table info from HTML data attributes
 let cart = {}; // Track quantities by item ID
 
-function increaseQuantity(itemId, itemName, itemPrice) {
+function increaseQuantity(itemId) {
+  const qtyEl = document.getElementById(`quantity-${itemId}`);
+  const currentDisplayed = qtyEl ? parseInt(qtyEl.textContent) || 0 : 0;
+
+  // Read data safely from the DOM to avoid quote issues
+  const itemCard = document.querySelector(`.item-card[data-item-id="${itemId}"]`);
+  const itemName = itemCard?.dataset.name || '';
+  const itemPrice = parseFloat(itemCard?.dataset.price || '0');
+
   // Initialize if doesn't exist
   if (!cart[itemId]) {
     cart[itemId] = {
       id: itemId,
       name: itemName,
-      price: parseFloat(itemPrice),
-      quantity: 0,
+      price: itemPrice,
+      quantity: currentDisplayed,
     };
   }
 
@@ -127,7 +135,7 @@ function updateOrderSummary() {
             "Wine": "gin.png"
         };
 
-        const iconFilename = iconMap[category] || "cocktail.png"; 
+        const iconFilename = iconMap[category] || "cocktail.png";
         const iconUrl = `${staticPath}${iconFilename}`;
 
         const li = document.createElement("li");
@@ -185,6 +193,35 @@ document.getElementById("itemModalOverlay").addEventListener("click", (e) => {
         e.currentTarget.classList.remove("show-modal");
         document.body.style.overflow = "";
     }
+});
+
+// Delegated handlers for summary plus/minus buttons
+document.addEventListener('DOMContentLoaded', function () {
+  const orderItemsContainer = document.getElementById('order-items');
+
+  // Use event delegation because the buttons are added dynamically
+  orderItemsContainer.addEventListener('click', function (e) {
+    const btn = e.target.closest('.qty-btn');
+    if (!btn) return;
+
+    const itemId = btn.dataset.itemId;
+    if (!itemId) return;
+
+    if (btn.classList.contains('plus')) {
+      // Reuse main increase logic
+      increaseQuantity(itemId);
+    } else if (btn.classList.contains('minus')) {
+      // Reuse main decrease logic
+      decreaseQuantity(itemId);
+    }
+
+    // Update the summary quantity for this specific item row
+    const summaryItem = btn.closest('.summary-item-card');
+    const summaryQty = summaryItem?.querySelector('.summary-qty');
+    if (summaryQty) {
+      summaryQty.textContent = cart[itemId] ? cart[itemId].quantity : 0;
+    }
+  });
 });
 
 
@@ -253,7 +290,7 @@ function redirectForReview() {
       table_display: menuData.dataset.tableDisplay,
     })
   );
-  
+
   // Redirect to review page
   window.location.href = "/menu/review/";
 }
