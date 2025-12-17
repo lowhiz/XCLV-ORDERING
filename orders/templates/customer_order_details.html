@@ -72,37 +72,5 @@
       </div>
 
     </section>
-
-    <div class="container">
-        <a href="{% url 'table_details' %}" class="back-button">← Back to Table Details</a>
-
-        <div class="header">
-            <h1>Order Details</h1>
-        </div>
-
-        <div class="order-details">
-            <div class="order-info">
-                <h2>Order #{{ table_order_id|truncatechars:13 }}</h2>
-                <p><strong>Table:</strong> {{ table_display }}</p>
-                <p><strong>Order Time:</strong> {{ order_time|date:"M d, Y - h:i A" }}</p>
-                <p><strong>Status:</strong> <span class="order-status {{ order_status|lower }}">{{ order_status }}</span></p>
-            </div>
-
-            <div class="order-items">
-                <h3>Items Ordered:</h3>
-                {% for item in items %}
-                <div class="order-item">
-                    <span class="item-name">{{ item.name }}</span>
-                    <span class="item-quantity">x{{ item.quantity }}</span>
-                    <span class="item-price">Php {{ item.total_item_price|floatformat:2 }}</span>
-                </div>
-                {% endfor %}
-            </div>
-
-            <div class="order-total">
-                <h3>Total Amount: ₱{{ order_total|floatformat:2 }}</h3>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
