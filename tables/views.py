@@ -6,6 +6,7 @@ from orders.models import Order
 from qr_codes.models import QRCode, QRBatch
 from django.http import JsonResponse
 from admin_auth.views import admin_required # Middleware to check if admin is logged in
+from django.utils import timezone as tz # For timezone conversion
 
 # This section will get all the TableOrder who have a pending status
 @admin_required
@@ -112,14 +113,12 @@ def table_overview(request):
                     status = "Completed"
                 else:
                     status = table_orders.order_by('-order_time').first().order_status
-
             # If there is no TableOrder, marked inactive(this will happen if the customer did not choose to order or still picking up the order)
             else:
                 status = "Inactive"
 
             # Get the table id if it is being occupied
             table_id = table.id
-
         # If the Table is being not occupied, just make the id as 0 and status as inactive
         else:
             table_id = 0
@@ -235,14 +234,12 @@ def edit_order(request, table_order_id):
 def table_status_api(request):
     # Fetch all tables and prefetch related QRCode to reduce DB queries
     tables = Table.objects.select_related('qrcode').all()
-
     # Container to store the status of each table
     tables_status = []
 
     for table in tables:
         # Get all orders for this table, ordered by order_time (oldest first)
         orders = table.orders.order_by('order_time')
-
         if orders.exists():
             # Extract all order statuses in lowercase to make comparisons case-insensitive
             statuses = [o.order_status.lower() for o in orders]
@@ -359,11 +356,14 @@ def pending_orders_api(request):
                 "quantity": order.quantity,
             })
 
+        # Convert to local timezone (Asia/Manila as per settings.py)
+        local_time = tz.localtime(table_order.order_time)
+
         orders_list.append({
             "table_order_id": table_order.id,
             "description": table_description,
             "items": items_list,
-            "order_time": table_order.order_time.strftime("%I:%M %p"),  # Format time
+            "order_time": local_time.strftime("%I:%M %p"),  # Format time in local timezone
         })
 
     return JsonResponse(orders_list, safe=False)
