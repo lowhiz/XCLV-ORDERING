@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     const quantityElement = document.getElementById(`quantity-${itemId}`);
                     if (quantityElement) {
                         const menuItem = quantityElement.closest('.menu-item');
-                        const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
+                        // FIX: match the template's col-8 container
+                        const itemName = menuItem.querySelector('.col-8 span').textContent.trim();
                         const priceText = menuItem.querySelector('.text-muted').textContent;
                         const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
@@ -40,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Also initialize cart from the displayed quantities on the page
-        // This ensures we capture items even if the data parsing fails
         const quantityElements = document.querySelectorAll('[id^="quantity-"]');
         quantityElements.forEach(element => {
             const itemId = element.id.replace('quantity-', '');
@@ -48,7 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (displayedQuantity > 0 && !cart[itemId]) {
                 const menuItem = element.closest('.menu-item');
-                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
+                // FIX: match the template's col-8 container
+                const itemName = menuItem.querySelector('.col-8 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
@@ -74,7 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (displayedQuantity > 0) {
                 const menuItem = element.closest('.menu-item');
-                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
+                // FIX: match the template's col-8 container
+                const itemName = menuItem.querySelector('.col-8 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
@@ -100,11 +102,15 @@ function increaseQuantity(itemId, itemName, itemPrice) {
     console.log(`Increase: ${itemId}, ${itemName}, ${itemPrice}`); // Debug line
 
     if (!cart[itemId]) {
+        // Initialize from currently displayed quantity instead of starting at 0
+        const quantityElement = document.getElementById(`quantity-${itemId}`);
+        const currentDisplayed = quantityElement ? parseInt(quantityElement.textContent) || 0 : 0;
+
         cart[itemId] = {
             id: itemId,
             name: itemName,
             price: parseFloat(itemPrice),
-            quantity: 0
+            quantity: currentDisplayed
         };
     }
 
@@ -123,13 +129,14 @@ function decreaseQuantity(itemId) {
 
     // Check if item exists in cart
     if (!cart[itemId]) {
-        // If not in cart, try to initialize it from the displayed quantity
+        // If not in cart, initialize it from the displayed quantity
         const quantityElement = document.getElementById(`quantity-${itemId}`);
         if (quantityElement) {
             const currentDisplayed = parseInt(quantityElement.textContent) || 0;
             if (currentDisplayed > 0) {
                 const menuItem = quantityElement.closest('.menu-item');
-                const itemName = menuItem.querySelector('.col-10 span').textContent.trim();
+                // FIX: match the template's col-8 container
+                const itemName = menuItem.querySelector('.col-8 span').textContent.trim();
                 const priceText = menuItem.querySelector('.text-muted').textContent;
                 const itemPrice = parseFloat(priceText.replace('Php ', '').replace(',', ''));
 
