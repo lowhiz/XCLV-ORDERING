@@ -9,6 +9,8 @@ psycopg2 = "*"
 psycopg2-binary = "*"
 pillow = "*"
 qrcode = "*"
+djangorestframework = "*"
+
 
 [dev-packages]
 
