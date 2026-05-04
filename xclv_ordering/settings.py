@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'menu',
     'admin_auth',
     'archive',
+    'rest_framework',
+    'inventory',
 ]
 
 MIDDLEWARE = [
