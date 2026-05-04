@@ -29,6 +29,8 @@ urlpatterns = [
     path('menu/', include('menu.urls')),
     path('orders/', include('orders.urls')),
     path('archive/', include('archive.urls')),
+    # OAuth2 URL
+    path('auth/', include('social_django.urls', namespace='social')),
 ]
 
 # Serve media files in both development and production
