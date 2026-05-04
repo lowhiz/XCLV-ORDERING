@@ -52,6 +52,10 @@
                         <button type="submit" class="btn btn-primary btn-login inter fw-bold">
                             <img src="{% static 'images/logout.svg' %}" alt="Login Icon" class="custom-login-icon me-2">LOGIN
                         </button>
+                        <a href="{% url 'social:begin' 'google-oauth2' %}"
+                           class="btn btn-danger w-100">
+                          <i class="bi bi-google me-2"></i> Sign in with Google
+                        </a>
                     </div>
                 </form>
             </div>
