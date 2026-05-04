@@ -41,9 +41,23 @@ def admin_required(view_func):
     Decorator to ensure only logged-in admins can access certain views.
     """
     @wraps(view_func)
+
+    # OLD LOGIN MECHANISM: Checks for 'admin_id' in session to verify
+    # if the user is logged in as admin.
+
+    # def wrapper(request, *args, **kwargs):
+    #     if 'admin_id' not in request.session:
+    #         messages.error(request, "Please log in to access this page.")
+    #         return redirect('admin_login')
+    #     return view_func(request, *args, **kwargs)
+    # return wrapper
+
+    # NEW LOGIN MECHANISM: Uses OAuth2 for Django to manage the session
+    # through request.user. Checks request.user.is_authenticated instead
+
     def wrapper(request, *args, **kwargs):
-        if 'admin_id' not in request.session:
-            messages.error(request, "Please log in to access this page.")
+        if not request.user.is_authenticated:
+            messages.error(request, 'Please sign in to access this page.')
             return redirect('admin_login')
         return view_func(request, *args, **kwargs)
     return wrapper
