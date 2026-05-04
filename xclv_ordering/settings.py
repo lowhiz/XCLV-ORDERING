@@ -27,8 +27,19 @@ LOGIN_REDIRECT_URL  = '/tables/pending-table-orders/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL           = '/'
 
-
-
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    # ↓ Our custom step — must come before create_user so unauthorized
+    #   users are stopped before a Django User is created for them.
+    'admin_auth.pipeline.restrict_to_known_admins',
+]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
