@@ -25,7 +25,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
 # Where to send admins after login
-LOGIN_REDIRECT_URL  = '/tables/pending-table-orders/'
+LOGIN_REDIRECT_URL  = '/tables/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL           = '/'
 
