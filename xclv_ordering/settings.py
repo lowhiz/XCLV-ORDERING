@@ -12,15 +12,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
 
 # Google OAuth2 credentials (set these in your .env or Render environment)
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
-
-# Only allow Google accounts from your team's domain (recommended)
-SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['xclv-ordering-production.onrender.com', 'localhost']
 
 # Where to send admins after login
 LOGIN_REDIRECT_URL  = '/tables/pending-table-orders/'
@@ -32,13 +34,13 @@ SOCIAL_AUTH_PIPELINE = [
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
+    # ↓ Our custom step — must come BEFORE create_user so unauthorized
+    #   users are stopped before a Django User is created for them.
+    'admin_auth.pipeline.restrict_to_known_admins',
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    # ↓ Our custom step — must come before create_user so unauthorized
-    #   users are stopped before a Django User is created for them.
-    'admin_auth.pipeline.restrict_to_known_admins',
 ]
 
 # Quick-start development settings - unsuitable for production
@@ -80,6 +82,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "xclv_ordering.urls"

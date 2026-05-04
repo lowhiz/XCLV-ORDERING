@@ -10,6 +10,7 @@ psycopg2-binary = "*"
 pillow = "*"
 qrcode = "*"
 social-auth-app-django = "*"
+dotenv = "*"
 
 [dev-packages]
 
