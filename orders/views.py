@@ -8,6 +8,7 @@ from tables.models import Table, TableOrder
 from .models import Order
 from menu.models import Item
 from django.views.decorators.csrf import csrf_exempt
+from inventory.services import mark_items_from_completed_order
 
 
 # This section creates the customer's order.
@@ -247,6 +248,9 @@ def complete_order(request, table_order_id):
     table.total_payment += table_order.total_order_price
     table.save()
 
+    # Add trigger inventory update hook
+    mark_items_from_completed_order(table_order)
+    
     return redirect(request.META.get('HTTP_REFERER', 'pending_table_orders'))
 
 @csrf_exempt
