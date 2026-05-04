@@ -15,6 +15,20 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Google OAuth2 credentials (set these in your .env or Render environment)
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
+# Only allow Google accounts from your team's domain (recommended)
+SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_DOMAINS = ['xclv-ordering-production.onrender.com', 'localhost']
+
+# Where to send admins after login
+LOGIN_REDIRECT_URL  = '/tables/pending-table-orders/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL           = '/'
+
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
