@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'menu',
     'admin_auth',
     'archive',
+    # OAuth2 App
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,11 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+
+                # Social-auth context processors
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
+
             ],
         },
     },
@@ -108,6 +115,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Appended for Django to know to check social-auth when logging in a user
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',  # Google OAuth2
+    'django.contrib.auth.backends.ModelBackend', # keep default for Django admin
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
