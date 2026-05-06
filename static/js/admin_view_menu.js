@@ -69,6 +69,8 @@ function showModal(itemId) {
     const itemDescription = menuItemCard.dataset.itemDescription || 'No description available.';
     const itemCategory = menuItemCard.dataset.itemCategory;
     const itemImage = getCategoryIcon(itemCategory);
+    // ↓ new: read availability from the card's data attribute
+    const isAvailable = menuItemCard.dataset.itemAvailable === 'true';
 
     console.log('Item data:', { itemName, itemPrice, itemDescription, itemCategory, itemImage });
 
@@ -86,6 +88,21 @@ function showModal(itemId) {
             <div class="modal-description-section">
                 <p class="modal-description-label">Description:</p>
                 <p class="modal-description-text">${itemDescription}</p>
+            </div>
+
+            <!-- ↓ new: availability section -->
+            <div class="modal-availability-section">
+                <div class="availability-status-row">
+                    <span class="availability-label">Availability:</span>
+                    <span class="availability-badge ${isAvailable ? 'badge-available' : 'badge-unavailable'}">
+                        ${isAvailable ? 'Available' : 'Out of Stock'}
+                    </span>
+                </div>
+                <button
+                    class="availability-toggle-btn ${isAvailable ? 'btn-mark-oos' : 'btn-mark-available'}"
+                    onclick="toggleAvailability(${itemId})">
+                    ${isAvailable ? 'Mark as Out of Stock' : 'Mark as Available'}
+                </button>
             </div>
         </div>
     `;
@@ -132,4 +149,47 @@ function attachModalListeners() {
             showModal(itemId);
         };
     });
+}
+
+// ===========================
+// INVENTORY: AVAILABILITY TOGGLE
+// ===========================
+
+async function toggleAvailability(itemId) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    try {
+        const res = await fetch(`/menu/toggle-availability/${itemId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+        });
+
+        if (!res.ok) {
+            console.error('Toggle request failed:', res.status);
+            return;
+        }
+
+        const data = await res.json();
+
+        if (data.success) {
+            // Update the card's data attribute so the next modal open reads the new state
+            const card = document.querySelector(`.menu-item-card[data-item-id="${itemId}"]`);
+            card.dataset.itemAvailable = data.is_available ? 'true' : 'false';
+
+            // Swap the card's unavailable CSS class
+            if (data.is_available) {
+                card.classList.remove('item-unavailable');
+                card.classList.add('item-available');
+            } else {
+                card.classList.remove('item-available');
+                card.classList.add('item-unavailable');
+            }
+
+            // Re-render the modal so the badge and button text update immediately
+            showModal(itemId);
+        }
+
+    } catch (err) {
+        console.error('Error toggling availability:', err);
+    }
 }
