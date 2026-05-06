@@ -24,6 +24,10 @@ load_dotenv(BASE_DIR / '.env')
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY    = os.environ.get('GOOGLE_CLIENT_ID')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
 
+# Redirects here whenever the social-auth pipeline raises an exception
+# (including AuthForbidden from your restrict_to_known_admins step)
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/auth/access-denied/'
+
 # Where to send admins after login
 LOGIN_REDIRECT_URL  = '/tables/'
 LOGOUT_REDIRECT_URL = '/'

@@ -77,3 +77,15 @@ def admin_logout(request):
 
     # Redirect to the login page
     return redirect("admin_login")
+
+def oauth_access_denied(request):
+    """
+    Rendered when social-auth raises AuthForbidden —
+    i.e. the Google account is not in ALLOWED_ADMIN_EMAILS.
+    Reads the attempted email from the social-auth session key if present,
+    so the template can show the user which account was rejected.
+    """
+    attempted_email = request.session.pop('failed_login_email', None)
+    return render(request, 'admin_auth/oauth_access_denied.html', {
+        'attempted_email': attempted_email,
+    })
