@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from menu.models import item
+from menu.models import Item
 
 class InventoryItemSerializer(serializers.ModelSerializer):
   class Meta:
