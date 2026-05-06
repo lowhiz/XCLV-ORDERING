@@ -11,7 +11,6 @@ pillow = "*"
 qrcode = "*"
 djangorestframework = "*"
 
-
 [dev-packages]
 
 [requires]
