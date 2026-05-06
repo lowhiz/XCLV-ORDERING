@@ -17,6 +17,9 @@ class Item(models.Model):
     # The selling price of one unit of this item.
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    # Inventory: True = available, False = out of stock
+    is_available = models.BooleanField(default=True) 
+
     def __str__(self):
         """
         Returns the name of the item for a readable representation of the object.

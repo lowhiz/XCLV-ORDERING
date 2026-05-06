@@ -11,6 +11,7 @@ pillow = "*"
 qrcode = "*"
 social-auth-app-django = "*"
 dotenv = "*"
+djangorestframework = "*"
 
 [dev-packages]
 

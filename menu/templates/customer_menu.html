@@ -69,16 +69,24 @@
                         </div>
 
                         <div class="right d-flex align-items-center gap-2">
-                            <!-- Decrease quantity button -->
-                            <button class="qty-btn minus btn btn-sm btn-outline-secondary"
-                                    onclick="decreaseQuantity('{{ item.id }}')">−</button>
 
-                            <!-- Quantity display -->
-                            <span class="qty" id="quantity-{{ item.id }}">0</span>
+                            <!-- Appended logic from the implemented Inventory
+                            API to disable the buttons if the item is unavailable -->
 
-                            <!-- Increase quantity button -->
-                            <button class="qty-btn plus btn btn-sm btn-outline-primary"
-                                    onclick="increaseQuantity('{{ item.id }}')">+</button>
+                            {% if item.is_available %}
+                                <!-- Decrease quantity button -->
+                                <button class="qty-btn minus btn btn-sm btn-outline-secondary"
+                                        onclick="decreaseQuantity('{{ item.id }}')">−</button>
+
+                                <!-- Quantity display -->
+                                <span class="qty" id="quantity-{{ item.id }}">0</span>
+
+                                <!-- Increase quantity button -->
+                                <button class="qty-btn plus btn btn-sm btn-outline-primary"
+                                        onclick="increaseQuantity('{{ item.id }}')">+</button>
+                                {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>Unavailable</button>
+                            {% endif %}
                         </div>
                     </div>
                 {% endfor %}

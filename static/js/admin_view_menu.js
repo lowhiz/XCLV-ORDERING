@@ -69,6 +69,8 @@ function showModal(itemId) {
     const itemDescription = menuItemCard.dataset.itemDescription || 'No description available.';
     const itemCategory = menuItemCard.dataset.itemCategory;
     const itemImage = getCategoryIcon(itemCategory);
+    // ↓ new: read availability from the card's data attribute
+    const isAvailable = menuItemCard.dataset.itemAvailable === 'true';
 
     console.log('Item data:', { itemName, itemPrice, itemDescription, itemCategory, itemImage });
 
@@ -87,10 +89,26 @@ function showModal(itemId) {
                 <p class="modal-description-label">Description:</p>
                 <p class="modal-description-text">${itemDescription}</p>
             </div>
+
+            <!-- ↓ new: availability section -->
+            <div class="modal-availability-section">
+                <div class="availability-status-row">
+                    <span class="availability-label">Availability:</span>
+                    <span class="availability-badge ${isAvailable ? 'badge-available' : 'badge-unavailable'}">
+                        ${isAvailable ? 'Available' : 'Out of Stock'}
+                    </span>
+                </div>
+                <button
+                    class="availability-toggle-btn ${isAvailable ? 'btn-mark-oos' : 'btn-mark-available'}"
+                    onclick="toggleAvailability(${itemId})">
+                    ${isAvailable ? 'Mark as Out of Stock' : 'Mark as Available'}
+                </button>
+            </div>
         </div>
     `;
 
     // Show the modal
+    itemModalOverlay.dataset.activeItemId = String(itemId);
     itemModalOverlay.classList.add('show-modal');
     document.body.style.overflow = 'hidden';
     console.log('Modal should now be visible');
@@ -99,6 +117,7 @@ function showModal(itemId) {
 function hideModal() {
     console.log('hideModal called');
     itemModalOverlay.classList.remove('show-modal');
+    delete itemModalOverlay.dataset.activeItemId;
     document.body.style.overflow = '';
 }
 
@@ -132,4 +151,61 @@ function attachModalListeners() {
             showModal(itemId);
         };
     });
+}
+
+// ===========================
+// INVENTORY: AVAILABILITY TOGGLE
+// ===========================
+
+async function toggleAvailability(itemId) {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    try {
+        const res = await fetch(`/menu/toggle-availability/${itemId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },
+        });
+
+        if (!res.ok) {
+            console.error('Toggle request failed:', res.status);
+            return;
+        }
+
+        const data = await res.json();
+
+        if (data.success) {
+            // Update the card's data attribute so the next modal open reads the new state
+            const card = document.querySelector(`.menu-item-card[data-item-id="${itemId}"]`);
+
+            // New: Implementation of the Internal Inventory API needs the
+            // toggle button element, then update its style classes based
+            // on its availability state
+            const toggleBtn = card.querySelector('.item-toggle');
+            card.dataset.itemAvailable = data.is_available ? 'true' : 'false';
+
+            // Swap the card's unavailable CSS class
+            if (data.is_available) {
+                card.classList.remove('item-unavailable');
+                card.classList.add('item-available');
+                toggleBtn.classList.remove('btn-danger');
+                toggleBtn.classList.add('btn-success');
+
+            } else {
+                card.classList.remove('item-available');
+                card.classList.add('item-unavailable');
+                toggleBtn.classList.remove('btn-success');
+                toggleBtn.classList.add('btn-danger');
+            }
+
+            // Re-render only when this item's modal is currently open
+            const isModalOpen = itemModalOverlay.classList.contains('show-modal');
+            const activeItemId = itemModalOverlay.dataset.activeItemId;
+            if (isModalOpen && activeItemId === String(itemId)) {
+                showModal(itemId);
+            }
+        }
+
+    } catch (err) {
+        console.error('Error toggling availability:', err);
+    }
 }

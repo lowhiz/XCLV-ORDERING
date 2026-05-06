@@ -72,7 +72,20 @@ INSTALLED_APPS = [
     'archive',
     # OAuth2 App
     'social_django',
+    'rest_framework',
+    'inventory',
 ]
+
+# DRF's default settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -333,3 +333,82 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ---------------------------------------- */
+/* INVENTORY: UNAVAILABLE CARD STATE        */
+/* ---------------------------------------- */
+
+.menu-item-card.item-available {
+    background-color: #d3f2d3;   /* visibly muted vs the normal #BFB4CD */
+}
+
+.menu-item-card.item-unavailable {
+    background-color: #f7c8c8;   /* visibly muted vs the normal #BFB4CD */
+}
+
+/* ---------------------------------------- */
+/* INVENTORY: MODAL AVAILABILITY SECTION    */
+/* ---------------------------------------- */
+
+.modal-availability-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #6c607a;
+}
+
+.availability-status-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.availability-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: #c9c9c9;
+}
+
+.availability-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.badge-available {
+    background-color: #2e7d32;
+    color: #fff;
+}
+
+.badge-unavailable {
+    background-color: #616161;
+    color: #fff;
+}
+
+.availability-toggle-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.availability-toggle-btn:hover {
+    opacity: 0.85;
+}
+
+.btn-mark-oos {
+    background-color: #b71c1c;
+    color: #fff;
+}
+
+.btn-mark-available {
+    background-color: #2e7d32;
+    color: #fff;
+}
