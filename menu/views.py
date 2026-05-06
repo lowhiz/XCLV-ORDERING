@@ -111,3 +111,27 @@ def admin_toggle_menu(request):
 def check_menu_status(request):
     global MENU_CLOSED
     return JsonResponse({"menu_closed": MENU_CLOSED})
+
+
+# New view to support the Internal Inventory API implemented via DRF
+# via the "inventory" app
+@admin_required
+def toggle_item_availability(request, item_id):
+    """
+    Toggles the is_available field on a menu Item.
+    Called via AJAX POST from the admin View Menu page (admin_menu.html).
+    Returns JSON so the frontend can update the card live without a page reload.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST request required.'}, status=405)
+
+    item = get_object_or_404(Item, id=item_id)
+    item.is_available = not item.is_available
+    item.save(update_fields=['is_available'])
+
+    return JsonResponse({
+        'success':      True,
+        'item_id':      item.id,
+        'item_name':    item.name,
+        'is_available': item.is_available,
+    })
