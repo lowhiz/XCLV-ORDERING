@@ -68,7 +68,14 @@
                                     data-item-available="{{ item.is_available|yesno:'true,false' }}">
                                     <span class="info-icon" data-item-id="{{ item.id }}">i</span>
                                     {{ item.name }}
-                                    <span></span>
+                                    <span
+                                        <button
+                                            class="item-toggle btn p-3 {% if item.is_available %}btn-success{% else %}btn-danger{% endif %}"
+                                            data-item-id="{{ item.id }}"
+                                            onclick="event.stopPropagation(); toggleAvailability({{ item.id }})">
+
+                                            </button>
+                                    </span>
                                 </div>
                                 {% endfor %}
                             </div>
