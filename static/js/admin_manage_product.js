@@ -13,12 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // CATEGORY HANDLING
     const selects = document.querySelectorAll("select[name='category']");
-    const inputs = document.querySelectorAll("input[name='new_category']");
 
-    selects.forEach((select, i) => {
+    selects.forEach((select) => {
         select.addEventListener("change", function () {
+            const form = this.closest("form");
+            if (!form) return;
 
-            const input = inputs[i];
+            const input = form.querySelector("input[name='new_category']");
             if (!input) return;
 
             if (this.value === "__new__") {
@@ -28,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 input.style.display = "none";
                 input.required = false;
             }
-
         });
     });
 

@@ -10,6 +10,26 @@ body .main-content {
     text-transform: uppercase;
 }
 
+.admin-dark-button {
+    background-color: #363030;
+    color: var(--white);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-dark-button:hover {
+    background-color: #463e3e;
+    color: var(--white);
+}
+
+.admin-dark-button:active {
+    background-color: var(--black) !important;
+    color: var(--white) !important;
+}
+
 .admin-grey-button {
     background-color: var(--lighter-grey);
     color: var(--black);
