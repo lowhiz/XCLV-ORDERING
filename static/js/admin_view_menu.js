@@ -107,6 +107,24 @@ function showModal(itemId) {
         </div>
     `;
 
+    // Append Edit & Delete controls (Edit opens the existing edit modal, Delete submits to admin-delete-product)
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const controlsHtml = `
+            <div class="modal-action-row mt-3 d-flex gap-2">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal${itemId}">Edit</button>
+                <form method="POST" action="/menu/admin-delete-product/${itemId}/" onsubmit="return confirm('Delete this product?');">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        `;
+
+        itemModalBody.insertAdjacentHTML('beforeend', controlsHtml);
+    } catch (err) {
+        console.error('Error appending modal controls:', err);
+    }
+
     // Show the modal
     itemModalOverlay.dataset.activeItemId = String(itemId);
     itemModalOverlay.classList.add('show-modal');

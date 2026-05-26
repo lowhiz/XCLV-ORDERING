@@ -125,31 +125,7 @@
 
                                         </button>
 
-                                        <!-- EDIT -->
-                                        <button
-                                            class="btn btn-primary"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editModal{{ item.id }}">
-
-                                            Edit
-
-                                        </button>
-
-                                        <!-- DELETE -->
-                                        <form method="POST"
-                                            action="{% url 'admin_delete_product' item.id %}">
-
-                                            {% csrf_token %}
-
-                                            <button
-                                                type="submit"
-                                                class="btn btn-danger"
-                                                onclick="return confirm('Delete this product?')">
-
-                                                Delete
-
-                                            </button>
-                                        </form>
+                                        <!-- Edit/Delete moved to item modal -->
 
                                     </div>
 
@@ -248,20 +224,23 @@
         </div>
     </div>
 
-            <!-- Modal for Item Description Modal -->
-        <div class="item-modal-overlay" id="itemModalOverlay">
-            <div class="item-modal-content" id="itemModalContent">
-                <div class="modal-header-custom">
-                    <h2 class="modal-title-custom">ITEM DESCRIPTION</h2>
-                    <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
-                </div>
-                <div class="modal-body"></div>
-            </div>
-        </div>
-
+    
     <!-- ====== -->
     <!-- MODALS -->
     <!-- ====== -->
+    <!-- Item Description Modal -->
+    <div class="item-modal-overlay" id="itemModalOverlay">
+        <div class="item-modal-content" id="itemModalContent">
+            <div class="modal-header-custom">
+                <h2 class="modal-title-custom">ITEM DESCRIPTION</h2>
+                <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal-->
     <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -286,7 +265,7 @@
                             <option value="{{ category }}">{{ category }}</option>
                             {% endfor %}
                             
-                            <!-- NEW CATEGORY (luigi, pa add ng javascript here na mawala ang add new category if ma click siya kay add kasi siya new field. ikaw na bahala here. hehe) -->
+                            <!-- NEW CATEGORY -->
                             <option value="__new__">
                                 + Add New Category
                             </option>
