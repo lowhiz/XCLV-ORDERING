@@ -101,7 +101,7 @@ function showModal(itemId) {
                 <button
                     class="availability-toggle-btn ${isAvailable ? 'btn-mark-oos' : 'btn-mark-available'}"
                     onclick="toggleAvailability(${itemId})">
-                    ${isAvailable ? 'Mark as Out of Stock' : 'Mark as Available'}
+                    ${isAvailable ? 'MARK AS OUT OF STOCK' : 'MARK AS AVAILABLE'}
                 </button>
             </div>
         </div>
@@ -111,12 +111,18 @@ function showModal(itemId) {
     try {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
         const controlsHtml = `
-            <div class="modal-action-row mt-3 d-flex gap-2">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal${itemId}">Edit</button>
-                <form method="POST" action="/menu/admin-delete-product/${itemId}/" onsubmit="return confirm('Delete this product?');">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
+            <div class="d-flex justify-content-center container">
+                <div class="row w-100 g-2 mt-2">
+                    <div class="col">
+                        <button class="btn btn-primary admin-grey-button w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#editModal${itemId}">EDIT ITEM</button>
+                    </div>
+                    <div class="col">
+                        <form method="POST" action="/menu/admin-delete-product/${itemId}/" onsubmit="return confirm('Delete this product?');">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                            <button type="submit" class="btn btn-danger w-100 fw-bold">DELETE ITEM</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         `;
 
