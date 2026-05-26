@@ -54,7 +54,7 @@ function showModal(itemId) {
     console.log('showModal called with itemId:', itemId);
 
     // Find the menu item card with the matching item ID
-    const menuItemCard = document.querySelector(`.menu-item-card[data-item-id="${itemId}"]`);
+    const menuItemCard = document.querySelector(`.menu-item-card[data-item-id="${itemId}"]`)
 
     if (!menuItemCard) {
         console.error('Menu item not found for ID:', itemId);

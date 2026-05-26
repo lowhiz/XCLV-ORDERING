@@ -84,7 +84,13 @@
                                         item-available
                                     {% else %}
                                         item-unavailable
-                                    {% endif %}">
+                                    {% endif %}"
+                                    data-item-id="{{ item.id }}"
+                                    data-item-name="{{ item.name|escape }}"
+                                    data-item-price="{{ item.unit_price }}"
+                                    data-item-description="{{ item.description|default_if_none:''|escape }}"
+                                    data-item-category="{{ item.category|default_if_none:''|escape }}"
+                                    data-item-available="{% if item.is_available %}true{% else %}false{% endif %}">
 
                                     <!-- INFO ICON -->
                                     <span class="info-icon" data-item-id="{{ item.id }}">
@@ -241,6 +247,17 @@
             {% endif %}
         </div>
     </div>
+
+            <!-- Modal for Item Description Modal -->
+        <div class="item-modal-overlay" id="itemModalOverlay">
+            <div class="item-modal-content" id="itemModalContent">
+                <div class="modal-header-custom">
+                    <h2 class="modal-title-custom">ITEM DESCRIPTION</h2>
+                    <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+                </div>
+                <div class="modal-body"></div>
+            </div>
+        </div>
 
     <!-- ====== -->
     <!-- MODALS -->
