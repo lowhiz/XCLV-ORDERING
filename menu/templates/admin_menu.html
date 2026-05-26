@@ -86,9 +86,11 @@
                                     data-item-image="{{ item.image.url }}"
                                     data-item-available="{{ item.is_available|yesno:'true,false' }}">
                                     <span class="info-icon" data-item-id="{{ item.id }}">i</span>
-                                    <span class="fw-bold">{{ item.name }}</span>
-                                    <!-- PRICE -->
-                                    Php {{ item.unit_price }}
+                                    <div class="container-fluid justify-content-between d-flex flex-column h-100">
+                                        <span class="fw-bold">{{ item.name }}</span>
+                                        <!-- PRICE -->
+                                        <span>Php {{ item.unit_price }}</span>
+                                    </div>
                                     <span
                                         <button
                                             class="item-toggle btn p-3 {% if item.is_available %}btn-success{% else %}btn-danger{% endif %}"
