@@ -77,58 +77,26 @@
                             <div class="accordion-body category-items-grid">
 
                                 {% for item in items %}
-
-                                <!-- PRODUCT CARD (RESTORED STYLES) -->
-                                <div class="menu-item-card general-card inter
-                                    {% if item.is_available %}
-                                        item-available
-                                    {% else %}
-                                        item-unavailable
-                                    {% endif %}"
+                                <div class="menu-item-card general-card inter {% if item.is_available %} item-available {% else %} item-unavailable {% endif %}"
                                     data-item-id="{{ item.id }}"
-                                    data-item-name="{{ item.name|escape }}"
+                                    data-item-name="{{ item.name }}"
                                     data-item-price="{{ item.unit_price }}"
-                                    data-item-description="{{ item.description|default_if_none:''|escape }}"
-                                    data-item-category="{{ item.category|default_if_none:''|escape }}"
-                                    data-item-available="{% if item.is_available %}true{% else %}false{% endif %}">
-
-                                    <!-- INFO ICON -->
-                                    <span class="info-icon" data-item-id="{{ item.id }}">
-                                        i
-                                    </span>
-
-                                    <!-- PRODUCT NAME -->
-                                    <h5 class="mb-1">{{ item.name }}</h5>
-
+                                    data-item-description="{{ item.description }}"
+                                    data-item-category="{{ category }}"
+                                    data-item-image="{{ item.image.url }}"
+                                    data-item-available="{{ item.is_available|yesno:'true,false' }}">
+                                    <span class="info-icon" data-item-id="{{ item.id }}">i</span>
+                                    <span class="fw-bold">{{ item.name }}</span>
                                     <!-- PRICE -->
-                                    <p class="mb-2">₱{{ item.unit_price }}</p>
-
-                                    <!-- BUTTONS -->
-                                    <div class="d-flex gap-2 mt-2 flex-wrap">
-
-                                        <!-- TOGGLE AVAILABILITY -->
+                                    Php {{ item.unit_price }}
+                                    <span
                                         <button
-                                            class="item-toggle btn
-                                            {% if item.is_available %}
-                                                btn-success
-                                            {% else %}
-                                                btn-danger
-                                            {% endif %}"
-                                            onclick="event.stopPropagation();
-                                            toggleAvailability({{ item.id }})">
+                                            class="item-toggle btn p-3 {% if item.is_available %}btn-success{% else %}btn-danger{% endif %}"
+                                            data-item-id="{{ item.id }}"
+                                            onclick="event.stopPropagation(); toggleAvailability({{ item.id }})">
 
-                                            {% if item.is_available %}
-                                                Available
-                                            {% else %}
-                                                Unavailable
-                                            {% endif %}
-
-                                        </button>
-
-                                        <!-- Edit/Delete moved to item modal -->
-
-                                    </div>
-
+                                            </button>
+                                    </span>
                                 </div>
 
                                 <!-- EDIT MODAL -->
