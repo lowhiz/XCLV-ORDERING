@@ -7,6 +7,7 @@ ALLOWED_ADMIN_EMAILS = [
     'lgguillen@up.edu.ph',
     'jgcasquejo@up.edu.ph',
     'kcdongon@up.edu.ph',
+    'jeycelanntabon@gmail.com'
 ]
 
 def restrict_to_known_admins(backend, details, request, user=None, *args, **kwargs):

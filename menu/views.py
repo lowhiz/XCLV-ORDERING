@@ -1,5 +1,7 @@
 import json
+from django.urls import reverse
 from decimal import Decimal
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib import messages
@@ -135,3 +137,52 @@ def toggle_item_availability(request, item_id):
         'item_name':    item.name,
         'is_available': item.is_available,
     })
+
+# add new product
+def admin_add_product(request):
+
+    if request.method == "POST":
+
+        category = request.POST.get("category")
+        new_category = request.POST.get("new_category")
+
+        # new category via admin request
+        if category == "__new__" and new_category:
+            category = new_category
+
+        Item.objects.create(
+            category=category,
+            name=request.POST.get("name"),
+            description=request.POST.get("description"),
+            unit_price=request.POST.get("unit_price"),
+            is_available=request.POST.get("is_available") == "on"
+        )
+
+    return redirect(f"{reverse('view_menu')}?admin=true")
+
+# edit product via admin request
+def admin_edit_product(request, item_id):
+
+    item = get_object_or_404(Item, id=item_id)
+
+    if request.method == "POST":
+
+        item.category = request.POST.get("category")
+        item.name = request.POST.get("name")
+        item.description = request.POST.get("description")
+        item.unit_price = request.POST.get("unit_price")
+        item.is_available = request.POST.get("is_available") == "on"
+
+        item.save()
+
+    return redirect("/menu/view/?admin=true")
+
+# delete product
+def admin_delete_product(request, item_id):
+
+    item = get_object_or_404(Item, id=item_id)
+
+    if request.method == "POST":
+        item.delete()
+
+    return redirect("/menu/view/?admin=true")

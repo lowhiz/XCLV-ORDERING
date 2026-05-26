@@ -11,4 +11,7 @@ urlpatterns = [
     path('check_menu_status/', views.check_menu_status, name='check_menu_status'),
     # Feature armed from the DRF inventory app to allow admins to toggle item availability from the admin menu page
     path('toggle-availability/<int:item_id>/', views.toggle_item_availability, name='toggle_item_availability'),
+    path('add-product/', views.admin_add_product, name='admin_add_product'),
+    path('admin-edit-product/<int:item_id>/',views.admin_edit_product,name='admin_edit_product'),
+    path('admin-delete-product/<int:item_id>/',views.admin_delete_product,name='admin_delete_product'),
 ]
