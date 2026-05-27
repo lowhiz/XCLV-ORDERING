@@ -1,55 +1,107 @@
 # XCLV Davao Ordering System
 
-This repository contains all source code and related resources for the **XCLV Davao Ordering System** project.
-
-To better understand our **branching strategies**, **development workflow**, and overall **project context**, please visit the following links:
-
-[Git and GitHub Documentation (by lowhiz)](https://docs.google.com/document/d/1l1XPDwYQddUXh0kjVJZButdPzNLvGjmAEwV0ho1QTAg/edit?usp=sharing)
-
-[Project Document (in school domain)](https://docs.google.com/document/d/1AZlIi8WTghCwsrWWpuuY7iQlhgN1QCuq35Yy6cs11W0/edit?usp=sharing)
+This repository contains the source code and assets for the XCLV Davao Ordering System — a Django-based web app used to manage menus, orders and QR-based ordering flows.
 
 ---
 
-## 📘 Overview
-The **XCLV Davao Ordering System** is being developed to streamline and simplify the ordering process for XCLV Davao.
-It serves as a centralized platform for managing orders efficiently and securely.
+## Overview
+A small Django application that provides an admin dashboard for managing menu items, tables, QR codes, and order workflows.
 
----
+## Tech stack
+- Frontend: HTML, CSS, JavaScript, Bootstrap 5
+- Backend: Django (Python)
+- Database: PostgreSQL
+- Dev tooling: `pipenv` for virtualenv / dependency management
 
-## 🛠️ Tech Stack
-* **Frontend:** HTML, CSS, JavaScript, Bootstrap
-* **Backend:** Django (Python)
-* **Database:** PostgreSQL
-* **Version Control:** Git & GitHub
+## Requirements
+- Python 3.10+ (3.13-3.14 recommended)
+- PostgreSQL (12+)
+- `pipenv` (install via `pip install pipenv`)
 
----
+## Quick install (development)
+1. Clone the repo and cd into the project root:
 
-## 👥 Contributors
-* [lowhiz](#)
-* [luigi-ichi](#)
-* [jcell](#)
-* [jd](#)
+```bash
+git clone <repo-url>
+cd XCLV-ORDERING
+```
 
-## Development Onboarding
-### Dependencies
-* `pipenv` for managing Python virtual environments (installable via `pip install pipenv`)
+2. Install dependencies and enter the virtual environment:
 
-### Onboarding Proper
-* When working on the project, always run under the pipenv subshell. You can enter it by running `pipenv shell` in the project root directory.
-  * The pipenv is a virtual environment containing all necessary dependencies for the project. This is to maintain consistency across different development environments The `Pipfile` lists all dependencies for the project in the event in the event that you prefer your local environment over pipenv.
+```bash
+pip install pipenv
+pipenv install
+pipenv shell
+```
 
-### Testing
-#### Prior to Running The Server
-* In Postgres, make sure to create a database named `xclv_ordering`
-* Create a superuser account (if not already created) by running `python manage.py createsuperuser`.
-* Ensure all migrations are applied by running `python manage.py migrate` within the pipenv shell. This will populate the database with the necessary tables and initial data like QR codes and their batches as well as menu items.
+If the virtual environment fails when trying to install dependencies and/or start the Django web server, specify the Python version when re-initializing the Pipenv virtual environment
+```bash
+pipenv uninstall
+# Initialize a virtual environment specifying a Python version
+pipenv --python 3.14
+pipenv shell
+pipenv install
+```
 
-#### Running The Server
-* Make sure your Postgres server is running.
-* To run tests, use the command `python manage.py runserver` within the pipenv shell.
-* To access the ordering form, you can generate test QR URLs. Simply execute `pipenv run python debug_qr_codes.py` and open a valid QR URL from the output to your web browser.
+3. Create a PostgreSQL database and user (example):
 
----
+```bash
+# create a DB named xclv_ordering
+createdb xclv_ordering
+# or via psql:
+# psql -c "CREATE DATABASE xclv_ordering;"
+```
 
-## 📄 License
-This project is for educational purposes only and is maintained by the XCLV Davao development team.
+4. Configure environment variables (recommended):
+
+- Create a `.env` file in the project root with at least:
+
+```
+SECRET_KEY=your-secret-key
+DEBUG=True
+DATABASE_NAME=xclv_ordering
+DATABASE_USER=<db_user>
+DATABASE_PASSWORD=<db_password>
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+```
+
+5. Apply migrations and create a superuser:
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+6. Run the development server:
+
+```bash
+python manage.py runserver
+```
+
+Visit `http://127.0.0.1:8000/` and log in to the admin dashboard to manage menu items.
+
+
+7. To obtain a URL for a valid QR code to enter the customer side (ordering form), run this command and use any of the three valid QR code URLs
+
+```bash
+# generate debug QR codes for testing
+pipenv run python debug_qr_codes.py
+```
+
+
+## Production notes
+- Set `DEBUG=False` and configure `ALLOWED_HOSTS`.
+- Use `collectstatic` and serve static files via a web server or CDN:
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+- Use a WSGI server (gunicorn/uvicorn) behind a reverse proxy, and configure environment variables for DB and secret key.
+
+## Contributors
+- lowhiz
+- luigi-ichi
+- jcell
+- jd
