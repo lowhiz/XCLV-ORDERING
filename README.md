@@ -66,14 +66,23 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 ```
 
-5. Apply migrations and create a superuser:
+5. Configure `/admin_auth/pipeline.py` to whitelist the Google account emails of your choice:
+
+```python
+# List of Google emails allowed to log in as admin.
+# Replace these with your actual team's Google emails.
+ALLOWED_ADMIN_EMAILS = [
+]
+```
+
+6. Apply migrations and create a superuser:
 
 ```bash
 python manage.py migrate
 python manage.py createsuperuser
 ```
 
-6. Run the development server:
+7. Run the development server:
 
 ```bash
 python manage.py runserver
@@ -82,7 +91,7 @@ python manage.py runserver
 Visit `http://127.0.0.1:8000/` and log in to the admin dashboard to manage menu items.
 
 
-7. To obtain a URL for a valid QR code to enter the customer side (ordering form), run this command and use any of the three valid QR code URLs
+8. To obtain a URL for a valid QR code to enter the customer side (ordering form), run this command and use any of the three valid QR code URLs
 
 ```bash
 # generate debug QR codes for testing
