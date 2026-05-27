@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
@@ -220,7 +221,7 @@ def edit_order(request, table_order_id):
         'table_order': table_order,
         'table_display': table_order.table.description,
         'table_id': table_order.table.id,
-        'current_quantities': current_quantities,
+        'current_quantities': json.dumps(current_quantities),
         'current_total': current_total,
         'is_admin_edit': True,  # Flag to identify this as admin edit mode
     }

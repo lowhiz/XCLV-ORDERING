@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
         // Handle case where currentQuantities might be empty or malformed
         if (currentQuantities && currentQuantities !== '{}' && currentQuantities !== 'None') {
-            const quantities = JSON.parse(currentQuantities.replace(/'/g, '"'));
+            const quantities = JSON.parse(currentQuantities);
             console.log('Parsed quantities:', quantities); // Debug line
 
             for (const [itemId, quantity] of Object.entries(quantities)) {
