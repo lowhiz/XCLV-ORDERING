@@ -47,9 +47,9 @@ pipenv install
 
 ```bash
 # create a DB named xclv_ordering
-createdb xclv_ordering
+createdb xclv-ordering
 # or via psql:
-# psql -c "CREATE DATABASE xclv_ordering;"
+# psql -c "CREATE DATABASE xclv-ordering;"
 ```
 
 4. Configure environment variables (recommended):
