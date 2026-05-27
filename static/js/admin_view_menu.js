@@ -68,7 +68,7 @@ function showModal(itemId) {
     const itemPrice = parseFloat(menuItemCard.dataset.itemPrice).toFixed(2);
     const itemDescription = menuItemCard.dataset.itemDescription || 'No description available.';
     const itemCategory = menuItemCard.dataset.itemCategory;
-    const itemImage = getCategoryIcon(itemCategory);
+    const itemImage = '/static/images/generic.png';
     // ↓ new: read availability from the card's data attribute
     const isAvailable = menuItemCard.dataset.itemAvailable === 'true';
 
