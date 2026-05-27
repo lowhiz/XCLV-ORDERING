@@ -132,7 +132,7 @@
 
                                                     <!-- DESCRIPTION -->
                                                     <label for="editProductDescription{{ item.id }}" class="form-label mt-2">Description</label>
-                                                    <textarea class="form-control" name="description" id="editProductDescription{{ item.id }}">{{ item.description }}</textarea>
+                                                    <textarea class="form-control" name="description" id="editProductDescription{{ item.id }}" rows="4">{{ item.description }}</textarea>
 
                                                     <!-- AVAILABILITY -->
                                                     <div class="form-check mt-4">
@@ -225,15 +225,15 @@
                         </select>
                         
                         <!-- HIDDEN INPUT FOR NEW CATEGORY -->
-                        <input type="text" class="form-control mt-2" id="newCategoryInput" name="new_category" placeholder="Enter New Category" style="display:none;">
+                        <input type="text" class="form-control mt-2" id="newCategoryInput" name="new_category" placeholder="Enter new category name" style="display:none;">
 
                         <!-- PRICE -->
                         <label for="unit_price" class="form-label mt-2">Price</label>
-                        <input type="number" class="form-control" step="0.01" name="unit_price" id="unit_price" placeholder="Price" required>
+                        <input type="number" class="form-control" step="0.01" name="unit_price" id="unit_price" required>
 
                         <!-- DESCRIPTION -->
                         <label for="productDescription" class="form-label mt-2">Description</label>
-                        <textarea class="form-control" name="description" id="productDescription"></textarea>
+                        <textarea class="form-control" name="description" id="productDescription" rows="4"></textarea>
 
                         <!-- AVAILABILITY -->
                         <div class="form-check mt-4">
