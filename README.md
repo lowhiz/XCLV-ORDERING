@@ -36,7 +36,7 @@ pipenv shell
 
 If the virtual environment fails when trying to install dependencies and/or start the Django web server, specify the Python version when re-initializing the Pipenv virtual environment
 ```bash
-pipenv uninstall
+pipenv remove
 # Initialize a virtual environment specifying a Python version
 pipenv --python 3.14
 pipenv shell
