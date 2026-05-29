@@ -66,14 +66,20 @@ DATABASE_HOST=localhost
 DATABASE_PORT=5432
 ```
 
-5. Configure `/admin_auth/pipeline.py` to whitelist the Google account emails of your choice:
+5. **Configure `/admin_auth/pipeline.py` to whitelist the Google account emails of your choice by appending to the `ALLOWED_ADMIN_EMAILS` list enclosed in single-quotes (`'`) and separated by commas for multiple entries, such as this example below:**
 
 ```python
 # List of Google emails allowed to log in as admin.
 # Replace these with your actual team's Google emails.
 ALLOWED_ADMIN_EMAILS = [
+    'johndoe123@gmail.com',
+    'juandelacruz@gmail.com',
 ]
 ```
+
+> [!IMPORTANT]
+> The Google (Gmail) account that you're going to use to log in to the admin dashboard must be included in the `ALLOWED_ADMIN_EMAILS` above. Otherwise, you won't be able to log in even if you have a valid Google account as part of the authentication pipeline.
+
 
 6. Apply migrations and create a superuser:
 
@@ -81,6 +87,9 @@ ALLOWED_ADMIN_EMAILS = [
 python manage.py migrate
 python manage.py createsuperuser
 ```
+
+> [!NOTE]
+> When running the migration command, this will take some time as it populates the /media/qrcodes directory with QR code images for all tables in the database. Do not interrupt the migration process until it completes successfully.
 
 7. Run the development server:
 
@@ -110,7 +119,7 @@ python manage.py collectstatic --noinput
 - Use a WSGI server (gunicorn/uvicorn) behind a reverse proxy, and configure environment variables for DB and secret key.
 
 ## Contributors
-- lowhiz
-- luigi-ichi
-- jcell
-- jd
+- lowhiz (Karlo Louis C. Dongon)
+- luigi-ichi (Luigi Antonio G. Guillen)
+- jcell (Jeycel Ann M. Tabon)
+- jd (Jann Dave R. Casquejo)
